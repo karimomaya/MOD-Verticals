@@ -29,7 +29,7 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/report")
-public class reportController {
+public class ReportController {
 
     @Autowired
     ReportService reportService;
