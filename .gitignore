@@ -4,5 +4,7 @@
 #ignore
 *.idea
 *.xlsx
+*.iml
+*.jar
 #Ignore upload dir
 /mod-rest/uploadDir
