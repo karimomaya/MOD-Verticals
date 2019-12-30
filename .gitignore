@@ -1,0 +1,8 @@
+#ignore target 
+/mod-rest/target
+/mod-soap/target
+#ignore
+*.idea
+*.xlsx
+#Ignore upload dir
+/mod-rest/uploadDir
