@@ -1,0 +1,93 @@
+<div class="mytask-card card card-main table-border-bottom">
+    <div class="table-container">
+        <table class="main-table">
+            <thead>
+                <tr class="col-md-12">
+                    <th></th>
+                    <th sort-by="programName" translate-text="program-name"></th>
+                    <th sort-by="programOwner" translate-text="program-owner"></th>
+                    <th sort-by="startDate" translate-text="start-date"></th>
+                    <th sort-by="endDate" translate-text="end-date"></th>
+                    <th sort-by="progress" translate-text="progress"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="program-table" class="program-data" data-bind="foreach: programs">
+                <tr class="view col-md-12">
+                    <td class="accordion" data-bind='click: openProgramCollapse'></td>
+                    <td data-bind="text: name"></td>
+                    <td data-bind="text: DisplayName"></td>
+                    <td data-bind="text: startDate"></td>
+                    <td data-bind="text: endDate"></td>
+                    <td>
+                        <div class="progress-container progress-width">
+                            <span data-bind="text: programProgress"></span>
+                            <div class="progress-box p-0">
+                                <div class=" progress">
+                                    <div class="progress-bar" data-bind="style: { width: programProgress }"
+                                        role="progressbar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown dropleft">
+                            <a id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                <span class="heading-6 icon-ActionMenu"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuButton"
+                                x-placement="bottom-start">
+                                <a data-bind='click: displayProgram' class="dropdown-item"><span
+                                        class="icon-See-Details1"></span> <span translate-text="display"> </span></a>
+                                <!-- ko if: isOwner -->
+                                <!-- ko ifnot: isEnded -->
+                                <a class="dropdown-item" data-bind='click: editProgram'><span class="icon-Edit"></span>
+                                    <span translate-text="edit"></span></a>
+                                <!-- ko if: isInprogresss -->
+                                <a class="dropdown-item" data-bind="click: stopProgram"><span class="icon-1"></span>
+                                    <span translate-text="stop"></span></a>
+                                <!-- /ko -->
+                                <!-- ko if: isStopped -->
+                                <a class="dropdown-item" data-bind="click: completeProgram"><span
+                                        class="icon-Returned"></span> <span translate-text="complete"></span></a>
+                                <!-- /ko -->
+                                <a class="dropdown-item" data-bind="click: endProgram"><span class="icon-OnOff"></span>
+                                    <span translate-text="end"></span></a>
+                                <!-- ko if: haveDelete -->
+                                <a class="dropdown-item" data-bind='click: deleteProgram'><span
+                                        class="icon-Delete"></span><span translate-text="delete"></span></a>
+                                <!-- /ko -->
+                                <!-- /ko -->
+                                <!-- /ko -->
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="fold">
+                    <td colspan="7">
+                        <div class="fold-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="exported-label exported-label-gray"
+                                        translate-text="program-description"></label>
+                                    <div class="card-exported" data-bind="text: description"></div>
+                                </div>
+                                <div class="col-md-12 mt-2">
+                                    <label class="exported-label exported-label-gray" translate-text="program-notes"></label>
+                                    <div class="card-exported" data-bind="text: notes"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+</div>
+<div class="mytask-card card card-main" style="padding: 0;">
+    <ul class="pagination justify-content-center">
+    </ul>
+</div>

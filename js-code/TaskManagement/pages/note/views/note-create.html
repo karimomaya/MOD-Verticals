@@ -1,0 +1,29 @@
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h4 id="note-modal-title" class="modal-title" translate-text="add-note"></h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <div class="modal-body" id="creation-note">
+            <div class="row required-fileds">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <label for="note" class="modal-property property-required" translate-text="notes"></label>
+                        <textarea id="note" data-bind="value: note,valueUpdate: 'afterkeydown'" class="form-control form-input form-input-text"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal-footer block">
+            <button class="button button-third float-right" id="mod-btn-note-submit" data-bind='click: submit, disable: hasError' translate-text="add"></button>
+            <button class="button button-third  float-right" id="mod-btn-note-close" data-dismiss="modal" data-toggle="tooltip" data-original-title="" title="" translate-text="close"></button>
+    
+        </div>   
+
+    </div>
+</div>

@@ -1,0 +1,161 @@
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h4 class="modal-title" data-bind="text: headerTitle" translate-text="add-task"></h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <div class="modal-body" id="creation-task">
+            <div class="row required-fileds">
+                <!-- ko if: havePointOfDiscussion -->
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <label for="point-of-discussion" class="modal-property property-required" translate-text="point-of-discussion"></label>
+                        <input type="text" id="point-of-discussion" data-bind="value: pointOfDiscussion" class="input form-control form-input">
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <label for="task-name" class="modal-property property-required" translate-text="task-name"></label>
+                        <input type="text" id="task-name" data-bind="value: taskName" class="input form-control form-input">
+                    </div>
+
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-row" id="task-project">
+                        <label for="task-project-option" class="modal-property" translate-text="project"></label>
+                        <div class="form-select-container task">
+                            <select id="task-project-option" data-bind="selectize: taskProjectOptions, selectedOptions: taskProject" ></select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-row" id="task-owner-selectize">
+                        <label class="modal-property property-required" translate-text="task-owner"></label>
+                        <div class="form-select-container task">
+                            <select id="task-owner-options" data-bind="selectize: taskOwnerOptions, selectedOptions: taskOwner"></select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <label class="modal-property property-required" translate-text="pirority"></label>
+                        <div>
+                            <select class="form-control form-input" data-bind="
+                            options: taskPriorityOptions,
+                            optionsText: 'name',
+                            optionsValue: 'id',
+                            optionsCaption: '',
+                            value: taskPriority,">
+
+                            </select> 
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="col-md-6">
+                    <div class="form-row ">
+                        <label for="task-pirority" class="modal-property property-required" translate-text="pirority"></label>
+                        <div class="form-select-container task">
+                            <select id="task-pirority" data-bind="selectize: taskPriorityOptions, selectedOptions: taskPriority" name="task-pirority"></select>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="col-md-6">
+                    <div class="form-row ">
+                        <label for="task-start-date" class="modal-property property-required" translate-text="start-date"></label>
+                        <input type="date" id="task-start-date" data-bind="value: taskStartDate, attr: {min: todayDate, max: maxDate}" class="datepicker-1 input form-control form-input">
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="form-row ">
+                        <label for="task-end-date" class="modal-property property-required" translate-text="end-date"></label>
+                        <input type="date" id="task-end-date" data-bind="value: taskEndDate, attr: {min: minDate, max: maxDate}" class="datepicker-1 input form-control form-input">
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <label class="modal-property property-required" translate-text="task-type"></label>
+                        <div>
+                            <select class="form-control form-input" data-bind="
+                            options: singleOrMultipleOptions,
+                            optionsText: 'name',
+                            optionsValue: 'id',
+                            optionsCaption: '',
+                            value: singleOrMultiple,">
+
+                            </select> 
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- <div class="col-md-12 ">
+                    <div class="form-row">
+                        <label class="modal-property property-required" translate-text="task-type"></label>
+                        <div class="form-select-container task">
+                            <select data-bind="selectize: singleOrMultipleOptions, selectedOptions: singleOrMultiple"></select>
+                        </div>
+                    </div>
+
+                </div> -->
+                    
+
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <label for="task-description" class="modal-property"  translate-text="task-description"></label>
+                        <textarea type="textarea" id="task-description" data-bind="value: taskDescription" class="textarea-input form-control form-input form-input-text" ></textarea>
+                    </div>
+                </div>
+                
+                <div class="col-md-12">
+                    <div class="form-row multiple-select" id="task-team">
+                        <label for="task-assignee" class="modal-property-selectise property-required" translate-text="task-worker"></label>
+                        <div class="form-select-container task">
+                            <select multiple id="task-assignee" class="form-input" data-bind="selectize: taskTeamOptions, selectedOptions: taskTeam"></select>
+                         </div>
+                        <!-- <span class="icon-Search form-input-selectise-icon"></span> -->
+                    </div>
+                </div>
+                
+                <!-- <div class="col-md-12">
+                    <div class="input-group-append float-right">
+                    <button id="enter" onclick="addWorkingUsers()" class="button mt-0 button-third" translate-text="add" ></button>
+                    </div>
+                </div>
+                <hr />
+                <div class="col-md-12">
+                    <div class="row justify-center">
+                        <div class="col-md-12">
+                            <ul id="suppliers-name-list" class="list-group mt-2">
+                        
+                            </ul>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+        </div>
+
+
+        <div class="modal-footer block">
+            <!-- ko ifnot: taskPage -->
+            <button class="button button-third" id="mod-btn-task-save" data-bind='click: saveTask, visible: showSave' translate-text="save"></button>
+            <!-- /ko -->
+            <button class="button button-third float-right" id="mod-btn-task-submit" data-bind='click: submit, disable: hasError' translate-text="add"></button>
+            <button class="button button-third  float-right" id="mod-btn-task-close" data-bind='click: close' data-dismiss="modal" data-toggle="tooltip" data-original-title="" title="" translate-text="close"></button>
+    
+        </div>   
+
+    </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="tab-pane fade card  active show" id="tasks-notes-tab">
+    <div class="table-container">
+        <div class="table-container">
+            <table id="" class="main-table " cellspacing="0" width="100%">
+                <thead > 
+                    <tr class="col-md-12">
+                        <th></th>
+                        <th translate-text="task-name"></th>
+                        <th translate-text="start-date"></th>
+                        <th translate-text="end-date"></th>
+                        <th translate-text="progress"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="task-related-project-tbody" data-bind="foreach: tasks">
+                    <tr>
+                        <td></td>
+                        <td data-bind="text: taskName"></td>
+                        <td data-bind="text: startDate"></td>
+                        <td data-bind="text: dueDate"></td>
+                        <td>
+                            <div class="progress-container progress-width">
+                                <span  data-bind="text: progress"></span>
+                                <div class="progress-box p-0">
+                                    <div class=" progress">
+                                        <div class="progress-bar" data-bind="style: { width: progress }" role="progressbar"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td data-bind='click: displayTask' >
+                            <a href="#"><span class="icon-See-Details1 title"></span></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

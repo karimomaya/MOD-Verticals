@@ -1,0 +1,21 @@
+<div class="modal fade" id="program-confirmation-model">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+            <h4 class="modal-title"><span data-bind="text: title" class="icon-stop middle title-gold mr-1 title-bol"></span translate-text="stop-title"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body" id="model-body">
+                <div class="col-md-12 p-0">
+                    <span class="title-gold mr-1 title-bold" data-bind="text: question"></span>  <span class="title-dark" data-bind="text: warning"></span>
+                </div>
+            </div>
+            <div class="modal-footer block">
+                <button data-bind="click: confirm" class="button button-third float-right" data-dismiss="modal" data-toggle="tooltip" translate-text="confirm"></button>
+                <button class=" button button-third float-right" data-dismiss="modal" data-toggle="tooltip" translate-text="close"></button>
+            </div>
+
+        </div>
+    </div>
+</div>

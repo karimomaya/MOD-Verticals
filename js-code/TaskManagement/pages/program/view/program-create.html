@@ -1,0 +1,70 @@
+
+<div class="modal-dialog modal-lg">
+        <div class="modal-content">
+    
+            <div class="modal-header">
+                <h4 class="modal-title" translate-text="add-program"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <div class="modal-body" id="creation-program">
+                <div class="row required-fileds">
+                    <div class="col-md-6" data-bind="css: isEdit">
+                        <div class="form-row">
+                            <label for="programName" class="modal-property property-required" translate-text="program-name"></label>
+                            <input type="text" data-bind="value: programName" class="input form-control form-input" name="programName" id="programName">
+                        </div>
+    
+                    </div>
+                    
+                    <div class="col-md-6" data-bind="css: ownerDimmed">
+                        <div class="form-row " id="program-owner">
+                            <label for="program-owner" class="modal-property property-required" translate-text="program-owner"></label>
+                            <!-- <input type="text"  data-bind="value: programOwner" class="input form-control form-input" name="program-owner" id="program-owner"> -->
+                            <div class="form-select-container task">
+                                <select data-bind="selectize: programOwnerOptions, selectedOptions: programOwner" name="program-owner"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" data-bind="css: isEdit">
+                            <div class="form-row ">
+                                <label for="program-start-date" class="modal-property property-required" translate-text="start-date"></label>
+                            <input type="date"  id="program-start-date" data-bind="value: programStartDate, attr: {min: minDate}" class="datepicker-1 input form-control form-input" name="program-start-date">
+                        </div>
+    
+                    </div>
+    
+                    <div class="col-md-6">
+                        <div class="form-row ">
+                            <label for="program-end-date" class="modal-property property-required" translate-text="end-date"></label>
+                            <input type="date" id="program-end-date" data-bind="value: programEndDate, attr: {min: minDate}" class="datepicker-1 input form-control form-input" name="program-end-date">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12" >
+                        <div class="form-row">
+                            <label for="program-description" class="modal-property property-required"  translate-text="program-description"></label>
+                            <textarea type="textarea" id="program-description" data-bind="value: programDescription" class="form-control form-input form-input-text" ></textarea>
+                        </div>
+                    </div>
+                                
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <label for="notes" class="modal-property"  translate-text="program-notes"></label>
+                            <textarea type="textarea" id="notes" data-bind="value: programNotes" class="form-control form-input form-input-text" ></textarea>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+    
+    
+            <div class="modal-footer">
+                <button class="button button-third" id="mod-btn-program-close" data-dismiss="modal" data-toggle="tooltip" data-original-title="" title="" translate-text="close"></button>
+                <button class="button button-third" data-bind='click: programSubmit, disable: hasError, text: buttonText' ></button>
+        
+            </div>   
+    
+        </div>
+    </div>

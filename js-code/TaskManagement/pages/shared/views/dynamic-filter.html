@@ -1,0 +1,47 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title" translate-text="filter-task"></h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body" id="FilterModal">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-row">
+                        <label class="modal-property" translate-text="task-name"></label>
+                        <input data-bind="value: taskName" class="input form-control form-input">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <label class="modal-property" translate-text="start-date"></label>
+                        <input type="date" data-bind="value: startDate" class="input form-control form-input">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <label class="modal-property" translate-text="end-date"></label>
+                        <input type="date" data-bind="value: endDate" class="input form-control form-input">
+                    </div>
+                </div>
+                <div class="col-md-6" data-bind="visible: disableOwner">
+                    <div class="form-row">
+                        <label class="modal-property" translate-text="task-owner"></label>
+                        <input data-bind="value: owner" class="input form-control form-input">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <label class="modal-property" translate-text="task-progress"></label>
+                        <input data-bind="value: progress" class="input form-control form-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="cancel-filter" class="button button-third" data-dismiss="modal" data-toggle="tooltip" translate-text="cancel"></button>
+            <button data-bind="click: submit" class="button button-third" data-toggle="tooltip" translate-text="search"></button>
+        </div> 
+    </div>
+</div>

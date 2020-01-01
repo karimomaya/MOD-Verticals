@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<style>
+</style>
+<html dir="rtl">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Task Management</title>
+</head>
+<body id="task-body" style="overflow: auto !important;">
+    <project-edit class="modal" id="project-edit" project-success=""></project-edit>
+    <project-confirmation id="project-confirmation"></project-confirmation>
+    
+    <div class="page-content">
+        <div class="page-width">
+            <div class="container">
+                <div class="single-task" id="project-display">
+                    <title-bar title="" id="title-bar"></title-bar>
+                    <progress-bar id="progress-bar"></progress-bar>
+                    <project-data id="project-data"></project-data>
+                    <div class="tasks-header mt-4">
+                        <div class="tasks-header-right col-md-10">
+                            <nav>
+                                <div class="nav" role="tablist" id="task-adding-notes">
+                                    <a class="right-nav-link nav-link current-tab active show" data-toggle="tab" translate-text="tasks"></a>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="mytask-card card card-main">
+                        <div class="tab-content">
+                            <task-related-project class="tab-pane fade card active show" id="task-related-project"></task-related-project>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="/cordys/html5/demo/commons/javascripts/dynamic-loader.js"></script>
+	<script src="/cordys/html5/demo/TaskManagement/pages/project/controller/project-display-controller.js"></script>
+</body>
+</html>

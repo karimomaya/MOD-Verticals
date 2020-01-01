@@ -1,0 +1,10 @@
+<div class="tasks-header-title">
+    <span>التقارير</span>
+</div>
+<div class="filters"  data-bind="foreach: filters">
+    <div class="filters-record" ><span data-bind="text: name"></span><a class="delete-member" data-bind="click: remove">x</a> </div>
+</div>
+<div class="tasks-header-action">
+
+    <a data-bind="click: filterClick"><span class="icon-Filter-New" ></span></a>
+</div>

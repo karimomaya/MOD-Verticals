@@ -1,0 +1,44 @@
+<div class="card-white mt-3" style="position: relative">
+    <div class="pt-2 pb-3">
+        <div class="row" data-bind="with: taskObject">
+            <div class="col-md-4 mb-3">
+                <label class="exported-label exported-label-gray" translate-text="task-name"></label>
+                <div class="card-exported-large" data-bind="text: taskName"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="exported-label exported-label-gray" translate-text="creator"></label>
+                <div class="card-exported-large" data-bind="text: taskCreator"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="exported-label exported-label-gray" translate-text="start-date"></label>
+                <div class="card-exported-large" data-bind="text: startDate"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="exported-label exported-label-gray" translate-text="end-date"></label>
+                <div class="card-exported-large" data-bind="text: dueDate"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="exported-label exported-label-gray" translate-text="pirority"></label>
+                <div class="card-exported-large" data-bind="text: priority"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="exported-label exported-label-gray" translate-text="project-name"></label>
+                <div class="card-exported-large" data-bind="text:taskProjectName"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="exported-label exported-label-gray" translate-text="task-owner"></label>
+                <div class="card-exported-large single-task-user" data-bind="text: owner"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="exported-label exported-label-gray" translate-text="task-type"></label>
+                <div class="card-exported-large single-task-user" data-bind="text: singleOrMultiple"></div>
+            </div>
+            
+            <div class="col-md-12">
+                <label class="exported-label exported-label-gray" translate-text="task-description"></label>
+                <div class="card-exported-large" data-bind="text: description"></div>
+            </div>
+        </div>
+
+    </div>
+</div>

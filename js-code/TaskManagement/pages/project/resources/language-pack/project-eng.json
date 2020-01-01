@@ -1,0 +1,17 @@
+{
+    "projects": "المشروعات",
+    "edit-project": "تعديل المشروع",
+    "add-project": "إضافة مشروع",
+    "project-relate-prog": "البرنامج الذي يرتبط به المشروع",
+    "updateProjectStatusSuccess": "تم تغير حالة المشروع بنجاح",
+    "project-end-success": "تم انهاء المشروع بنجاح",
+    "project-stop-success": "تم ايقاف المشروع بنجاح",
+    "project-complete-success": "تم اعادة تفعيل المشروع بنجاح",
+    "project-name": "اسم المشروع",
+    "project-owner" : "مدير المشروع",
+    "end-date" : "تاريخ الإنتهاء",
+    "basic-info" : "البيانات الأساسية",
+    "progress" : "نسبة الإنجاز",
+    "project-description" : "وصف المشروع",
+    "project-notes" : "الملاحظات"
+}

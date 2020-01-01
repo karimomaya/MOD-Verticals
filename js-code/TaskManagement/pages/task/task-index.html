@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<style>
+</style>
+<html dir="rtl">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Task Management</title>
+
+</head>
+
+<body id="task-body" style="overflow: auto !important;">
+    <task-create bind-edit="bindEditTask" class="modal" id="task-create" task-source="TaskManagement" task-data=""
+        task-entity-itemId="" task-success="drawGetCreatedTaskByEntityItemId" task-fail=""></task-create>
+    <program-create class="modal" id="program-create" program-success=""></program-create>
+    <program-edit class="modal" id="program-edit" program-success=""></program-edit>
+    <project-create class="modal" id="project-create" project-success=""></project-create>
+    <project-edit class="modal" id="project-edit" project-success=""></project-edit>
+    <project-confirmation id="project-confirmation"></project-confirmation>
+    <program-confirmation id="program-confirmation"></program-confirmation>
+    <task-filter class="modal" id="task-filter"></task-filter>
+    <project-selector class="modal" id="project-selector"></project-selector>
+    <!-- <dynamic-filter class="modal" id="dynamic-filter"></dynamic-filter> -->
+
+    <div class="page" style="display: block">
+        <div class="page-content">
+            <div class="page-width">
+                <div class="container">
+                    <reports id="reports"></reports>
+                    <div class="card-pad-0 mt-3" id="task-nav-header">
+                        <div class="tasks-single-bar">
+                            <nav>
+                                <div class="nav nav-right" role="tablist" id="action-tabs">
+                                    <a add-button="program-create-button" class="right-nav-link nav-link current-tab"
+                                        href="#program-container"
+                                        onclick="changeParentNavCurrent(this, 'program-create', 'add-program', 'EXM')"
+                                        data-toggle="tab" translate-text="programs"></a>
+                                    <a add-button="project-create-button" class="right-nav-link nav-link"
+                                        onclick="changeParentNavCurrent(this, 'project-create', 'add-project', 'DIV')"
+                                        href="#project-container" data-toggle="tab" translate-text="projects"></a>
+                                    <a add-button="task-create-button" class="right-nav-link nav-link"
+                                        onclick="changeParentNavCurrent(this, 'task-create', 'add-task')"
+                                        href="#task-container" data-toggle="tab" translate-text="tasks"></a>
+
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="input-group search-inpt header-inpt  mt-2">
+                            <input class="form-control main-search-input" onchange="freeTextSearch()" type="search"
+                                placeholder="بحث" id="search-input">
+                            <span class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button">
+                                    <span class="icon-Search"></span>
+                                </button>
+                            </span>
+                        </div>
+                        <div class="input-group  filter-inpt  header-inpt mt-2">
+                            <a data-toggle="modal" style="color:#c9a869" data-target="task-filter" class="title-gold">
+                                <span class="icon-Filter-New"></span>
+                            </a>
+                        </div>
+                        <div class="tasks-header-action">
+                            <div class="team-leader-title">
+                                <a id="program-create-button" class="button-add-memmber add-new" data-toggle="modal"
+                                    data-target="#task-create-program">
+                                    <span class="icon-icon-add title-gold"></span>
+                                </a>
+                                <span class="team-title title-medium" translate-text="task-add-program">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="program-container" class="tab-pane fade active show">
+                        <div id="program-nav">
+                            <div class="tasks-header mt-4">
+                                <nav>
+                                    <div class="nav nav-right" role="tablist" id="task-tabs">
+                                        <a class="right-nav-link nav-link current-tab" href="#inprogress-program"
+                                            onclick="changeChildNavCurrent(this); reloadInProgressProgram()"
+                                            data-toggle="tab" translate-text="inprogress"></a>
+                                        <a class="right-nav-link nav-link" href="#stopped-program"
+                                            onclick="changeChildNavCurrent(this); reloadStoppedProgram()"
+                                            data-toggle="tab" translate-text="stopped"></a>
+                                        <a class="right-nav-link nav-link" href="#ended-program"
+                                            onclick="changeChildNavCurrent(this);  reloadEndedProgram()"
+                                            data-toggle="tab" translate-text="ended"></a>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <inprogress-program id="inprogress-program" output-draw-function="drawInProgressProgram"
+                                class="tab-pane fade card show active"></inprogress-program>
+                            <stopped-program id="stopped-program" output-draw-function="drawStoppedProgram"
+                                class="tab-pane fade card"></stopped-program>
+                            <ended-program id="ended-program" output-draw-function="drawEndedProgram"
+                                class="tab-pane fade card"></ended-program>
+                        </div>
+                    </div>
+
+                    <div id="project-container" class="tab-pane fade">
+                        <div id="project-nav">
+                            <div class="tasks-header mt-4">
+                                <nav>
+                                    <div class="nav nav-right" role="tablist" id="task-tabs">
+                                        <a class="right-nav-link nav-link current-tab" href="#inprogress-project"
+                                            onclick="changeChildNavCurrent(this); reloadInProgressProject()"
+                                            data-toggle="tab" translate-text="inprogress"></a>
+                                        <a class="right-nav-link nav-link" href="#stopped-project"
+                                            onclick="changeChildNavCurrent(this); reloadStoppedProject()"
+                                            data-toggle="tab" translate-text="stopped"></a>
+                                        <a class="right-nav-link nav-link" href="#ended-project"
+                                            onclick="changeChildNavCurrent(this);  reloadEndedProject()"
+                                            data-toggle="tab" translate-text="ended"></a>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <inprogress-project id="inprogress-project" output-draw-function="drawInProgressProjects"
+                                class="tab-pane fade card show active"></inprogress-project>
+                            <stopped-project id="stopped-project" output-draw-function="drawStoppedProjects"
+                                class="tab-pane fade card"></stopped-project>
+                            <ended-project id="ended-project" output-draw-function="drawEndedProjects"
+                                class="tab-pane fade card"></ended-project>
+                        </div>
+                    </div>
+
+                    <div id="task-container" class="tab-pane fade">
+                        <div class="tab-content">
+                            <div id="task-nav">
+                                <div class="tasks-header mt-4">
+                                    <nav>
+                                        <div class="nav nav-right" role="tablist" id="task-tabs">
+                                            <a class="right-nav-link nav-link current-tab" href="#inprogress-task"
+                                                onclick="changeChildNavCurrent(this); reloadInProgressTask()"
+                                                data-toggle="tab" translate-text="inprogress"></a>
+                                            <a class="right-nav-link nav-link" href="#task-created-by"
+                                                onclick="changeChildNavCurrent(this); reloadCreatedByTask()"
+                                                data-toggle="tab" translate-text="created"></a>
+                                            <a class="right-nav-link nav-link" href="#owned-task"
+                                                onclick="changeChildNavCurrent(this); reloadMyOwnedTask()"
+                                                data-toggle="tab" translate-text="my-task"></a>
+                                            <a class="right-nav-link nav-link" href="#completed-task"
+                                                onclick="changeChildNavCurrent(this); reloadCompletedTask()"
+                                                data-toggle="tab" translate-text="completed"></a>
+                                            <!-- <a class="right-nav-link nav-link" href="#task-draft"
+                                                onclick="changeChildNavCurrent(this); reloadDraftTask()"
+                                                data-toggle="tab" translate-text="drafts"></a> -->
+                                            <a class="right-nav-link nav-link" href="#task-archive"
+                                                onclick="changeChildNavCurrent(this); reloadArchivedTask()"
+                                                data-toggle="tab" translate-text="archive"></a>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </div>
+                            <inprogress-task id="inprogress-task" output-draw-function="drawInProgressTask" class="tab-pane fade card show active"></inprogress-task>
+                            <task-created-by id="task-created-by" output-draw-function="drawCreatedByTask" class="tab-pane fade card"></task-created-by>
+                            <owned-task id="owned-task" output-draw-function="drawMyOwnedTask" class="tab-pane fade card"></owned-task>
+                            <completed-task id="completed-task" output-draw-function="drawCompletedTask" class="tab-pane fade card"></completed-task>
+                            <task-draft id="task-draft" output-draw-function="drawDraftTask" class="tab-pane fade card"></task-draft>
+                            <task-archive id="task-archive" output-draw-function="drawArchivedTask" class="tab-pane fade card"></task-archive>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/cordys/html5/demo/commons/javascripts/dynamic-loader.js"></script>
+    <script src="/cordys/html5/demo/TaskManagement/pages/task/controller/task-index-controller.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+
+<div class="modal-dialog modal-lg">
+        <div class="modal-content">
+    
+            <div class="modal-header">
+                <h4 class="modal-title" data-bind="text: title"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <div class="modal-body" id="creation-task">
+                <div class="row required-fileds">
+                    <div class="col-md-6" data-bind="css: isEdit"> 
+                        <div class="form-row">
+                            <label for="project-name" class="modal-property property-required" translate-text="project-name"></label>
+                            <input id="project-name" type="text" data-bind="value: projectName" class="input form-control form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6" data-bind="css: isEdit">
+                        <div id="assign-to-unit-id" class="form-row ">
+                            <label for="assign-to" class="modal-property property-required" translate-text="assign-to"></label>
+                            <div class="form-select-container task">
+                                <select id="assign-to-unit" data-bind="selectize: assignToUnitOptions, selectedOptions: assignToUnit" name="assign-to-unit"></select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6" data-bind="css: isEdit">
+                        <div id="project-manager-id" class="form-row" data-bind="class: assignToUnitNotSelected">
+                            <label for="project-manager" class="modal-property property-required" translate-text="project-manager"></label>
+                            <div class="form-select-container task">
+                                <select id="project-manager" data-bind="selectize: projectManagerOptions, selectedOptions: projectManager" name="project-relate-org"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="col-md-6" data-bind="css: isEdit">
+                        <div id="institutional-plan-id" class="form-row ">
+                            <label for="institutional-plan" class="modal-property property-required" translate-text="institutional-plan"></label>
+                            <div class="form-select-container task">
+                                <select id="institutional-plan" data-bind="selectize: institutionalPlanOptions, selectedOptions: institutionalPlan" name="project-relate-org"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" data-bind="css: isEdit">
+                        <div id="project-relate-prog-id" class="form-row">
+                            <label for="project-relate-prog" class="modal-property" translate-text="project-relate-prog"></label>
+                            <div class="form-select-container task">
+                                <select id="project-relate-prog" data-bind="selectize: projectRelateProgOptions, selectedOptions: projectRelateProg" name="project-relate-prog"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" data-bind="css: isEdit">
+                        <div class="form-row ">
+                            <label for="start-date" class="modal-property property-required" translate-text="start-date"></label>
+                            <input type="date" id="start-date" data-bind="value: projectStartDate, attr: {min: minDate, max: maxDate}" class="datepicker-1 input form-control form-input" name="start-date">
+                        </div>
+                    </div>
+    
+                    <div class="col-md-6">
+                        <div class="form-row ">
+                            <label for="end-date" class="modal-property property-required" translate-text="end-date"></label>
+                            <input type="date" id="end-date" data-bind="value: projectEndDate, attr: {min: selectedStartDate, max: maxDate}" class="datepicker-1 input form-control form-input" name="end-date">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12" >
+                        <div class="form-row">
+                            <label for="project-description" class="modal-property property-required"  translate-text="project-description"></label>
+                            <textarea id="project-description" type="textarea" data-bind="value: projectDescription" class="form-control form-input form-input-text" ></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12">
+                        <div class="form-row">
+                            <label for="project-notes" class="modal-property"  translate-text="notes"></label>
+                            <textarea type="textarea" id="project-notes" data-bind="value: projectNotes" class="form-control form-input form-input-text" ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="modal-footer">
+                <button class="button button-third" id="mod-btn-project-close" data-dismiss="modal" data-toggle="tooltip" data-original-title="" title="" translate-text="close"></button>
+                <button class="button button-third" data-bind='click: projectSubmit, disable: hasError, text: textBtn'></button>
+        
+            </div>   
+    
+        </div>
+    </div>

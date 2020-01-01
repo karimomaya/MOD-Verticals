@@ -1,0 +1,127 @@
+<div class="mytask-card card card-main table-border-bottom">
+    <div class="table-container">
+        <table id="mainTable" class="main-table">
+            <thead>
+                <tr class="col-md-12">
+                    <th></th>
+                    <th sort-by="pirority" translate-text="pirority"></th>
+                    <th sort-by="taskName" translate-text="task-name"></th>
+                    <th sort-by="startDate" translate-text="start-date"></th>
+                    <th sort-by="endDate" translate-text="end-date"></th>
+                    <th sort-by="taskStatus" translate-text="task-status"></th>
+                    <th sort-by="progress" translate-text="task-progress"></th>
+                </tr>
+            </thead>
+            <tbody class="task-data-table"  data-bind="foreach: tasks">
+                <tr class="view col-md-12" data-bind='class: dueDateClass'>
+                    <td class="accordion"  data-bind='click: openTaskCollapse'></td>
+                    <td >
+                        <span data-bind="class: priorityClass" ></span>
+                    </td>
+                    <td data-bind="text: taskName"></td>
+                    <td data-bind="text: startDate"></td>
+                    <td data-bind="text: dueDate"></td>
+                    <td data-bind="text: taskStatus"></td>
+                    <td>
+                        <div class="progress-container progress-width">
+                            <span data-bind="text: progress"></span>
+                            <div class="progress-box p-0">
+                                <div class=" progress">
+                                    <div data-bind="style: { width: progress }, class: progressColor"  role="progressbar">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown dropleft">
+                            <a id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="heading-6 icon-ActionMenu"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuButton" x-placement="bottom-start">
+                                <a data-bind='click: displayTask, attr: { href: taskUrl }' class="dropdown-item" ><span class="icon-See-Details1"></span><span translate-text="display"></span></a>
+                                <!-- ko if: isOwner -->
+
+                                <!-- ko if: canEdit -->
+                                <a class="dropdown-item" data-bind='click: editTask'><span class="icon-Edit"></span><span translate-text="edit"></span></a>
+                                <!-- /ko -->
+
+                                <!-- ko if: canClose -->
+                                <a class="dropdown-item" data-bind='click: closeTask'><span class="icon-OnOff"></span><span translate-text="close-task"></span></a>
+                                 <!-- /ko -->
+
+                                <!-- ko if: canDelete -->
+                                <a class="dropdown-item" data-bind='click: deleteTask'><span class="icon-Delete"></span><span translate-text="delete"></span></a>
+                                <!-- /ko -->
+                                <!-- ko if: canArchive -->
+                                <a class="dropdown-item" data-bind="click: archiveTask"><span class="icon-Archive"></span><span translate-text="task-archive"></span></a>
+                                <!-- /ko -->
+                                <!-- ko if: canForceClose -->
+                                <a class="dropdown-item" data-bind="click: forceCloseTask"><span class="icon-OnOff"></span><span translate-text="force-close"></span></a>
+                                <!-- /ko -->
+                                <!-- /ko -->
+
+                                <!-- ko ifnot: isOwner -->
+                                <!-- ko if: canAcquireTask -->
+                                <a class="dropdown-item" data-bind='click: startTask'><span class="icon-Approved"></span><span translate-text="acquire"></span></a>
+                                <!-- /ko -->
+
+                                <!-- ko if: canStartTask -->
+                                <a class="dropdown-item" data-bind='click: startTask'><span class="icon-Clock"></span><span translate-text="start"></span></a>
+                                <!-- /ko -->
+
+                                <!-- ko if: canEndTask -->
+                                <a class="dropdown-item" data-bind='click: endTask'><span class="icon-OnOff"></span><span translate-text="task-end"></span></a>
+                                <!-- /ko -->
+
+                                <!-- ko if: canRestartTask -->
+                                <a class="dropdown-item" data-bind="click: restartTask"><span class="icon-Update"></span><span translate-text="task-restart"></span></a>
+                                <!-- /ko -->
+
+                                <!-- /ko -->
+
+                                
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="fold">
+                    <td colspan="7">
+                        <div class="fold-content">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="exported-label exported-label-gray" translate-text="description"></label>
+                                    <div class="card-exported" data-bind="text: description"></div>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <label class="exported-label exported-label-gray" translate-text="project"></label>
+                                    <div class="card-exported" data-bind="text: taskProjectName"></div>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <label class="exported-label exported-label-gray" translate-text="task-worker"></label>
+                                    <div class="listOfUsers card-exported"  data-bind="foreach: taskPerformers">
+                                        <span class="user-record"  data-bind="text: performerName, class: className"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-2 extra-task-data" data-bind=" attr: {'data-value': taskData}" id="extra-task-data">
+                                    <label class="exported-label exported-label-gray" ></label>
+                                    <div class="card-exported" ></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- <div class="">
+            <ul class="pagination justify-content-center">
+            </ul>
+        </div> -->
+    </div>
+   
+</div>
+<div class="mytask-card card card-main" style="padding: 0;">
+    <ul class="pagination justify-content-center">
+    </ul>
+</div>
+

@@ -1,0 +1,19 @@
+{
+    "add-program" : "إضافة برنامج",
+    "programs" : "البرامج",
+    "program-name" : "اسم البرنامج",
+    "program-owner" : "مدير البرنامج",
+    "program-description" : "وصف البرنامج",
+    "acquire" : "استحواذ",
+    "project-name" : "اسم المشروع",
+    "project-manager" : "مدير المشروع",
+    "institutional-plan" : "الأرتباط مع الخطة المؤسسية",
+    "project-relate-prog" : "البرنامج الذي يرتبط به المشروع",
+    "project-owner" : "مدير المشروع",
+    "assign-to" : "الجهة المعنية",
+    "updateProgramStatusSuccess": "تم تعديل حالة البرنامج بنجاح",
+    "program-notes" : "الملاحظات",
+    "end-date" : "تاريخ الإنتهاء",
+    "basic-info" : "البيانات الأساسية",
+    "progress" : "نسبة الإنجاز"
+}

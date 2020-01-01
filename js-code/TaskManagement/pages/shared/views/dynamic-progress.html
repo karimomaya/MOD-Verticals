@@ -1,0 +1,52 @@
+<div class="mt-3">
+    <div class="Priorities-row">
+        <!-- ko if: havePriority -->
+        <div class="col-md-1 Priorities-row-num title-gold" data-bind="text: priority"></div>
+        <div data-bind="css: ( haveAction()? 'col-md-10' : 'col-md-10')" class="Priorities-row-state">
+            <div class="progress-container border-right-0 block">
+                <span data-bind="text: progressPercentage, visible:canEdit()==false"></span>
+                <input onkeypress="updateProgressInput(event)" style="float: left; width:40px" data-bind='visible:canEdit, if:canEdit,  value:progress' />
+                <div class="progress-box">
+                    <div class=" progress">
+                        <div class="progress-bar" data-bind="style: { width: progressPercentage() }" role="progressbar">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <!-- ko ifnot: havePriority -->
+        <div data-bind="css: ( haveAction()? 'col-md-11' : 'col-md-12')" class="Priorities-row-state">
+            <div class="progress-container border-right-0 block">
+                <span data-bind="text: progressPercentage, visible:canEdit()==false"></span>
+                <input class="progress-editor"  onkeypress="updateProgressInput(event)"   data-bind='visible:canEdit, if:canEdit,  value:progress' />
+                <div class="progress-box">
+                    <div class=" progress">
+                        <div class="progress-bar" data-bind="style: { width: progressPercentage() }" role="progressbar">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /ko -->
+        <!-- ko if: haveAction -->
+        <a data-bind='visible:haveEdit, if:haveEdit,  click:edit'><span class="icon-Edit"></span><span class="pointer" translate-text="edit"></span></a>
+        <a data-bind='visible:canEdit, if:canEdit,  click:submitEdit'><span class="icon-Approved title-gold"></span><span class="pointer" translate-text="add"></span></a>
+        <a data-bind='visible:haveStart, if:haveStart, click:start'><span class="icon-Clock"></span><span class="pointer" translate-text="start"></span></a>
+        <a data-bind='visible:haveAcquire, if:haveAcquire, click:acquire'><span class="icon-Approved"></span><span class="pointer" translate-text="acquire"></span></a>
+        <a data-bind='visible:haveFinish, if:haveFinish, click:finish'><span class="icon-OnOff"></span><span class="pointer" translate-text="finish"></span></a>
+        <!-- /ko -->
+    </div>
+</div>
+ <!-- <div class="col-md-1 Priorities-row-rate pt-3 title-gold dropdown dropleft">
+            <a id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="heading-6 icon-ActionMenuSelected"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuButton">
+                
+                
+                
+            </div>
+        </div> -->

@@ -1,0 +1,33 @@
+<div data-bind="foreach: notes" style="position: relative">
+    <div class="card athurize-box mt-4">
+        <div class="card-header athurize-box-header">
+            <div class="athurize-box-title  athurize-box-title-large">
+                <div data-bind="text: DisplayName" class="athurize-box-label athurize-box-label-gold"
+                    style="font-size: 13px;"></div>
+                <span data-bind="text: createdDate" class="note-date"></span>
+            </div>
+            <div class="athurize-box-drp-dwn ">
+                <!-- ko if: haveAction -->
+                <div class="dropdown">
+                    <a id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="heading-6 icon-ActionMenuSelected"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuButton">
+                        <!-- ko if: canEdit -->
+                        <a data-bind="click: editNote" class="dropdown-item"><span class="icon-Edit"></span> <span
+                                translate-text="edit"></span></a>
+                        <!-- /ko -->
+                        <!-- ko if: canDelete -->
+                        <a data-bind="click: deleteNote" class="dropdown-item"><span class="icon-Delete"></span> <span
+                                translate-text="delete"></span></a>
+                        <!-- /ko -->
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+        </div>
+        <div id="Approval-1" class="collapse show">
+            <div class="card-body card-bg" data-bind="text: note"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<style>
+</style>
+<html dir="rtl">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Task Management</title>
+
+</head>
+
+<body id="task-body" style="overflow: auto !important;">
+    <project-selector class="modal" id="project-selector"></project-selector>
+    <note-create success="reloadTaskNote" class="modal" bind-edit="bindEdit" id="note-create"></note-create>
+    <performer-reasign class="modal" id="performer-reasign"></performer-reasign>
+
+    <task-create class="modal" id="task-create" task-source="" task-data="" task-entity-itemId=""
+        task-success="reloadDisplayPage" controller-name="" application-name="" bind-edit="bindEditTask" entity-name=""
+        task-fail=""></task-create>
+
+
+    <div class="page-content">
+
+        <div class="page-width">
+            <div class="container">
+                <div class="single-task">
+
+                    <title-bar update-performer-button-fun="updatePerformersButton"
+                        update-titlebar-output-function="updateTitleBar" id="title-bar"></title-bar>
+                    <progress-bar id="progress-bar"></progress-bar>
+                    <div class="card-pad-0 mt-3">
+                        <div class="tasks-single-bar">
+                            <nav>
+                                <div class="nav nav-right" role="tablist" id="action-tabs">
+                                    <a class="right-nav-link nav-link current-tab" href="#task-data"
+                                        onclick="changeNavActive(this)" data-toggle="tab"
+                                        translate-text="task-info"></a>
+                                    <a class="right-nav-link nav-link"
+                                        onclick="reloadPerformers(); changeNavActive(this)" href="#task-performer"
+                                        data-toggle="tab" translate-text="the-task-multiple"></a>
+                                    <a class="right-nav-link nav-link"
+                                        onclick="changeNavActive(this)" href="#task-history"
+                                        data-toggle="tab" translate-text="task-history"></a>
+                                    <!-- <a add-button="task-create-button" class="right-nav-link nav-link" href="#task-container" data-toggle="tab" translate-text="task-task"></a> -->
+
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                    <task-data update-process-details-func="updateProcessDetails" class="tab-pane fade active show"
+                        when-loading-complete="setContentData" update-details-output-function="updateContentDetails"
+                        id="task-data"></task-data>
+                    <task-performer class="tab-pane fade" id="task-performer" output-draw-function="drawPerformers">
+                    </task-performer>
+                    <task-history class="tab-pane fade" id="task-history"></task-history>
+                    <process-details class="tab-pane fade" id="process-details"></process-details>
+
+
+                    <div class="tasks-header mt-4">
+                        <div class="tasks-header-right col-md-10">
+                            <nav>
+                                <div class="nav" role="tablist" id="task-adding-notes">
+                                    <a id="note-nav" onclick="reloadTaskNote(); changeNavActive(this)"
+                                        class="right-nav-link nav-link current-tab active show" href="#task-note"
+                                        data-toggle="tab" translate-text="notes"></a>
+                                    <a class="right-nav-link nav-link" onclick="reloadBWS(); changeNavActive(this)"
+                                        href="#task-attachment" data-toggle="tab" translate-text="attachments"></a>
+                                </div>
+
+                            </nav>
+                        </div>
+
+                        <div id="add-note-btn-div" class="tasks-header-left-action col-md-2">
+                            <a id="add-note-btn" class="button-add-memmber add-new" data-toggle="modal"
+                                data-target="#note-create">
+                                +</a><span class="title-gold team-title title-medium title-bold"
+                                translate-text="add-note"></span>
+                        </div>
+
+
+
+                    </div>
+                    <div class="mytask-card card card-main">
+                        <div class="tab-content">
+                            <task-note output-draw-function="drawNotes" class="tab-pane fade card active show"
+                                id="task-note"></task-note>
+                            <task-attachments style="position: relative; " class="tab-pane fade card"
+                                id="task-attachment">
+                                <iframe id="bws">
+
+                                </iframe>
+                            </task-attachments>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/cordys/html5/demo/commons/javascripts/dynamic-loader.js"></script>
+    <script src="/cordys/html5/demo/TaskManagement/pages/task/controller/task-display-controller.js"></script>
+</body>
+
+</html>

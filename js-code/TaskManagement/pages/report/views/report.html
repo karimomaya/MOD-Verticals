@@ -1,0 +1,52 @@
+<div id="rep" class="row mt-3 mb-5 justify-content-around">
+            
+    <div class="col-md-3">
+        <div class="card-chart chart-donut">
+        <div id="program-chart"  style="display: inline-block; width: 120px; height: 180px"></div>
+        <div class="card-chart-title">
+            <span data-bind="text: firstLabel" ></span> 
+            <div class="card-chart-result">
+                <span data-bind="text: endedFirstValue"></span>
+                <span translate-text="of"></span>
+                <span data-bind="text: totalFirstValue"></span>
+                    <!-- 8 من 
+                    <span>25</span> -->
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-chart chart-donut">
+            <div id="project-chart"  style="display: inline-block; width: 120px; height: 180px"></div>
+            <div class="card-chart-title">
+                <span data-bind="text: secondLabel"></span> 
+                <div class="card-chart-result">
+                        <!-- 4 من <span>36</span> -->
+                    <span data-bind="text: endedSecondValue"></span>
+                    <span translate-text="of"></span>
+                    <span data-bind="text: totalSecondValue"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card-chart chart-donut">
+            <div id="task-chart"  style="display: inline-block; width: 120px; height: 180px"></div>
+            <div class="card-chart-title">
+                <span data-bind="text: thirdLabel"></span> 
+                <div class="card-chart-result">
+                    <span data-bind="text: endedThirdValue"></span>
+                    <span translate-text="of"></span>
+                    <span data-bind="text: totalThirdValue"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card-chart">
+            <a data-bind="attr:{href: reportUrl}" class="report-link pt-4"><span class="icon-Reports report middle"></span>
+                <span style="font-size: 22px;" translate-text="reports"></span>
+            </a>
+        </div>
+    </div>
+</div>

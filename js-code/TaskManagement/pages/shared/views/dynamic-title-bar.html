@@ -1,0 +1,45 @@
+<div class="mt-3">
+    <div class="Priorities-row col-md-12">
+        <div onclick="goBackDynamicTitle()" class="col-md-1 Priorities-row-num title-gold"><span class="icon-right-back1"></span></div>
+        <div data-bind="css: ( haveAction()? 'col-md-9' : 'col-md-10' ), text: title"  class="col-md-9 Priorities-row-state" ></div>
+         <!-- ko if: haveAction -->
+        <div id="action-title-menu" class="col-md-1 Priorities-row-rate title-gold pt-3">
+            <div class="dropdown dropleft">
+                <a id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="icon-ActionMenuSelected"></span>
+                </a>
+               
+                <div id="task-action-buttons" class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuButton">
+                    <!-- ko if: haveEdit -->
+                    <a class="dropdown-item" data-bind='click: editBtn'><span class="icon-Created-forms-selected"></span><span translate-text="edit"></span></a>
+                    <!-- /ko -->
+
+                    <!-- ko if: haveStop -->
+                    <a class="dropdown-item" data-bind="click: stopBtn"><span class="icon-1"></span> <span translate-text="stop"></span></a>
+                    <!-- /ko -->
+                    <!-- ko if: haveComplete -->
+                    <a class="dropdown-item" data-bind="click: completeBtn"><span class="icon-Returned"></span> <span translate-text="complete"></span></a>
+                    <!-- /ko -->
+
+                    <!-- ko if: canRestart -->
+                    <a class="dropdown-item" data-bind="click: restart"><span class="icon-Update"></span><span translate-text="task-restart"></span></a>
+                    <!-- /ko -->
+
+                    
+                    <!-- ko if: haveEnd -->
+                    <a class="dropdown-item" data-bind='click: endBtn'><span class="icon-OnOff"></span><span translate-text="end"></span></a>
+                    <!-- /ko -->
+                    <!-- ko if: haveDelete -->
+                    <a class="dropdown-item" data-bind='click: deleteBtn'><span class="icon-Delete"></span><span translate-text="delete"></span></a>
+                    <!-- /ko -->
+                    <!-- ko if: haveReport -->
+                    <a class="dropdown-item" data-bind='click: reportBtn'><span class="icon-ratio"></span><span translate-text="reports"></span></a>
+                    <!-- /ko -->
+                    
+                </div>
+                
+            </div>
+        </div>
+        <!-- /ko -->
+    </div>
+</div>

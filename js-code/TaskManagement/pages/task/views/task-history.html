@@ -1,0 +1,49 @@
+<div class="card-form card-scroll">
+        
+    <div class="table-container">
+        <table class="main-table">
+            <thead>
+                <tr class="col-md-12">
+                    <th></th>
+                    <th translate-text="name">الاسم</th>
+                    <th translate-text="role">الوظيفة</th>
+                    <th translate-text="date">التاريخ</th>
+                    <th translate-text="taskAction">الاجراء</th>
+
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: taskHistories">
+                <tr class="view col-md-12" draggable="true" >
+                    <!-- ko if: haveDescription -->
+                    <td class="accordion" data-bind="click:openCollapse"></td>
+                    <!-- /ko -->
+                    <!-- ko ifnot: haveDescription -->
+                    <td></td>
+                     <!-- /ko -->
+                    <td data-bind="text: DisplayName">عبدالرحمن محمد</td>
+                    <td data-bind="text: RoleName">رئيس قسم الصحة و السلامة</td>
+                    <td data-bind="text: actionDate"></td>
+                    <td >
+                        <div class="athurize-box-status border-0 p-0">
+                        <span data-bind="text: actionName, class: actionClass"> </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="fold" draggable="true">
+                    <td colspan="7">
+                        <div class="fold-content">
+                            <div class="row">
+                                <div class="col-md-12 mt-2">
+                                        <label for="" class="exported-label exported-label-gray">ملاحظات</label>
+                                        <div class="card-exported"  data-bind="text: description">
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

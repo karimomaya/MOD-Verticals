@@ -1,0 +1,86 @@
+<div class="tasks-header mt-4">
+    <div class="tasks-header-right col-md-6">
+        <nav>
+            <div class="nav" role="tablist" id="task-adding-notes">
+                <a class="right-nav-link nav-link current-tab active show"
+                    href="#tasks-projects-tab" data-toggle="tab" data-bind="text: reportName"></a>
+            </div>
+        </nav>
+    </div>
+    <div class="tasks-header-right" style="height: 20px;position: relative;left: 10px; width: 49%;">
+    <span data-bind="click: exportExcel" class="icon-Forword" style="position: absolute;font-size: 23px;left: 0;"></span>
+        
+    </div>
+</div>
+<div class="mytask-card card card-main d-block table-border-bottom">
+    <div class="table-container">
+        <div class="table-container">
+            <table class="main-table">
+                <thead>
+                    <tr class="col-md-12">
+                        <th></th>
+                        <th sort-by="pirority" translate-text="pirority"></th>
+                        <th data-bind="text: thName"></th>
+                        <th translate-text="start-date"></th>
+                        <th translate-text="end-date"></th>
+                        <th translate-text="progress"></th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: results">
+                    <tr class="view col-md-12" data-bind='class: dueDateClass'>
+                        <td class="accordion"  data-bind='click: openCollapse'></td>
+                        <td >
+                            <span data-bind="class: priorityClass" ></span>
+                        </td>
+                        <td data-bind="text: name, click: view"></td>
+                        <td data-bind="text: startDate"></td>
+                        <td data-bind="text: endDate"></td>
+                        <td>
+                            <div class="progress-container col-md-12">
+                                <span data-bind="text: progress"></span>
+                                <div class="progress-box p-0">
+                                    <div class="progress">
+                                        <div class="progress-bar" data-bind="style: { width: progress }"
+                                            role="progressbar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="fold" draggable="true">
+                        <td colspan="7">
+                            <div class="fold-content">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="exported-label exported-label-gray" data-bind="text: ownerLabel"></label>
+                                        <div class="card-exported single-task-user" data-bind="text: owner"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="exported-label exported-label-gray" data-bind="text: extraInfoLabel"></label>
+                                        <div class="card-exported" >
+                                            <span class="user-record" data-bind="text: extraInfo"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mt-2">
+                                        <label class="exported-label exported-label-gray" translate-text="description"></label>
+                                        <div class="card-exported" data-bind="text: description"> </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="">
+                <ul class="pagination justify-content-center">
+                </ul>
+            </div> -->
+        </div>
+    </div>
+</div>
+<div class="mytask-card card card-main d-block " style="padding: 0!important;">
+    <ul class="pagination justify-content-center">
+    </ul>
+</div>

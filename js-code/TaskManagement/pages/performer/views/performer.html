@@ -1,0 +1,109 @@
+<div class="card-white mt-3" id="performers">
+    <div class="pt-2 pb-3">
+
+        <div class="table-container">
+            <table class="main-table">
+                <thead>
+                    <tr class="col-md-12">
+                        <th></th>
+                        <th translate-text="performer-worker"></th>
+                        <th translate-text="progress"></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="task-performer-table" data-bind="foreach: performers">
+                    <tr class="view col-md-12" draggable="true">
+                        <!-- ko if: isCollapse -->
+                        <td class="accordion" data-bind='click: openCollapse'></td>
+                        <!-- /ko -->
+                        <!-- ko ifnot: isCollapse -->
+                        <td></td>
+                        <!-- /ko -->
+                        <td data-bind="text: displayName"></td>
+                        <td>
+                            <!-- ko if: isAcquired -->
+                            <div class="progress-container progress-width"><span data-bind="text: progress"></span>
+                                <div class="progress-box p-0">
+                                    <div class=" progress">
+                                        <div class="progress-bar" data-bind="style: { width: progress }" role="progressbar"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /ko -->
+                        </td>
+                        <td>
+                            <!-- ko if: isOwner -->
+                            <div class="dropdown dropleft">
+                                <a id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="heading-6 icon-ActionMenuSelected"></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-small" aria-labelledby="dropdownMenuButton">
+                                     <!-- ko if: canReassign -->
+                                    <a class="dropdown-item" data-bind='click: reassign'>
+                                        <span class="icon-send"></span> 
+                                        <span translate-text="reasign-task"></span>
+                                    </a>
+                                    <!-- /ko -->
+                                     
+                                    <a class="dropdown-item" data-bind="click: deletePerformer">
+                                        <span class="icon-Delete"></span>
+                                        <span translate-text="delete"></span>
+                                    </a>
+                                    <!-- ko if: canReturn -->
+                                    <a class="dropdown-item" data-bind='click: returnTask'>
+                                        <span class="icon-Returned"></span> 
+                                        <span translate-text="return-task" translate-text="return-task"></span>
+                                    </a>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                             <!-- /ko -->
+                        </td>
+                    </tr>
+                    <!-- ko if: isCollapse -->
+                    <tr class="fold" >
+                        <td colspan="7">
+                            <div class="fold-content">
+                                <div class="table-container">
+                                    <table class="main-table table table-sortable" cellspacing="0" width="100%">
+                                    
+                                        <tbody class="target-performer-table" data-bind="foreach: targets">
+                                            <tr class="single-view col-md-12">
+                                                <td style="width:100px"></td>
+                                                <td data-bind="text: performerName"></td>
+                                                <td>
+                                                    <!-- ko if: isAcquired -->
+                                                    <div class="progress-container progress-width">
+                                                        <span data-bind="text: progress"></span>
+                                                        <div class="progress-box p-0">
+                                                            <div class=" progress">
+                                                                <div class="progress-bar" data-bind="style: { width: progress }"  role="progressbar">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /ko -->
+                                                </td>
+                                                <td class="last-child-has-icon">
+                                                    <!-- ko if: canReturnToTarget -->
+                                                    <a class="dropdown-item pointer" data-bind='click: returnToTargetTask' >
+                                                        <span class="icon-Returned"></span> 
+                                                        <span translate-text="return-task" translate-text="return-task"></span>
+                                                    </a>
+                                                    <!-- /ko -->
+                                                </td>
+                                            </tr>
+                                        
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- /ko -->
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
