@@ -32,4 +32,13 @@ public class UserHelperService {
         return doc.getElementsByTagName("UserEntityId");
 
     }
+
+    public  Document getSubUsersDocument(String SAMLart){
+        Http http = new Http(SAMLart, config);
+        UserDetails userDetails = new UserDetails();
+        UserHelper userHelper = sessionService.getSession(SAMLart);
+        String res = http.cordysRequest(userDetails.getSubUsersMessage(1, Integer.MAX_VALUE,userHelper.getId(), ""));
+        System.out.println(res);
+        return  Utils.convertStringToXMLDocument( res );
+    }
 }

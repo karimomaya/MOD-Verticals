@@ -19,6 +19,35 @@ import java.util.concurrent.TimeUnit;
  */
 public class Utils {
 
+    public static int compareDates(Date date1,Date date2) {
+
+        //date object is having 3 methods namely after,before and equals for comparing
+        //after() will return true if and only if date1 is after date 2
+        if(date1.after(date2)){
+            System.out.println("Date1 is after Date2");
+            return 1;
+        }
+
+        //before() will return true if and only if date1 is before date2
+        if(date1.before(date2)){
+            System.out.println("Date1 is before Date2");
+            return 2;
+        }
+
+        //equals() returns true if both the dates are equal
+        if(date1.equals(date2)){
+            System.out.println("Date1 is equal Date2");
+            return 1;
+        }
+
+        return 0;
+    }
+
+    public static String dateFormat(Date date, String format) {
+        DateFormat dateFormat = new SimpleDateFormat(format);
+        return dateFormat.format(date);
+    }
+
     public static Document convertStringToXMLDocument(String xmlString) {
         //Parser that produces DOM object trees from XML content
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

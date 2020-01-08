@@ -8,3 +8,5 @@
 *.jar
 #Ignore upload dir
 /mod-rest/uploadDir
+/js-code/stored-procedures/getSubSuersOfRole-old.sql
+/js-code/stored-procedures/getSubSuersOfRole-new.sql

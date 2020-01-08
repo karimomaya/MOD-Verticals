@@ -37,7 +37,7 @@ public class ReportController {
     @GetMapping("export/{report}/{samlart}")
     @ResponseBody
     public ResponseEntity<byte[]> export(@PathVariable("samlart") String SAMLart,
-                                       @PathVariable("report") String reportStr){
+                                         @PathVariable("report") String reportStr){
 
 
         ObjectMapper mapper = new ObjectMapper();
@@ -52,7 +52,7 @@ public class ReportController {
             reportObject = reportObject.changeDetectedReportType(3);
             file = reportService.execute(reportObject);
             respHeaders.setContentLength(file.length());
-             isr = Files.readAllBytes(file.toPath());
+            isr = Files.readAllBytes(file.toPath());
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
             respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
