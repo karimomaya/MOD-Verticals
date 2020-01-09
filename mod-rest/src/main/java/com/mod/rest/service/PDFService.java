@@ -21,11 +21,14 @@ import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.itextpdf.tool.xml.pipeline.html.LinkProvider;
 import com.mod.rest.annotation.PDFResources;
 import com.mod.rest.system.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.rmi.CORBA.Util;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -35,6 +38,7 @@ import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,7 +48,8 @@ import java.util.List;
 @Service
 public class PDFService {
 
-
+    @Autowired
+    Environment config;
 
     public File generate(List<?> objects, String filename, String tagName) throws Exception {
         if (objects.size() == 0)
@@ -59,6 +64,7 @@ public class PDFService {
 
         if (nodeName.equals("tbody")){
             Node tableBody =  nodes.item(0).getParentNode();
+
             for(Object object : objects) {
                 Class cls = object.getClass();
                 // create TR
@@ -67,14 +73,32 @@ public class PDFService {
                 for(int i = 0 ; i < nodes.getLength() ; i++){
                     // create TD
                     Element td = document.createElement("td");
-                    td.setAttribute("dir", "rtl");
+
+                    if (i ==0 ) td.setAttribute("class", "padding");
+
                     try {
                         Method method =  cls.getMethod(nodes.item(i).getTextContent());
                         Object o = method.invoke(object);
 
                         if (o == null)  o = "";
 
-                        String innerText = o.toString();
+                        String innerText = "";
+
+                        if (o instanceof Date) {
+                            innerText = Utils.dateFormat( (Date) o,config.getProperty("date.format"));
+                        }else {
+                            innerText = o.toString();
+                        }
+
+                        if (!o.equals("")){
+                            if (Utils.isArabicText(innerText)){
+                                td.setAttribute("dir", "rtl");
+                            }else {
+                                td.setAttribute("class", "ltr");
+                            }
+
+                        }
+
                         td.setTextContent(innerText);
                         tr.appendChild(td);
                     }catch (Exception ex){
@@ -97,12 +121,22 @@ public class PDFService {
                 for(int i = 0 ; i < length ; i++){
                     Node parent = nodes.item(0).getParentNode();
 
-                    Element div = document.createElement("div");
+                    Element div = document.createElement("span");
                     div.setAttribute("dir", "rtl");
                     Method method =  cls.getMethod(nodes.item(0).getTextContent());
                     Object o = method.invoke(object);
+
                     if (o == null)  o = "";
-                    String innerText = o.toString();
+
+                    String innerText = "";
+
+                    if (o instanceof Date) {
+                        innerText = Utils.dateFormat( (Date) o,config.getProperty("date.format"));
+                    }else {
+                        innerText = o.toString();
+                    }
+
+
                     div.setTextContent(innerText);
 
                     parent.appendChild(div);

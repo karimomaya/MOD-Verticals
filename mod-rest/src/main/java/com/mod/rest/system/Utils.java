@@ -20,6 +20,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class Utils {
 
+    public static boolean isArabicText(String s) {
+        for (int i = 0; i < s.length();) {
+            int c = s.codePointAt(i);
+            if (c >= 0x0600 && c <= 0x06E0)
+                return true;
+            i += Character.charCount(c);
+        }
+        return false;
+    }
+
     public static int compareDates(Date date1,Date date2) {
 
         //date object is having 3 methods namely after,before and equals for comparing

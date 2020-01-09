@@ -1,206 +1,179 @@
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Example 1</title>
-	<style>
-	.clearfix:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-a {
-  color: #5D6975;
-  text-decoration: underline;
-}
-
-body {
-  position: relative;
-  width: 21cm;  
-  height: 29.7cm; 
-  margin: 0 auto; 
-  color: #001028;
-  background: #FFFFFF; 
-  font-family: Arial, sans-serif; 
-  font-size: 12px; 
-  font-family: Arial;
-}
-
-header {
-  padding: 10px 0;
-  margin-bottom: 30px;
-}
-
-#logo {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-#logo img {
-  width: 90px;
-}
-
-h1 {
-  border-top: 1px solid  #5D6975;
-  border-bottom: 1px solid  #5D6975;
-  color: #5D6975;
-  font-size: 2.4em;
-  line-height: 1.4em;
-  font-weight: normal;
-  text-align: center;
-  margin: 0 0 20px 0;
-  background: url(dimension.png);
-}
-
-#project {
-  float: left;
-}
-
-#project span {
-  color: #5D6975;
-  text-align: right;
-  width: 52px;
-  margin-right: 10px;
-  display: inline-block;
-  font-size: 0.8em;
-}
-
-#company {
-  float: right;
-  text-align: right;
-}
-
-#project div,
-#company div {
-  white-space: nowrap;        
-}
+<html class="rtl" lang="">
+<head>
+<style>
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-  margin-bottom: 20px;
+	width: 100%;
+    text-align: left;
+	padding-right: 30px;
+	color: #9e9e9e;
+    font-size: 16px;
+   
 }
 
-table tr:nth-child(2n-1) td {
-  background: #F5F5F5;
+.center {
+	text-align: center;
 }
 
-table th,
-table td {
-  text-align: center;
+th {
+	color: #c9a869;
+	    font-weight: bold;
+    font-size: 14px;
+}
+.email-wrapper{
+    height: 768px;
+    display:block;
+    padding: 0;
+        margin: 0 auto;
+  
+
+}
+.email-header{
+        width: 100%;
+        text-align: center;
+       
+}
+.email-template-body{
+    border: 1px solid #bfbfbf;
+    border-radius: 4px;
+    background-color: #fff;
+    
+    display: block;
+    margin-top:30px;
+}
+.template-body-header{
+    display: flex;
+    flex-direction: row-reverse;
 }
 
-table th {
-  padding: 5px 20px;
-  color: #5D6975;
-  border-bottom: 1px solid #C1CED9;
-  white-space: nowrap;        
-  font-weight: normal;
+.template-subject{
+    border-bottom: 1px solid #bfbfbf;
+
+}
+.template-subject-img{
+    width:25%;
+    display: inline;
+    margin-left: 25px;
+}
+.template-subject-main{
+ display: inline-block;
+ padding: 30px;
+ vertical-align: top;
+
+}
+.template-subject-title{
+    color: #c9a869;
+    font-weight: bold;
+    font-size: 18px;
+
+}
+.template-subject-text{
+    color: #9e9e9e;
+    font-size: 16px;
+    margin-top: 30px;
+}
+.template-data{
+    border-bottom: 1px solid #bfbfbf;
+    display: block;
 }
 
-table .service,
-table .desc {
-  text-align: left;
+.template-data-item{
+    width: 33%;
+    display: inline-grid;
+}
+.template-data-label{
+    color: #bfbfbf
+}
+.template-data-info{
+    color: #606060;
+    padding: 10px 0;
+}
+.padding {
+	padding-right: 40px;
 }
 
-table td {
-  padding: 20px;
-  text-align: right;
+img {
+	width: 200px;
 }
 
-table td.service,
-table td.desc {
-  vertical-align: top;
-}
+</style>
 
-table td.unit,
-table td.qty,
-table td.total {
-  font-size: 1.2em;
-}
+</head>
 
-table td.grand {
-  border-top: 1px solid #5D6975;;
-}
+<body style="font-family: Noto Naskh Arabic">
+    <div class="email-wrapper">
+     <div class="email-header">
+         <img src="UAElogo.png"/>
+     </div>
+     <div class="email-template-body">
+         <div class="template-subject">
+             <div class="template-subject-img">
+                 <!-- <img src="../dist/images/UAElogo.png" style="width: 40%; height: 40%;" /> -->
+             </div>
+             <div class="template-subject-main">
+                 <div class="template-subject-title" dir="rtl">
+                    اهلاً اسم المستخدم
+                 </div>
+                 <div class="template-subject-text" dir="rtl">
+                      	<meeting-description-replacer>getDescription</meeting-description-replacer>
+                </div>
+             </div>
 
-#notices .notice {
-  color: #5D6975;
-  font-size: 1.2em;
-}
 
-footer {
-  color: #5D6975;
-  width: 100%;
-  height: 30px;
-  position: absolute;
-  bottom: 0;
-  border-top: 1px solid #C1CED9;
-  padding: 8px 0;
-  text-align: center;
-}
-	</style>
-  </head>
-  <body>
-    <header class="clearfix">
-      <div id="logo">
-        <img src="logo.png"/>
-      </div>
-      <h1>INVOICE 3-2-1</h1>
-      <div id="company" class="clearfix">
-        <div>Company Name</div>
-        <div>455 Foggy Heights,<br /> AZ 85004, US</div>
-        <div>(602) 519-0450</div>
-        <div><a href="mailto:company@example.com">company@example.com</a></div>
-      </div>
-      <div id="project">
-        <div><span>PROJECT</span> Website development</div>
-        <div><span>CLIENT</span> John Doe</div>
-        <div><span>ADDRESS</span> 796 Silver Harbour, TX 79273, US</div>
-        <div><span>EMAIL</span> <a href="mailto:john@example.com">john@example.com</a></div>
-        <div><span>DATE</span> August 17, 2015</div>
-        <div><span>DUE DATE</span> September 17, 2015</div>
-      </div>
-    </header>
-    <main>
-      <table style="font-family: Noto Naskh Arabic">
-        <thead>
-          <tr>
-            <th class="service">الأسم</th>
-            <th class="desc">الرقم</th>
-            <th>التاريخ</th>
-          </tr>
-        </thead>
-		<tbody id="meeting-data" >	
-			<meeting-data-replacer>getDescription</meeting-data-replacer>
-			<meeting-data-replacer>getMeetingType</meeting-data-replacer>
-			<meeting-data-replacer>getEndDate</meeting-data-replacer>
-		</tbody>
+         </div>
+         <div class="template-data" dir="rtl">
+		 
+		 <table>
+			<thead>
+				<tr>
+					<th dir="rtl" class="padding">الموضوع</th>
+					<th dir="rtl">منسق الاجتماع </th>
+					<th dir="rtl" >تاريخ بدء الاجتماع</th>
+					<th dir="rtl" >تاريخ انتهاء الاجتماع</th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<meeting-data-replacer>getSubject</meeting-data-replacer>
+				<meeting-data-replacer>getOwnerName</meeting-data-replacer>
+				<meeting-data-replacer>getStartDate</meeting-data-replacer>
+				<meeting-data-replacer>getEndDate</meeting-data-replacer>
+			</tbody>
+		 </table>
+		 
+		 
+		 <table style="font-family: Noto Naskh Arabic">
+			<thead>
+			  <tr>
+				<th dir="rtl" class="padding">الأسم</th>
+				<th dir="rtl" >الرقم</th>
+			  </tr>
+			</thead>
+			<tbody id="meeting-data">	
+				<attendee-data-replacer>getDisplayName</attendee-data-replacer>
+				<attendee-data-replacer>getStatusType</attendee-data-replacer>
+			</tbody>
        
       </table>
-      <table style="font-family: Noto Naskh Arabic">
-        <thead>
-          <tr>
-            <th dir="rtl" class="service">الأسم</th>
-            <th dir="rtl" class="desc">الرقم</th>
-            <th dir="rtl">التاريخ</th>
-          </tr>
-        </thead>
-		<tbody id="meeting-data">	
-			<attendee-data-replacer>getDisplayName</attendee-data-replacer>
-			<attendee-data-replacer>getStatusType</attendee-data-replacer>
-		</tbody>
+	  
+	  <table style="font-family: Noto Naskh Arabic">
+			<thead>
+			  <tr>
+				<th dir="rtl" class="padding">العنوان</th>
+				<th dir="rtl" >الوصف</th>
+			  </tr>
+			</thead>
+			<tbody id="meeting-data">	
+				<minute-of-meeting-replacer>getTitle</minute-of-meeting-replacer>
+				<minute-of-meeting-replacer>getDescription</minute-of-meeting-replacer>
+			</tbody>
        
       </table>
-      
-	  <div id="notices">
-        <div>NOTICE:</div>
-        <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
-      </div>
-    </main>
-    <footer>
-      Invoice was created on a computer and is valid without the signature and seal.
-    </footer>
-  </body>
+		 
+             </div>
+         </div>
+         
+
+     </div>
+</body>
 </html>

@@ -7,6 +7,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.*;
 
+import com.itextpdf.tool.xml.html.CssAppliers;
+import com.itextpdf.tool.xml.html.CssAppliersImpl;
 import com.itextpdf.tool.xml.html.Tags;
 import com.itextpdf.tool.xml.net.FileRetrieve;
 import com.itextpdf.tool.xml.net.FileRetrieveImpl;
@@ -57,19 +59,80 @@ public class PDFController {
 //        convertHTMLToPDF("pdf-template/meeting-template.html");
 
 //        testReflection();
+
+        generatePDF("");
         return m.get().toString();
     }
 
+    public byte[] generatePDF(String filename) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        String source = "C:/Users/karim.omaya/Desktop/test.html";
+        String dest = "C:/Users/karim.omaya/Desktop/test.pdf";
+        File file = new File(source);
+        File tempFile = null;
+        try {
+            Document document = new Document();
+
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(dest));
+            writer.setInitialLeading(12.5f);
+
+            XMLWorkerFontProvider fontProvider =
+                    new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
+
+            fontProvider.register("resources/fonts/NotoNaskhArabic-Regular.ttf");
+            CssAppliers cssAppliers = new CssAppliersImpl(fontProvider);
+
+            document.open();
+
+            CSSResolver cssResolver =
+                    XMLWorkerHelper.getInstance().getDefaultCssResolver(false);
+            FileRetrieve retrieve = new FileRetrieveImpl("pdf-template");
+            cssResolver.setFileRetrieve(retrieve);
+
+            HtmlPipelineContext htmlContext = new HtmlPipelineContext(cssAppliers);
+            htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
+            htmlContext.setImageProvider(new AbstractImageProvider() {
+                public String getImageRootPath() {
+                    return "pdf-template";
+                }
+            });
+            htmlContext.setLinkProvider(new LinkProvider() {
+                public String getLinkRoot() {
+                    return "pdf-template";
+                }
+            });
+
+            PdfWriterPipeline pdf = new PdfWriterPipeline(document, writer);
+            HtmlPipeline html = new HtmlPipeline(htmlContext, pdf);
+            CssResolverPipeline css = new CssResolverPipeline(cssResolver, html);
+
+            XMLWorker worker = new XMLWorker(css, true);
+            XMLParser p = new XMLParser(worker);
+            p.parse(new FileInputStream(file), Charset.forName("UTF-8"));
+
+            document.close();
+        }
+        catch (IOException e){
+            System.out.println(e);
+        }
+        catch (DocumentException e){
+            System.out.println(e);
+        }
+        return byteArrayOutputStream.toByteArray();
+
+
+    }
+
     private void convertHTMLToPDF(String html){
-        String dest = "C:/Users/omar.sabry/Desktop/test.pdf";
-        File file = new File(dest);
-        file.getParentFile().mkdirs();
+        String source = "C:/Users/karim.omaya/Desktop/test.html";
+        String dest = "C:/Users/karim.omaya/Desktop/test.pdf";
+        File file = new File(source);
         Document document = new Document();
         try {
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(dest));
             document.open();
             XMLWorkerHelper.getInstance().parseXHtml(writer, document,
-                    new FileInputStream(html), Charset.forName("UTF-8"));
+                    new FileInputStream(file), Charset.forName("UTF-8"));
         }
         catch (DocumentException e){
             System.out.println(e);

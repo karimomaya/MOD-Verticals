@@ -1,17 +1,15 @@
 package com.mod.rest.model;
 
 import com.mod.rest.annotation.PDFResources;
-import lombok.Data;
+import com.mod.rest.system.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
-import javax.persistence.Id;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -23,6 +21,8 @@ import java.util.Date;
 @Table(name = "O2MyCompanyMeetingManagementMOD_MM_entity_meeting")
 @PDFResources(key="meeting-template")
 public class Meeting {
+
+
     @Id
     long Id;
     String Subject;
@@ -40,4 +40,9 @@ public class Meeting {
     @JoinColumn(name = "Room_to_Meeting_Id")
     @NotFound(action = NotFoundAction.IGNORE)
     Room room;
+
+
+    public String getOwnerName(){
+        return owner.getDisplayName();
+    }
 }

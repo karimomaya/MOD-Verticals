@@ -17,4 +17,5 @@ public class MinuteOfMeeting {
     long Id;
     String title;
     String description;
+
 }

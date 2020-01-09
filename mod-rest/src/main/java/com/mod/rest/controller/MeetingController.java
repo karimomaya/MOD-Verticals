@@ -48,14 +48,13 @@ public class MeetingController {
         ArrayList<MinuteOfMeeting> minutesOfMeeting = minuteOfMeetingRepository.getMinutesOfMeeting(meetingId);
         if (meetingOptional.isPresent()) {
             Meeting meeting = meetingOptional.get();
-
             ArrayList<Meeting> arrayList = new ArrayList();
-
             arrayList.add(meeting);
-
             String templateName = pdfService.getTemplateName(meeting);
+
             try {
                 File file = pdfService.generate(arrayList,"pdf-template/"+templateName+".html", "meeting-data");
+                file = pdfService.generate(arrayList, file.toURI().getPath(), "meeting-description");
                 file = pdfService.generate(meetingAttendee, file.toURI().getPath(), "attendee-data");
                 file = pdfService.generate(minutesOfMeeting, file.toURI().getPath(), "minute-of-meeting");
                 byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
