@@ -6,6 +6,7 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -46,6 +47,25 @@ public class Utils {
     public static String dateFormat(Date date, String format) {
         DateFormat dateFormat = new SimpleDateFormat(format);
         return dateFormat.format(date);
+    }
+
+
+    public static Document convertFileToXMLDocument(String filename){
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        //API to obtain DOM Document instance
+        DocumentBuilder builder = null;
+        try {
+            //Create DocumentBuilder with default configuration
+            builder = factory.newDocumentBuilder();
+
+            //Parse the content to Document object
+            Document doc = builder.parse(filename);
+            return doc;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static Document convertStringToXMLDocument(String xmlString) {
