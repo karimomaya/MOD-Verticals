@@ -73,14 +73,14 @@ public class TaskReport {
     @ColumnName(key = "تاريخ البدء")
     public String getTaskStartDate(){
         Date date = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(this.task.getStartDate());
     }
 
     @ColumnName(key = "تاريخ الانتهاء")
     public String getTaskDueDate(){
         Date date = Calendar.getInstance().getTime();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(task.getDueDate());
     }
 

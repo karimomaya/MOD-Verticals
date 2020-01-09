@@ -1,9 +1,7 @@
 package com.mod.rest.service;
 
 import com.mod.rest.model.*;
-import com.mod.rest.repository.RiskRepository;
-import com.mod.rest.repository.TaskRepository;
-import com.mod.rest.repository.UserRepository;
+import com.mod.rest.repository.*;
 import com.mod.rest.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +36,10 @@ public class ReportService {
     ProjectService projectService;
     @Autowired
     RiskRepository riskRepository;
-
+    @Autowired
+    EntityRepository entityRepository;
+    @Autowired
+    IndividualRepository individualRepository;
 
     public ReportObject buildReportObject(ReportObject reportObject){
         if (reportObject.getReportType()<= 6){
@@ -71,7 +72,16 @@ public class ReportService {
 
 
     public <T> T execute( ReportObject reportObject){
-
+        if (reportObject.getReportType() == 20 ) {
+            List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
+            return (T) excelWriterService.generate(entityReports);
+        }else if (reportObject.getReportType() == 21 ) {
+            List<EntityReport> entityReports = entityRepository.getPrivateEntities(1, Integer.MAX_VALUE, "", "" ,reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getIsRegistered(),reportObject.getLicenseNumber(),reportObject.getTags());
+            return (T) excelWriterService.generate(entityReports);
+        }else if (reportObject.getReportType() == 22 ) {
+            List<IndividualReport> individualReports = individualRepository.getIndividuals(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition(),reportObject.getTags());
+            return (T) excelWriterService.generate(individualReports);
+        }
         if (reportObject.getReportType() == 10){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){

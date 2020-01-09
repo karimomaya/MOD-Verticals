@@ -26,6 +26,19 @@ public class ReportObject {
     int pageNumber = 0;
     int pageSize = 0;
     String SAMLart;
+    int type;
+    String nameArabic;
+    String nameEnglish;
+    String phone;
+    String tags;
+    String sortBy;
+    String sortDir;
+    int entityType;
+    int isRegistered;
+    String licenseNumber;
+    String entityName;
+    String name;
+    String position;
 
     public ReportObject setSAMLart(String SAMLart){
         this.SAMLart = SAMLart;

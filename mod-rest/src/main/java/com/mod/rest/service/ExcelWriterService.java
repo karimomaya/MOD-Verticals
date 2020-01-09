@@ -113,7 +113,7 @@ public class ExcelWriterService {
                 Cell cell = row.createCell(colNum++);
 
                 Object o = method.invoke(object);
-
+                if (o == null) o ="";
 
                 if (o instanceof String) {
                     cell.setCellValue((String) o);
