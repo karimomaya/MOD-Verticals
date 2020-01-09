@@ -15,4 +15,11 @@ public interface RiskRepository extends GenericRepository<Risk, Long> {
     @Query(value = "{call MOD_RM_SP_getRiskByName(:PageNumber,:PageSize, :createdBy, :name )}", nativeQuery = true)
     List<Risk> getRiskByName(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("name") String name, @Param("createdBy") long createdBy);
 
+
+    @Query(value = "{call MOD_RM_SP_GetDelayedRisks(:PageNumber,:PageSize, :createdBy )}", nativeQuery = true)
+    List<Risk> getDelayedRisks(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetDelayedRisksCount( :createdBy )}", nativeQuery = true)
+    Long getDelayedRisksCount(@Param("createdBy") String createdBy);
+
 }

@@ -1,9 +1,7 @@
 package com.mod.rest.service;
 
-import com.mod.rest.model.GraphDataHelper;
-import com.mod.rest.model.ReportObject;
-import com.mod.rest.model.Task;
-import com.mod.rest.model.UserHelper;
+import com.mod.rest.model.*;
+import com.mod.rest.repository.RiskRepository;
 import com.mod.rest.repository.TaskRepository;
 import com.mod.rest.repository.UserRepository;
 import com.mod.rest.system.Utils;
@@ -38,6 +36,8 @@ public class ReportService {
     SessionService sessionService;
     @Autowired
     ProjectService projectService;
+    @Autowired
+    RiskRepository riskRepository;
 
 
     public ReportObject buildReportObject(ReportObject reportObject){
@@ -71,6 +71,23 @@ public class ReportService {
 
 
     public <T> T execute( ReportObject reportObject){
+
+        if (reportObject.getReportType() == 10){
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
+            if (reportObject.getDetectedReportType() == 0){ // graph
+                return (T)  riskReportHelper(reportObject, "delayedRiskReport");
+            }else  if (reportObject.getDetectedReportType() == 1){ // table
+                return (T) riskRepository.getDelayedRisks(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
+            } else if(reportObject.getDetectedReportType() == 2) { // count
+                return (T) riskRepository.getDelayedRisksCount(ids);
+            } else if(reportObject.getDetectedReportType() == 3) { // file
+
+            }
+        }
 
         if (reportObject.getReportType() == 6){
             if (reportObject.getDetectedReportType() == 0){ // graph
@@ -140,6 +157,31 @@ public class ReportService {
         }
 
         return null;
+    }
+
+    private List<GraphDataHelper> riskReportHelper(ReportObject reportObject, String type){
+        List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
+        long[] users = reportObject.getUsers();
+
+
+        for(int i=0; i< users.length; i++){
+            List<Risk> riskList = null;
+            if (type.equals("delayedRiskReport")){
+                riskList = riskRepository.getDelayedRisks(1, Integer.MAX_VALUE,  users[i] +"");
+            }
+
+            int[] riskDate = new int[12];
+            for (Risk risk : riskList) {
+                int num = Utils.getMonthFromDate(risk.getRiskSolutionDate());
+                riskDate[num] += 1;
+            }
+            GraphDataHelper graphDataHelper = new GraphDataHelper();
+            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+            graphDataHelper.setData(riskDate);
+            graphDataHelpers.add(graphDataHelper);
+        }
+        return graphDataHelpers;
+
     }
 
     public List<GraphDataHelper> reportHelper(ReportObject reportObject, String type ){
