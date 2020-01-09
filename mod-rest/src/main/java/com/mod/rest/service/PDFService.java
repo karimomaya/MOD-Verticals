@@ -34,6 +34,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -46,11 +47,13 @@ public class PDFService {
 
 
     public File generate(List<?> objects, String filename, String tagName) throws Exception {
-        if (objects.size() == 0) return null;
+        if (objects.size() == 0)
+            return new File(filename);
+
 
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
         NodeList nodes = document.getElementsByTagName(tagName+"-replacer");
-        if (nodes.getLength() == 0) return null;
+        if (nodes.getLength() == 0) return new File(filename);
 
         String nodeName = nodes.item(0).getParentNode().getNodeName();
 
@@ -64,6 +67,7 @@ public class PDFService {
                 for(int i = 0 ; i < nodes.getLength() ; i++){
                     // create TD
                     Element td = document.createElement("td");
+                    td.setAttribute("dir", "rtl");
                     try {
                         Method method =  cls.getMethod(nodes.item(i).getTextContent());
                         Object o = method.invoke(object);
@@ -94,6 +98,7 @@ public class PDFService {
                     Node parent = nodes.item(0).getParentNode();
 
                     Element div = document.createElement("div");
+                    div.setAttribute("dir", "rtl");
                     Method method =  cls.getMethod(nodes.item(0).getTextContent());
                     Object o = method.invoke(object);
                     if (o == null)  o = "";
@@ -144,6 +149,30 @@ public class PDFService {
         return templateName;
     }
 
+    public byte[] convertHTMLToPDF(String filename){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Document document = new Document();
+
+
+        PdfWriter writer = null;
+        try {
+            writer = PdfWriter.getInstance(document,byteArrayOutputStream);
+
+            document.open();
+            XMLWorkerHelper.getInstance().parseXHtml(writer, document,
+                    new FileInputStream(filename), Charset.forName("UTF-8"));
+
+            document.close();
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return byteArrayOutputStream.toByteArray();
+    }
+
     public byte[] generatePDF(String filename) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         File tempFile = null;
@@ -166,7 +195,7 @@ public class PDFService {
             FileRetrieve retrieve = new FileRetrieveImpl("pdf-template");
             cssResolver.setFileRetrieve(retrieve);
 
-            HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
+            HtmlPipelineContext htmlContext = new HtmlPipelineContext(cssAppliers);
             htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
             htmlContext.setImageProvider(new AbstractImageProvider() {
                 public String getImageRootPath() {
@@ -185,7 +214,7 @@ public class PDFService {
 
             XMLWorker worker = new XMLWorker(css, true);
             XMLParser p = new XMLParser(worker);
-            p.parse(new FileInputStream(filename));
+            p.parse(new FileInputStream(filename), Charset.forName("UTF-8"));
 
             document.close();
         }
