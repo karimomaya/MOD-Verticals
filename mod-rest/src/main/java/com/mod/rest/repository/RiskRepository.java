@@ -22,4 +22,9 @@ public interface RiskRepository extends GenericRepository<Risk, Long> {
     @Query(value = "{call MOD_RM_SP_GetDelayedRisksCount( :createdBy )}", nativeQuery = true)
     Long getDelayedRisksCount(@Param("createdBy") String createdBy);
 
+    @Query(value = "{call MOD_RM_SP_GetDelayedTaskRiskReport(:PageNumber,:PageSize, :createdBy, :integrationIds )}", nativeQuery = true)
+    List<Risk> getDelayedTaskRiskReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy, @Param("integrationIds") String integrationIds);
+
+    @Query(value = "{call MOD_RM_SP_GetDelayedTaskRiskReportCount( :createdBy, :integrationIds )}", nativeQuery = true)
+    Long getDelayedTaskRiskReportCount(@Param("createdBy") String createdBy, @Param("integrationIds") String integrationIds);
 }

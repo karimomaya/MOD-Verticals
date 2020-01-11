@@ -58,7 +58,7 @@ public class ReportService {
             }
         }
 
-        if (reportObject.getReportType() == 6) {
+        if (reportObject.getReportType() == 6 || reportObject.getReportType() == 14) {
             if (reportObject.getRiskIds().equals("")) {
                 reportObject.setRiskIds(riskService.getRisksByUser(reportObject.getSAMLart()));
             }
@@ -98,7 +98,22 @@ public class ReportService {
 
             }
         }
+        if (reportObject.getReportType() == 14){
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
+            if (reportObject.getDetectedReportType() == 0){ // graph
+                return (T)  riskReportHelper(reportObject, "delayedTaskRiskReport");
+            }else  if (reportObject.getDetectedReportType() == 1){ // table
+                return (T) riskRepository.getDelayedTaskRiskReport(reportObject.getPageNumber(), reportObject.getPageSize(), ids, reportObject.getRiskIds());
+            } else if(reportObject.getDetectedReportType() == 2) { // count
+                return (T) riskRepository.getDelayedTaskRiskReportCount(ids, reportObject.getRiskIds());
+            } else if(reportObject.getDetectedReportType() == 3) { // file
 
+            }
+        }
         if (reportObject.getReportType() == 6){
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  reportHelper(reportObject, "riskReport");
@@ -173,22 +188,34 @@ public class ReportService {
         List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
         long[] users = reportObject.getUsers();
 
-
         for(int i=0; i< users.length; i++){
             List<Risk> riskList = null;
             if (type.equals("delayedRiskReport")){
                 riskList = riskRepository.getDelayedRisks(1, Integer.MAX_VALUE,  users[i] +"");
+                int[] riskDate = new int[12];
+                for (Risk risk : riskList) {
+                    int num = Utils.getMonthFromDate(risk.getRiskSolutionDate());
+                    riskDate[num] += 1;
+                }
+                GraphDataHelper graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                graphDataHelper.setData(riskDate);
+                graphDataHelpers.add(graphDataHelper);
+
+            }else if (type.equals("DelayedTaskReportProject")){
+                riskList = riskRepository.getDelayedTaskRiskReport(1, Integer.MAX_VALUE,  users[i] +"", reportObject.getRiskIds() );
+                int[] riskDate = new int[12];
+                for (Risk risk : riskList) {
+                    int num = Utils.getMonthFromDate(risk.getRiskSolutionDate());
+                    riskDate[num] += 1;
+                }
+                GraphDataHelper graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                graphDataHelper.setData(riskDate);
+                graphDataHelpers.add(graphDataHelper);
             }
 
-            int[] riskDate = new int[12];
-            for (Risk risk : riskList) {
-                int num = Utils.getMonthFromDate(risk.getRiskSolutionDate());
-                riskDate[num] += 1;
-            }
-            GraphDataHelper graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-            graphDataHelper.setData(riskDate);
-            graphDataHelpers.add(graphDataHelper);
+
         }
         return graphDataHelpers;
 

@@ -50,7 +50,7 @@ public class ReportObject {
         for (int i=0; users != null && i< users.length;i++){
             userIds += users[i]+";";
         }
-        if (reportType == 6){
+        if (reportType == 6 || reportType == 14 ){
             riskIds = "";
             for (int i=0; risks !=null && i< risks.length;i++){
                 if(i > 0) riskIds += ",";
