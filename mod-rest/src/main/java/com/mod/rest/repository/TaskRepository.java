@@ -47,4 +47,16 @@ public interface TaskRepository extends GenericRepository<Task,Long> {
     @Query(value = "{call MOD_TM_SP_GetIntegrationTaskReport(:PageNumber,:PageSize,:userIds, :integrationIds, :source)}", nativeQuery = true)
     List<Task> getIntegrationTaskReport(@Param("userIds") String userIds, @Param("integrationIds") String integrationIds, @Param("source") String source, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
 
+
+    @Query(value = "{call MOD_RM_SP_GetDelayedTaskRiskReport(:PageNumber,:PageSize, :integrationIds , :createdBy)}", nativeQuery = true)
+    List<Task> getDelayedTaskRiskReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("integrationIds") String integrationIds , @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetDelayedTaskRiskReportCount( :integrationIds, :createdBy )}", nativeQuery = true)
+    Long getDelayedTaskRiskReportCount( @Param("integrationIds") String integrationIds, @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetInProgressDelayedClosedTaskRisksReport(:PageNumber,:PageSize, :integrationIds , :createdBy)}", nativeQuery = true)
+    List<Task> getInProgressDelayedClosedTaskRisksReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("integrationIds") String integrationIds , @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetInProgressDelayedClosedTaskRisksReportCount( :integrationIds, :createdBy )}", nativeQuery = true)
+    Long getInProgressDelayedClosedTaskRisksReportCount( @Param("integrationIds") String integrationIds, @Param("createdBy") String createdBy);
 }

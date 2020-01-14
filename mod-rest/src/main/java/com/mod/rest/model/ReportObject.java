@@ -50,14 +50,14 @@ public class ReportObject {
         for (int i=0; users != null && i< users.length;i++){
             userIds += users[i]+";";
         }
-        if (reportType == 6 || reportType == 14 ){
+        if (reportType == 6 || reportType == 14 || reportType == 17 ){
             riskIds = "";
             for (int i=0; risks !=null && i< risks.length;i++){
                 if(i > 0) riskIds += ",";
                 riskIds += risks[i];
             }
 
-        } else if (reportType == 4){
+        } else if (reportType == 4 || reportType == 15 ){
             projectIds= "";
             for (int i=0; projects !=null && i< projects.length;i++){
                 if(i > 0) projectIds += ",";
