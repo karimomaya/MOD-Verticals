@@ -23,7 +23,10 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by karim.omaya on 12/27/2019.
@@ -76,6 +79,45 @@ public class ReportController {
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"null\"").body(null); // used to download file
+
+    }
+
+
+    @GetMapping("get/statistics/{report}")
+    public ResponseBuilder<ObjectNode> reportStatistics(@RequestHeader("samlart") String SAMLart,
+                                              @PathVariable("report") String reportStr){
+        ResponseBuilder<ObjectNode> responseBuilder = new ResponseBuilder<>();
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode result= mapper.createObjectNode();
+        try {
+
+            ReportObject reportObject = mapper.readValue(reportStr, ReportObject.class);
+            reportObject = reportObject.build();
+
+            reportObject = reportService.buildReportObject(reportObject.setSAMLart(SAMLart));
+
+            if (reportObject.getDetectedReportType() == 0){ // generate graph
+                HashMap<List, List> hashMap = reportService.riskStatisticsReportHelper(reportObject);
+
+                List<GraphDataHelper> graphDataHelpers = null;
+                String[] xaxis = null;
+
+                for (Map.Entry<List, List> entry : hashMap.entrySet()) {
+                    graphDataHelpers = entry.getKey();
+                    Object[] objArr =  entry.getValue().toArray();
+
+                    xaxis = Arrays.copyOf(objArr, objArr.length,String[].class);
+                }
+
+                result.put("graph", Utils.writeObjectIntoString(graphDataHelpers));
+                result.put("xaxis", Utils.writeObjectIntoString(xaxis));
+                responseBuilder.status(ResponseCode.SUCCESS);
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return responseBuilder.data(result).build();
 
     }
 

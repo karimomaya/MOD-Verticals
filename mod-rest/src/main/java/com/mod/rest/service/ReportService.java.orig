@@ -41,9 +41,13 @@ public class ReportService {
     EntityRepository entityRepository;
     @Autowired
     IndividualRepository individualRepository;
-	@Autowired
-    StatisticsRepository statisticsRepository; 	@Autowired
+    @Autowired
+<<<<<<< HEAD
     TaskReportHelperRepository taskReportHelperRepository;
+=======
+    StatisticsRepository statisticsRepository;
+>>>>>>> 5044ce5a2f502a125dc3c0c0d53ed416742c5915
+
     public ReportObject buildReportObject(ReportObject reportObject){
         if (reportObject.getReportType()<= 19){
             if (reportObject.getUserIds().equals(";")){
