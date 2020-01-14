@@ -1,24 +1,24 @@
 package com.mod.rest.service;
 
 import com.mod.rest.annotation.ColumnName;
-import com.mod.rest.model.Task;
-import com.mod.rest.model.TaskReport;
 import com.mod.rest.repository.UserRepository;
+import com.mod.rest.system.Utils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +30,9 @@ public class ExcelWriterService {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    Environment config;
+    XSSFCellStyle style;
 
 
     public File generate(List<?> objectList){
@@ -41,6 +44,13 @@ public class ExcelWriterService {
         XSSFWorkbook workbook = new XSSFWorkbook();
         String sheetName = getSheetName(objectList.get(0));
         XSSFSheet sheet = workbook.createSheet(sheetName);
+        if (style == null){
+            style = workbook.createCellStyle();
+            XSSFFont font = workbook.createFont();
+            font.setBold(true);
+            style.setFont(font);
+        }
+
 
         Row row = sheet.createRow(0);
         createHeader(objectList.get(0), row);
@@ -71,9 +81,6 @@ public class ExcelWriterService {
         int colNum = 0;
         Class cls = object.getClass();
 
-
-        cls = classFactory(cls, object);
-
         Method[] methods = cls.getMethods();
         for (Method method : methods){
             ColumnName annotation = method.getAnnotation(ColumnName.class);
@@ -82,6 +89,7 @@ public class ExcelWriterService {
 
             Cell cell = row.createCell(colNum++);
             cell.setCellValue((String) annotation.key());
+            cell.setCellStyle(style);
         }
     }
 
@@ -94,14 +102,7 @@ public class ExcelWriterService {
 
             Class cls = object.getClass();
 
-            if (cls.getName().equals("com.mod.rest.model.Task")){
 
-                helper = new ArrayList<>();
-                TaskReport taskReport = new TaskReport((Task) object, userRepository);
-                helper.add(taskReport);
-                cls = taskReport.getClass();
-                object = taskReport;
-            }
 
 
             Method[] methods = cls.getMethods();
@@ -120,7 +121,7 @@ public class ExcelWriterService {
                 }else if (o instanceof Integer) {
                     cell.setCellValue((Integer) o);
                 }else if (o instanceof Date) {
-                    cell.setCellValue((Date) o);
+                    cell.setCellValue((String)Utils.dateFormat((Date) o, config.getProperty("date.format")));
                 }else if (o instanceof Long) {
                     cell.setCellValue((Long) o);
                 }
@@ -131,12 +132,4 @@ public class ExcelWriterService {
     }
 
 
-    private  Class<?> classFactory(Class<?> cls, Object object){
-        if (cls.getName().equals("com.mod.rest.model.Task")){
-            TaskReport taskReport = new TaskReport((Task) object, userRepository);
-            return taskReport.getClass();
-        }
-
-        return cls;
-    }
 }

@@ -23,6 +23,6 @@ BEGIN
 select (CAST(sum(task.progress) as float) / (CAST(count(*)* 100 as float) ) * 100 ) as progress 
 from O2MyCompanyTaskManagementMOD_TM_entity_TaskProject as project
 	inner join O2MyCompanyTaskManagementMOD_TM_entity_Task as task on task.taskProjectId = project.Id 
-where project.Id = @ProjectId and (task.status <> 11 or task.status <> 12) and task.isDeleted <> 1
+where project.Id = @ProjectId and (task.status <> 11 or task.status <> 12 or task.status <> 0) and task.isDeleted <> 1
 
 END

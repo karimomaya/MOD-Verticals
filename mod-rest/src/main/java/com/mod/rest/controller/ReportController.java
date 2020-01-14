@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mod.rest.model.GraphDataHelper;
 import com.mod.rest.model.ReportObject;
 import com.mod.rest.model.Task;
+import com.mod.rest.model.UserHelper;
 import com.mod.rest.service.ReportService;
+import com.mod.rest.service.SessionService;
 import com.mod.rest.system.Pagination;
 import com.mod.rest.system.ResponseBuilder;
 import com.mod.rest.system.ResponseCode;
@@ -33,12 +35,17 @@ public class ReportController {
 
     @Autowired
     ReportService reportService;
+    @Autowired
+    SessionService sessionService;
 
     @GetMapping("export/{report}/{samlart}")
     @ResponseBody
     public ResponseEntity<byte[]> export(@PathVariable("samlart") String SAMLart,
                                          @PathVariable("report") String reportStr){
 
+        UserHelper userHelper = sessionService.getSession(SAMLart);
+        if (userHelper == null )
+            sessionService.login(SAMLart);
 
         ObjectMapper mapper = new ObjectMapper();
         HttpHeaders respHeaders = new HttpHeaders();

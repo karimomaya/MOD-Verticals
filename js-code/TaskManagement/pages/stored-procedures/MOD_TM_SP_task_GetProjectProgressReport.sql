@@ -1,6 +1,6 @@
 USE [awdb]
 GO
-/****** Object:  StoredProcedure [dbo].[MOD_TM_SP_task_GetProjectProgressReport]    Script Date: 1/5/2020 6:25:55 PM ******/
+/****** Object:  StoredProcedure [dbo].[MOD_TM_SP_task_GetProjectProgressReport]    Script Date: 1/9/2020 7:16:20 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -23,7 +23,7 @@ BEGIN
 	
 
 select distinct(select count(*) from O2MyCompanyTaskManagementMOD_TM_entity_TaskProject where isDeleted <> 1 and status = 2 and (owner = @Owner or createdBy = @Owner )) as ended,  
-(select count(*) from O2MyCompanyTaskManagementMOD_TM_entity_TaskProject where isDeleted <> 1 and  status <> 2 and (owner = @Owner or createdBy = @Owner )) as inProgress
+(select count(*) from O2MyCompanyTaskManagementMOD_TM_entity_TaskProject where isDeleted <> 1 and  (status =1) and (owner = @Owner or createdBy = @Owner )) as inProgress
 from O2MyCompanyTaskManagementMOD_TM_entity_TaskProject where owner = @Owner or createdBy = @Owner and isDeleted <> 1.
 
 END

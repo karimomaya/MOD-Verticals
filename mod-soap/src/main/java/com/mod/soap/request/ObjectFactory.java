@@ -9,9 +9,6 @@
 package com.mod.soap.request;
 
 import com.mod.soap.model.RequestNumber;
-import com.mod.soap.model.Student;
-import com.mod.soap.request.StudentDetailsRequest;
-import com.mod.soap.request.StudentDetailsResponse;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
@@ -41,51 +38,15 @@ public class ObjectFactory {
     public ObjectFactory() {
     }
 
-    /**
-     * Create an instance of {@link StudentDetailsResponse }
-     * 
-     */
-    public StudentDetailsResponse createStudentDetailsResponse() {
-        return new StudentDetailsResponse();
-    }
 
-    /**
-     * Create an instance of {@link Student }
-     * 
-     */
-    public Student createStudent() {
-        return new Student();
-    }
-
-    /**
-     * Create an instance of {@link StudentDetailsRequest }
-     * 
-     */
-    public StudentDetailsRequest createStudentDetailsRequest() {
-        return new StudentDetailsRequest();
-    }
-
-
-    /**
-     * Create an instance of {@link StudentDetailsResponse }
-     *
-     */
     public RequestNumberResponse createRequestNumberResponse() {
         return new RequestNumberResponse();
     }
 
-    /**
-     * Create an instance of {@link Student }
-     *
-     */
     public RequestNumber createRequestNumber() {
         return new RequestNumber();
     }
 
-    /**
-     * Create an instance of {@link StudentDetailsRequest }
-     *
-     */
     public RequestNumberRequest createRequestNumberRequest() {
         return new RequestNumberRequest();
     }

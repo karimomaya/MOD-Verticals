@@ -13,6 +13,15 @@ public class Config {
     @Autowired
     private Environment env;
 
+    public String configureCN(String name){
+
+        String organizationName = env.getProperty("organizationName");
+        String o = env.getProperty("o");
+        String organzationCN = "o=" + organizationName + ",cn=cordys,cn=defaultInst,o=" + o;
+        String cn = "cn=$name,cn=organizational $type," + organzationCN;
+        return cn.replace("$name", name).replace("$type", "users");
+    }
+
 
     public String getProperty(String pPropertyKey) {
         return env.getProperty(pPropertyKey);

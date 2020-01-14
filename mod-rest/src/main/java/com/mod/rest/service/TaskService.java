@@ -1,6 +1,7 @@
 package com.mod.rest.service;
 
 import com.mod.rest.model.*;
+import com.mod.rest.repository.TaskReportHelperRepository;
 import com.mod.rest.repository.TaskRepository;
 import com.mod.rest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ public class TaskService {
     @Autowired
     TaskRepository taskRepository;
     @Autowired
+    TaskReportHelperRepository taskReportHelperRepository;
+    @Autowired
     UserRepository userRepository;
     @Autowired
     SessionService sessionService;
@@ -25,6 +28,18 @@ public class TaskService {
         for (Task task : tasks){
             Optional<User> userOwner =  userRepository.findById(task.getOwner());
             if (userOwner.isPresent()) task.setUserOwner(userOwner.get());
+        }
+        return tasks;
+    }
+
+    public List<TaskReportHelper> getTaskReportHelperProjectBasedOnStatus(int projectStatus, String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart){
+        List<TaskReportHelper> tasks = null;
+        if (projectStatus == 1){ // delayed
+            tasks = getDelayedTaskReportHelperProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
+        }else if(projectStatus == 2) { // finished
+            tasks = getFinishedTaskReportHelperProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
+        } else { // all
+            tasks = getFinishedAndDelayedTaskReportHelperProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
         }
         return tasks;
     }
@@ -51,6 +66,14 @@ public class TaskService {
         return tasks;
     }
 
+    public List<TaskReportHelper> getFinishedAndDelayedTaskReportHelperProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+
+        UserHelper userHelper = sessionService.getSession(SAMLart);
+        List<TaskReportHelper> tasks = taskReportHelperRepository.getFinishedAndDelayedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+
+        return tasks;
+    }
+
     public List<Task> getFinishedTaskReportProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
 
         UserHelper userHelper = sessionService.getSession(SAMLart);
@@ -59,11 +82,23 @@ public class TaskService {
         return tasks;
     }
 
-    public List<Task> getDelayedTaskReportProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+    public List<TaskReportHelper> getFinishedTaskReportHelperProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
 
         UserHelper userHelper = sessionService.getSession(SAMLart);
-        List<Task> tasks = taskRepository.getDelayedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+        List<TaskReportHelper> tasks = taskReportHelperRepository.getFinishedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
 
+        return tasks;
+    }
+
+    public List<Task> getDelayedTaskReportProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+        UserHelper userHelper = sessionService.getSession(SAMLart);
+        List<Task> tasks = taskRepository.getDelayedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+        return tasks;
+    }
+
+    public List<TaskReportHelper> getDelayedTaskReportHelperProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+        UserHelper userHelper = sessionService.getSession(SAMLart);
+        List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
         return tasks;
     }
 }

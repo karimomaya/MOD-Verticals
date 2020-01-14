@@ -40,6 +40,8 @@ public class ReportService {
     EntityRepository entityRepository;
     @Autowired
     IndividualRepository individualRepository;
+    @Autowired
+    TaskReportHelperRepository taskReportHelperRepository;
 
     public ReportObject buildReportObject(ReportObject reportObject){
         if (reportObject.getReportType()<= 6){
@@ -107,7 +109,7 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cGetIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement");
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<Task> tasks=  taskRepository.getIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement", 1, Integer.MAX_VALUE);
+                List<TaskReportHelper> tasks=  taskReportHelperRepository.getIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement", 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
         }else if (reportObject.getReportType() == 1) {
@@ -118,7 +120,7 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cDelayedTask(reportObject.getUserIds());
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<Task> tasks = taskRepository.getDelayedTasks(reportObject.getUserIds(), 1, Integer.MAX_VALUE);
+                List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTasks(reportObject.getUserIds(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
         }else if (reportObject.getReportType() == 2) {
@@ -129,7 +131,7 @@ public class ReportService {
             } else if (reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds());
             } else if (reportObject.getDetectedReportType() == 3) { // file
-                List<Task> tasks = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), 1, Integer.MAX_VALUE);
+                List<TaskReportHelper> tasks = taskReportHelperRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
         }  else if (reportObject.getReportType() == 3) {
@@ -143,7 +145,7 @@ public class ReportService {
                 return (T) taskRepository.cCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate());
             } else if (reportObject.getDetectedReportType() == 3) { // file
                 Long userId = sessionService.getSession(reportObject.getSAMLart()).getId();
-                List<Task> tasks = taskRepository.getCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate(), 1, Integer.MAX_VALUE);
+                List<TaskReportHelper> tasks = taskReportHelperRepository.getCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
         }else if(reportObject.getReportType() == 4){
@@ -160,7 +162,7 @@ public class ReportService {
                     return (T) taskRepository.cFinishedAndDelayedTaskReportProject(reportObject.getUserIds(), sessionService.getSession(reportObject.getSAMLart()).getId(), reportObject.getProjectIds());
                 }
             } else if (reportObject.getDetectedReportType() == 3) { // file
-                List<Task> tasks =  taskService.getTaskReportProjectBasedOnStatus(reportObject.getStatus(), reportObject.getUserIds(), reportObject.getProjectIds(), reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getSAMLart());
+                List<TaskReportHelper> tasks =  taskService.getTaskReportHelperProjectBasedOnStatus(reportObject.getStatus(), reportObject.getUserIds(), reportObject.getProjectIds(), reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getSAMLart());
                 return (T) excelWriterService.generate(tasks);
             }
 

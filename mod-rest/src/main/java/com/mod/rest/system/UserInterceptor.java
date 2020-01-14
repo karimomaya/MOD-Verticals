@@ -44,26 +44,10 @@ public class UserInterceptor extends HandlerInterceptorAdapter {
 
         UserHelper user = sessionService.getSession(SAMLart);
 
-        if (user == null){
-            Http http = new Http(SAMLart, config);
-            UserDetails userDetails = new UserDetails();
-            String res = http.cordysRequest(userDetails.getUserDetails());
-            Document doc = Utils.convertStringToXMLDocument( res );
-            Node node = doc.getElementsByTagName("GetUserDetailsResponse").item(0);
-            String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
-            cn = configureCN(cn);
-            UserHelper userHelper = userHelperRepository.getUserDetail(cn).get(0);
-            sessionService.setSession(SAMLart, userHelper);
-        }
+        if (user == null) sessionService.login(SAMLart);
+
         return true;
     }
 
-    private String configureCN(String name){
 
-        String organizationName = config.getProperty("organizationName");
-        String o = config.getProperty("o");
-        String organzationCN = "o=" + organizationName + ",cn=cordys,cn=defaultInst,o=" + o;
-        String cn = "cn=$name,cn=organizational $type," + organzationCN;
-        return cn.replace("$name", name).replace("$type", "users");
-    }
 }

@@ -19,4 +19,8 @@ public class User {
     long id;
     String username;
     String DisplayName;
+    String RoleName;
+    String UnitTypeCode;
+    String UnitCode;
+
 }

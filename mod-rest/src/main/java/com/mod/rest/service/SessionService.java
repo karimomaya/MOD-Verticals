@@ -1,9 +1,18 @@
 package com.mod.rest.service;
 
+import com.mod.rest.entity.UserDetails;
 import com.mod.rest.model.UserHelper;
+import com.mod.rest.repository.UserHelperRepository;
+import com.mod.rest.system.Config;
+import com.mod.rest.system.Http;
+import com.mod.rest.system.Utils;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +26,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Service
 public class SessionService {
+
+    @Autowired
+    Config config;
+    @Autowired
+    UserHelperRepository userHelperRepository;
+
 
     ConcurrentHashMap<String, UserSession> concurrentHashMap = new ConcurrentHashMap();
 
@@ -66,6 +81,18 @@ public class SessionService {
                 concurrentHashMap.remove(key);
             }
         }
+    }
+
+    public void login(String SAMLart){
+        Http http = new Http(SAMLart, config);
+        UserDetails userDetails = new UserDetails();
+        String res = http.cordysRequest(userDetails.getUserDetails());
+        Document doc = Utils.convertStringToXMLDocument( res );
+        Node node = doc.getElementsByTagName("GetUserDetailsResponse").item(0);
+        String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
+        cn = config.configureCN(cn);
+        UserHelper userHelper =  userHelperRepository.getUserDetail(cn).get(0);
+        setSession(SAMLart, userHelper);
     }
 
     @Getter
