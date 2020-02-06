@@ -30,29 +30,42 @@ import java.util.List;
 public class TaskController  {
 
     @Autowired
-    TaskPerformerHelperRepository taskPerformerHelperRepository ;
+    TaskPerformerHelperRepository taskPerformerHelperRepository;
     @Autowired
     UserHelperService userHelperService;
 
-    @GetMapping("task-timeline/{startDate}/{endDate}/{users}")
+    @GetMapping("task-timeline/{startDate}/{endDate}/{users}/{project}/{status}")
     public ResponseBuilder<String> report(@RequestHeader("samlart") String SAMLart,
                                           @PathVariable("startDate") String startDateStr,
                                           @PathVariable("endDate") String endDateStr,
-                                          @PathVariable("users") String usersStr){
+                                          @PathVariable("users") String usersStr,
+                                          @PathVariable("project") int project,
+                                          @PathVariable("status") int status){
 
         ResponseBuilder<String> responseBuilder = new ResponseBuilder<>();
 //YYYY-MM-DD
         Date startDate = null;
         Date endDate = null;
         JSONArray result = null;
+        if (project == 0) {
+            project = -1;
+        }
+        if (status == 0 || status == 4) {
+            status = 0;
+        }else if (status == 2) {
+            status = 100;
+        }else if (status == 1){
+            status = 50;
+        }
+
         try {
             startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
             endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateStr);
             if (usersStr.equals(";")){
-                result = formulateJSONWithAllUsers(SAMLart, startDate, endDate);
+                result = formulateJSONWithAllUsers(SAMLart, startDate, endDate, project, status);
             }
             else {
-                result = formulateJSONWithSpecificUsers(SAMLart, startDate, endDate, usersStr.split(","));
+                result = formulateJSONWithSpecificUsers(startDate, endDate, usersStr.split(","), project, status);
             }
 
         } catch (ParseException e) {
@@ -65,14 +78,14 @@ public class TaskController  {
     }
 
 
-    public JSONArray formulateJSONWithSpecificUsers(String SAMLart, Date startDate, Date endDate, String[] users){
+    public JSONArray formulateJSONWithSpecificUsers( Date startDate, Date endDate, String[] users, int project, int status){
         JSONArray result = new JSONArray();
 
         for (int i=0; i< users.length; i++){
 
             JSONObject object = new JSONObject();
 
-            List<TaskPerformerHelper> taskList = taskPerformerHelperRepository.getTasksByPerformerId(Long.parseLong(users[i]), startDate, endDate);
+            List<TaskPerformerHelper> taskList = taskPerformerHelperRepository.getTasksByPerformerId(Long.parseLong(users[i]), startDate, endDate, project, status);
             if (taskList.size() == 0) continue;
 
             JSONArray data = new JSONArray();
@@ -93,6 +106,8 @@ public class TaskController  {
                 String color = detectTaskColor(task);
                 json.put("color", color);
 
+                json.put("tooltip", "Percentage: <br> "+task.getProgress()+"");
+
                 data.put(json);
             }
             setUsername = false;
@@ -105,26 +120,51 @@ public class TaskController  {
 
 
     private String detectTaskColor(TaskPerformerHelper task){
-        String color  = "#0F8BD0";
-        int taskStatus = task.getTaskStatus();
-        int performerStatus = task.getTargetPerformerStatus();
-        Date today = new Date();
-        Date dueDate = task.getDueDate();
-        int dateState = Utils.compareDates(today, dueDate); // 1 delayed
 
-        if (taskStatus ==3){
-            color  = "#38A32B";
-        } else if (taskStatus !=3 && dateState == 1 && performerStatus != 2){
-            color = "#D44E5A";
-        } else if (performerStatus == 2){
-            color = "#C9A869";
-        }else {
-            color = "#F5E630";
+
+
+
+
+        String color  = "#165080";
+        int taskStatus = task.getTaskStatus();
+
+        if (taskStatus == 3){
+            color = "#165080";
         }
+
+        else {
+
+            long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(task.getStartDate(), task.getDueDate());
+            long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(task.getStartDate(), new Date());
+
+
+            long expectedProgress = 90;
+
+            try
+            {
+                expectedProgress = (diffnow/ diffTotal)*100;
+            } catch (Exception e){
+
+            }
+
+
+
+            if (task.getProgress() == 100) {
+                color  = "#38A32B";
+            }else if (task.getProgress() < expectedProgress + 10  && task.getProgress() > expectedProgress - 10 ){
+                color = "#c9a869";
+            }else if(task.getProgress() > expectedProgress   ){
+                color = "#4aa472";
+            }else if (task.getProgress() < expectedProgress ) {
+                color = "#d44e5a";
+            }
+        }
+
+
         return color;
     }
 
-    public JSONArray formulateJSONWithAllUsers(String SAMLart, Date startDate, Date endDate){
+    public JSONArray formulateJSONWithAllUsers(String SAMLart, Date startDate, Date endDate, int project, int status){
         Document document =  userHelperService.getSubUsersDocument(SAMLart);
         NodeList userId = document.getElementsByTagName("UserEntityId");
         NodeList userName = document.getElementsByTagName("DisplayName");
@@ -139,7 +179,7 @@ public class TaskController  {
             Long userIdLong = Long.parseLong(idNode.getTextContent());
             String userNameStr = nameNode.getTextContent()+"";
 
-            List<TaskPerformerHelper> taskList = taskPerformerHelperRepository.getTasksByPerformerId(userIdLong, startDate, endDate);
+            List<TaskPerformerHelper> taskList = taskPerformerHelperRepository.getTasksByPerformerId(userIdLong, startDate, endDate, project, status);
             if (taskList.size() == 0) continue;;
 
             object.put("name", userNameStr);
@@ -157,6 +197,7 @@ public class TaskController  {
                 String color = detectTaskColor(task);
 
                 json.put("color", color);
+                json.put("tooltip",task.getProgress());
 
                 data.put(json);
             }

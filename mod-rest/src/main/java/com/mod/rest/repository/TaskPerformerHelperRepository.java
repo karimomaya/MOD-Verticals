@@ -11,6 +11,6 @@ import java.util.List;
  * Created by karim.omaya on 1/7/2020.
  */
 public interface TaskPerformerHelperRepository extends GenericRepository<TaskPerformerHelper,Long> {
-    @Query(value = "{call MOD_TM_SP_GetTasksByPerformerId(:performerId, :StartDate, :EndDate)}", nativeQuery = true)
-    List<TaskPerformerHelper> getTasksByPerformerId(@Param("performerId") long performerId, @Param("StartDate") Date startDate, @Param("EndDate") Date endDate);
+    @Query(value = "{call MOD_TM_SP_GetTasksByPerformerId(:performerId, :StartDate, :EndDate, :projectId, :status)}", nativeQuery = true)
+    List<TaskPerformerHelper> getTasksByPerformerId(@Param("performerId") long performerId, @Param("StartDate") Date startDate, @Param("EndDate") Date endDate, @Param("projectId") int projectId, @Param("status") int status );
 }

@@ -27,5 +27,6 @@ public class TaskPerformerHelper {
     Integer taskStatus;
     String DisplayName;
     String taskName;
+    int progress;
 
 }

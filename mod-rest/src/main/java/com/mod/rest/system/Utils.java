@@ -6,8 +6,10 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
+import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,6 +21,53 @@ import java.util.concurrent.TimeUnit;
  * Created by karim.omaya on 10/30/2019.
  */
 public class Utils {
+
+    public static String minifier(String fileLocation) throws IOException {
+        final URL url = new URL("https://javascript-minifier.com/raw");
+        String output = null;
+
+        System.out.println("try to minify: " + fileLocation);
+
+        byte[] bytes = Files.readAllBytes(Paths.get(fileLocation));
+
+        final StringBuilder data = new StringBuilder();
+        data.append(URLEncoder.encode("input", "UTF-8"));
+        data.append('=');
+        data.append(URLEncoder.encode(new String(bytes), "UTF-8"));
+
+        bytes = data.toString().getBytes("UTF-8");
+
+        final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setRequestProperty("charset", "utf-8");
+        conn.setRequestProperty("Content-Length", Integer.toString(bytes.length));
+
+        try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+            wr.write(bytes);
+        }
+
+        final int code = conn.getResponseCode();
+
+
+        if (code == 200) {
+            System.out.println("----");
+            final BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            while ((line = in.readLine()) != null) {
+
+                output = line;
+            }
+            in.close();
+
+            System.out.println("\n----");
+        } else {
+            System.out.println("Oops");
+        }
+        return output;
+    }
 
     public static boolean isArabicText(String s) {
         for (int i = 0; i < s.length();) {
@@ -130,6 +179,10 @@ public class Utils {
     public static long differenceBetweenTwoDates(Date one, Date two){
         long diffInMillies = Math.abs(two.getTime() - one.getTime());
         return TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    public static long differenceBetweenTwoDatesWithoutABS(Date one, Date two){
+        return (long)((two.getTime()-one.getTime())/(3600*24*1000));
     }
 
     public static java.sql.Date convertJavaDateToSQLDate(Date date){
