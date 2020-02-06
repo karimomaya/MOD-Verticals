@@ -15,5 +15,6 @@ import java.util.List;
 public class GraphDataHelper {
     int[] data;
     String name;
+    String[] xaxis;
 
 }

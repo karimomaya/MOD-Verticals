@@ -10,6 +10,7 @@ import org.w3c.dom.NodeList;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -201,9 +202,9 @@ public class ReportService {
                 List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTasks(reportObject.getUserIds(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
-        }else if (reportObject.getReportType() == 2) {
+        }else if (reportObject.getReportType() == 2) { // if user productivity report
             if (reportObject.getDetectedReportType() == 0) { // graph
-                return (T) reportDateHelper(reportObject, "UserProductivityReport");
+                return (T) userProductivityReportDateHelper(reportObject);
             } else if (reportObject.getDetectedReportType() == 1) { // table
                 return (T) taskService.addUserToTask(taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if (reportObject.getDetectedReportType() == 2) { // count
@@ -416,6 +417,55 @@ public class ReportService {
         }
     }
 
+    public List<GraphDataHelper> userProductivityReportDateHelper( ReportObject reportObject){
+        List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
+        long days = Utils.differenceBetweenTwoDates(reportObject.getStartDate(), reportObject.getEndDate());
+        long[] users = reportObject.getUsers();
+
+        int arraySize = users.length;
+
+        int[] completedTasks = new int[arraySize];
+        int[] inProgressTasks = new int[arraySize];
+        int[] delayedTasks = new int[arraySize];
+
+        for(int i=0; i< users.length; i++){
+            List<Task> taskList = null;
+            String user = ";"+  users[i] +";";
+
+            taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
+
+
+            if (taskList.size() == 0) continue;
+
+            int[] taskDate = new int[arraySize];
+            for (Task task : taskList) {
+//                if(task.getProgress() == 100){
+//                    completedTasks[i] += 1;
+//                }else {
+//                    if (task.getDueDate().before(new Date())) {
+//                        delayedTasks[i] += 1;
+//                    } else {
+//                        inProgressTasks[i] += 1;
+//                    }
+//                }
+                int num = 0;
+                if (arraySize == 7){
+                    num = Utils.getDayNameFromDate(task.getDueDate());
+                }else if (arraySize == 31){
+                    num = Utils.getDayFromDate(task.getDueDate());
+                }else if (arraySize == 12){
+                    num = Utils.getMonthFromDate(task.getDueDate());
+                }
+                taskDate[num] += 1;
+            }
+            GraphDataHelper graphDataHelper = new GraphDataHelper();
+            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+            graphDataHelper.setData(taskDate);
+            graphDataHelpers.add(graphDataHelper);
+        }
+        return graphDataHelpers;
+    }
+
     public List<GraphDataHelper> reportDateHelper( ReportObject reportObject,  String type ){
         List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
         long days = Utils.differenceBetweenTwoDates(reportObject.getStartDate(), reportObject.getEndDate());
@@ -426,9 +476,10 @@ public class ReportService {
         for(int i=0; i< users.length; i++){
             List<Task> taskList = null;
             String user = ";"+  users[i] +";";
-            if(type == "UserProductivityReport"){
-                taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
-            }else if(type == "CompletedTaskReport"){
+//            if(type == "UserProductivityReport"){
+//                taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
+//            }else
+            if(type == "CompletedTaskReport"){
                 UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
                 taskList = taskRepository.getCompletedTaskReport(user, userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(), 1, Integer.MAX_VALUE);
             }

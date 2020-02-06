@@ -22,13 +22,13 @@ import java.util.Date;
 @PDFResources(key="meeting-template")
 public class Meeting {
 
-
     @Id
     long Id;
     String Subject;
     String Description;
     Integer MeetingType;
     Date EndDate;
+//    Date endDate;
     Date startDate;
     String meetingGoal;
     Integer status;
