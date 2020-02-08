@@ -1,59 +1,34 @@
 package com.mod.soap.request;
 
+import com.mod.soap.model.SecurityRequest;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by karim.omaya on 1/12/2020.
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "type", "userId" , "code", "target"
+        "securityRequest"
 })
 public class CustomSecurityRequest {
-    @XmlElement(required = true)
-    protected int type;
+    @XmlElement(name = "SecurityRequest", required = true)
+    protected List<SecurityRequest> securityRequest;
 
-    @XmlElement(required = true)
-    protected int userId;
-
-    @XmlElement(required = true)
-    protected String code;
-
-    @XmlElement(required = true)
-    protected String target;
-
-    public int getType() {
-        return type;
+    public List<SecurityRequest> getSecurityRequest() {
+        return securityRequest;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
+    public void setSecurityAccess(SecurityRequest securityRequest) {
+        if (this.securityRequest == null ) this.securityRequest = new ArrayList<>();
+        this.securityRequest.add(securityRequest);
     }
 }
+
+
+

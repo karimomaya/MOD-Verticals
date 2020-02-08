@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class Security {
     @Id
     long id;
-    String code;
-    String target;
-    int type; // 1:unit type code, 2: unit code,3: role name
+    String config; //
+    String target; // process name
+    int type; // 1:unit type code, 2: unit code,3: role name, 4: webservice, stored procedure
 }

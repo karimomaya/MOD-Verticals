@@ -81,10 +81,8 @@ public class RequestNumberEndPoint {
         CustomSecurityResponse customSecurityResponse = new CustomSecurityResponse();
         SecurityAccess securityAccess = new SecurityAccess();
         securityAccess.setAccess(true);
-        securityAccess.setTarget("test");
         SecurityAccess securityAccess2 = new SecurityAccess();
         securityAccess2.setAccess(true);
-        securityAccess2.setTarget("test");
         customSecurityResponse.setSecurityAccess(securityAccess);
         customSecurityResponse.setSecurityAccess(securityAccess2);
 

@@ -5,7 +5,6 @@ import com.mod.rest.model.User;
 import com.mod.rest.model.UserProductivitySP;
 import com.mod.rest.system.Pagination;
 import com.mod.rest.system.Utils;
-import javafx.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Query;

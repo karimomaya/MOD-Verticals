@@ -5,7 +5,6 @@ package com.mod.soap.model;
  */
 public class SecurityAccess {
     boolean access;
-    String target;
 
 
     public boolean isAccess() {
@@ -14,14 +13,6 @@ public class SecurityAccess {
 
     public void setAccess(boolean access) {
         this.access = access;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
     }
 
     private int convertCodeToId(String code){

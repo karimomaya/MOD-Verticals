@@ -4,10 +4,12 @@
     <xs:element name="CustomSecurityRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="type" type="xs:int"/>
-                <xs:element name="userId" type="xs:long"/>
-                <xs:element name="code" type="xs:string"/>
-                <xs:element name="target" type="xs:string"/>
+                <!--<xs:element name="type" type="xs:int"/>-->
+                <!--<xs:element name="userId" type="xs:long"/>-->
+                <!--<xs:element name="code" type="xs:string"/>-->
+                <!--<xs:element name="target" type="xs:string"/>-->
+                <xs:element name="SecurityRequest" type="tns:SecurityRequest" minOccurs="0"
+                            maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -21,10 +23,18 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:complexType name="SecurityRequest">
+        <xs:sequence>
+            <xs:element name="type" type="xs:int"/>
+            <xs:element name="userId" type="xs:long"/>
+            <xs:element name="target" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
     <xs:complexType name="CustomSecurity">
         <xs:sequence>
             <xs:element name="access" type="xs:boolean" />
-            <xs:element name="target" type="xs:string" />
         </xs:sequence>
     </xs:complexType>
 
