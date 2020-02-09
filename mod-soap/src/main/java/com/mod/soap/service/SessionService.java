@@ -3,7 +3,7 @@ package com.mod.soap.service;
 import com.mod.soap.dao.model.User;
 import com.mod.soap.entity.UserDetails;
 import com.mod.soap.dao.repository.UserRepository;
-import com.mod.soap.system.Config;
+import com.mod.soap.system.Property;
 import com.mod.soap.system.Http;
 import com.mod.soap.system.Utils;
 import lombok.Getter;
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class SessionService {
     @Autowired
-    Config config;
+    Property property;
     @Autowired
     UserRepository userHelperRepository;
 
@@ -82,14 +82,14 @@ public class SessionService {
     }
 
     public User login(){
-        Http http = new Http( config);
-        String data = "{\"username\" : \""+config.getProperty("username")+"\", \"password\" : \"" + config.getProperty("password") + "\"}";
-        String res = http.cordysRequestWithContentType(config.getProperty("otds.url"),"application/json",data );
+        Http http = new Http(property);
+        String data = "{\"username\" : \""+ property.getProperty("username")+"\", \"password\" : \"" + property.getProperty("password") + "\"}";
+        String res = http.cordysRequestWithContentType(property.getProperty("otds.url"),"application/json",data );
 
         String SAMLart = "";
 
 
-        System.out.println(res);
+        java.lang.System.out.println(res);
         UserDetails userDetails = new UserDetails();
 
 
@@ -97,20 +97,20 @@ public class SessionService {
         Document doc = Utils.convertStringToXMLDocument( res );
         Node node = doc.getElementsByTagName("GetUserDetailsResponse").item(0);
         String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
-        cn = config.configureCN(cn);
+        cn = property.configureCN(cn);
         User userHelper =  userHelperRepository.getUserDetail(cn).get(0);
         setSession(SAMLart, userHelper);
         return userHelper;
     }
 
     public User login(String SAMLart){
-        Http http = new Http(SAMLart, config);
+        Http http = new Http(SAMLart, property);
         UserDetails userDetails = new UserDetails();
         String res = http.cordysRequest(userDetails.getUserDetails());
         Document doc = Utils.convertStringToXMLDocument( res );
         Node node = doc.getElementsByTagName("GetUserDetailsResponse").item(0);
         String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
-        cn = config.configureCN(cn);
+        cn = property.configureCN(cn);
         User userHelper =  userHelperRepository.getUserDetail(cn).get(0);
         setSession(SAMLart, userHelper);
         return userHelper;

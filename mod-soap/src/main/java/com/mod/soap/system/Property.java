@@ -8,7 +8,7 @@ import org.springframework.core.env.Environment;
  * Created by karim.omaya on 12/12/2019.
  */
 @Configuration
-public class Config {
+public class Property {
 
     @Autowired
     private Environment env;

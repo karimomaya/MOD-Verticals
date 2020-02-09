@@ -1,5 +1,4 @@
 package com.mod.soap.system;
-import com.mod.soap.system.Config;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -20,23 +19,23 @@ public class Http {
 //    String o = "MOD.COM";
 //    String organzationCN = "o="+organizationName+",cn=cordys,cn=defaultInst,o="+o;
     String SAMLart;
-    Config config;
+    Property property;
 
-    public Http(Config config){
+    public Http(Property property){
         this.client = new HttpClient();
         header = new Header();
-        this.config = config;
-        this.domain = config.getProperty("domain");
-        this.organizationName = config.getProperty("organizationName");
+        this.property = property;
+        this.domain = property.getProperty("domain");
+        this.organizationName = property.getProperty("organizationName");
     }
 
-    public Http(String SAMLart, Config config){
+    public Http(String SAMLart, Property property){
         this.SAMLart = SAMLart;
         this.client = new HttpClient();
         setSAMLart(SAMLart);
-        this.config = config;
-        this.domain = config.getProperty("domain");
-        this.organizationName = config.getProperty("organizationName");
+        this.property = property;
+        this.domain = property.getProperty("domain");
+        this.organizationName = property.getProperty("organizationName");
     }
 
     public void setSAMLart(String SAMLart){
