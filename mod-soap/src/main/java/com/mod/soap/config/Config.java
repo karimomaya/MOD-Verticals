@@ -33,6 +33,8 @@ public class Config extends WsConfigurerAdapter {
 		return wsdl11Definition;
 	}
 
+
+
 	@Bean
 	public XsdSchema studentSchema() {
 		return new SimpleXsdSchema(new ClassPathResource("helper.xsd"));

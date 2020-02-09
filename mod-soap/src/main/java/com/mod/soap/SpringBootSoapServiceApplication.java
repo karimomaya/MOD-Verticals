@@ -15,7 +15,7 @@ public class SpringBootSoapServiceApplication {
 
 		SpringApplication app = new SpringApplication(SpringBootSoapServiceApplication.class);
 		app.setDefaultProperties(Collections
-				.singletonMap("server.port", "8083"));
+				.singletonMap("server.port", "8082"));
 		app.run(args);
 
 //		SpringApplication.run(SpringBootSoapServiceApplication.class, args);

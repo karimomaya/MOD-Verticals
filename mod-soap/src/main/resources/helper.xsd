@@ -26,7 +26,7 @@
     <xs:complexType name="SecurityRequest">
         <xs:sequence>
             <xs:element name="type" type="xs:int"/>
-            <xs:element name="userId" type="xs:long"/>
+            <xs:element name="samlart" type="xs:string"/>
             <xs:element name="target" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>

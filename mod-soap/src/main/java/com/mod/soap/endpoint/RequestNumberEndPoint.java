@@ -1,21 +1,27 @@
 package com.mod.soap.endpoint;
 
 import com.mod.soap.dao.model.Config;
+import com.mod.soap.dao.model.User;
 import com.mod.soap.dao.repository.ConfigRepository;
 import com.mod.soap.dao.repository.UserRepository;
 import com.mod.soap.model.RequestNumber;
 import com.mod.soap.model.SecurityAccess;
+import com.mod.soap.model.SecurityRequest;
 import com.mod.soap.repository.RequestNumberRepository;
 import com.mod.soap.request.CustomSecurityRequest;
 import com.mod.soap.request.CustomSecurityResponse;
 import com.mod.soap.request.RequestNumberRequest;
 import com.mod.soap.request.RequestNumberResponse;
+import com.mod.soap.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
+import org.springframework.ws.transport.context.TransportContext;
+import org.springframework.ws.transport.context.TransportContextHolder;
+import org.springframework.ws.transport.http.HttpServletConnection;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -42,6 +48,8 @@ public class RequestNumberEndPoint {
     UserRepository userRepository;
     @Autowired
     ConfigRepository configRepository;
+    @Autowired
+    SessionService sessionService;
 
 
     @Autowired
@@ -79,16 +87,51 @@ public class RequestNumberEndPoint {
     public CustomSecurityResponse getCustomSecurity(@RequestPayload CustomSecurityRequest request) {
 
         CustomSecurityResponse customSecurityResponse = new CustomSecurityResponse();
-        SecurityAccess securityAccess = new SecurityAccess();
-        securityAccess.setAccess(true);
-        SecurityAccess securityAccess2 = new SecurityAccess();
-        securityAccess2.setAccess(true);
-        customSecurityResponse.setSecurityAccess(securityAccess);
-        customSecurityResponse.setSecurityAccess(securityAccess2);
+
+        List<SecurityRequest> securityRequests = request.getSecurityRequest();
+
+        for (SecurityRequest securityRequest : securityRequests){
+            User user = sessionService.getSession(securityRequest.getSamlart());
+
+            if (user == null) user = sessionService.login(securityRequest.getSamlart());
+
+
+            System.out.println("Voila you can find it by target and type");
+
+
+            SecurityAccess securityAccess = new SecurityAccess();
+            securityAccess.setAccess(true);
+
+            customSecurityResponse.setSecurityAccess(securityAccess);
+        }
+
+
+
+        HttpServletRequest httpServletRequest = getHttpServletRequest();
+        Enumeration<String> enums =  httpServletRequest.getHeaderNames();
+        while (enums.hasMoreElements()) {
+            String param = enums.nextElement();
+            System.out.println(param);
+            System.out.println(getHttpHeaderValue(param));
+        }
 
 
         return customSecurityResponse;
 //        return response;
+    }
+
+
+
+    protected HttpServletRequest getHttpServletRequest() {
+        TransportContext ctx = TransportContextHolder.getTransportContext();
+        return ( null != ctx ) ? ((HttpServletConnection) ctx.getConnection()).getHttpServletRequest() : null;
+    }
+
+    protected String getHttpHeaderValue( final String headerName ) {
+        HttpServletRequest httpServletRequest = getHttpServletRequest();
+
+
+        return ( null != httpServletRequest ) ? httpServletRequest.getHeader( headerName ) : null;
     }
 
     public String getProperty(String pPropertyKey) {
