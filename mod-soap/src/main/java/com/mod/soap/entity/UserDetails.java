@@ -27,6 +27,21 @@ public class UserDetails extends Entity {
                 "</SOAP:Envelope>";
     }
 
+    public String impersonateUser(String token, String username){
+        return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+                "  <SOAP:Header>\n" +
+                "    <OTAuthentication xmlns=\"urn:api.ecm.opentext.com\">\n" +
+                "      <AuthenticationToken>"+token+"</AuthenticationToken>\n" +
+                "    </OTAuthentication>\n" +
+                "  </SOAP:Header>\n" +
+                "  <SOAP:Body>\n" +
+                "    <ImpersonateUser xmlns=\"urn:Core.service.livelink.opentext.com\">\n"+
+                "      <userName>"+username+"</userName>\n" +
+                "    </ImpersonateUser>\n"+
+                "  </SOAP:Body>\n" +
+                "</SOAP:Envelope>";
+    }
+
     @Override
     String createMessage() {
         return null;

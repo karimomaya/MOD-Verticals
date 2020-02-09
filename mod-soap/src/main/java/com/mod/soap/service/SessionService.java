@@ -81,6 +81,28 @@ public class SessionService {
         }
     }
 
+    public User login(){
+        Http http = new Http( config);
+        String data = "{\"username\" : \""+config.getProperty("username")+"\", \"password\" : \"" + config.getProperty("password") + "\"}";
+        String res = http.cordysRequestWithContentType(config.getProperty("otds.url"),"application/json",data );
+
+        String SAMLart = "";
+
+
+        System.out.println(res);
+        UserDetails userDetails = new UserDetails();
+
+
+        res = http.cordysRequest(userDetails.getUserDetails());
+        Document doc = Utils.convertStringToXMLDocument( res );
+        Node node = doc.getElementsByTagName("GetUserDetailsResponse").item(0);
+        String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
+        cn = config.configureCN(cn);
+        User userHelper =  userHelperRepository.getUserDetail(cn).get(0);
+        setSession(SAMLart, userHelper);
+        return userHelper;
+    }
+
     public User login(String SAMLart){
         Http http = new Http(SAMLart, config);
         UserDetails userDetails = new UserDetails();
