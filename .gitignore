@@ -2,10 +2,13 @@
 /mod-rest/target
 /mod-soap/target
 #ignore
+.gitignore
 *.idea
 *.xlsx
 *.iml
 *.jar
+*.log
+*.lck
 #Ignore upload dir
 /mod-rest/uploadDir
 /js-code/stored-procedures/getSubSuersOfRole-old.sql

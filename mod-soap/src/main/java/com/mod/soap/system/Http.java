@@ -22,8 +22,10 @@ public class Http {
     Property property;
 
     public Http(Property property){
+        this.SAMLart = "";
         this.client = new HttpClient();
         header = new Header();
+        setSAMLart("");
         this.property = property;
         this.domain = property.getProperty("domain");
         this.organizationName = property.getProperty("organizationName");
@@ -42,13 +44,14 @@ public class Http {
         header = new Header();
         header.setName("SAMLart");
         header.setValue(SAMLart);
+//        this.SAMLart = SAMLart;
     }
 
     public String cordysRequest(String data){
         return this.post(this.getCordysURL(), data);
     }
 
-    public String cordysRequestWithContentType(String url, String data, String contentType){
+    public String cordysRequestWithContentType(String url, String contentType, String data){
         return this.postWithContentType(url, contentType, data);
     }
 
@@ -85,9 +88,8 @@ public class Http {
             statusCode = this.client.executeMethod(method);
             response = method.getResponseBodyAsString();
             java.lang.System.out.println(response);
-        } catch (HttpException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
         if (statusCode != HttpStatus.SC_OK) {
