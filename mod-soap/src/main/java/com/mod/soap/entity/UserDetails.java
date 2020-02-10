@@ -5,6 +5,19 @@ package com.mod.soap.entity;
  */
 public class UserDetails extends Entity {
 
+    public String getUserDetailsWithTicket(String ticket){
+        return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <SOAP:Header>\n" +
+                "    <OTAuthentication xmlns=\"urn:api.bpm.opentext.com\">\n" +
+                "      <AuthenticationToken>"+ticket+"</AuthenticationToken>\n" +
+                "    </OTAuthentication>\n" +
+                "  </SOAP:Header>\n" +
+                "  <SOAP:Body>\n" +
+                "    <GetUserDetails xmlns=\"http://schemas.cordys.com/UserManagement/1.0/User\">PARAMETER</GetUserDetails>\n" +
+                "  </SOAP:Body>\n" +
+                "</SOAP:Envelope>";
+    }
+
     public String getUserDetails(){
         return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <SOAP:Body>\n" +
@@ -65,6 +78,18 @@ public class UserDetails extends Entity {
                 "      </saml:Subject>\n" +
                 "    </samlp:AuthenticationQuery>\n" +
                 "  </samlp:Request>\n" +
+                "</SOAP:Body>\n" +
+                "</SOAP:Envelope>";
+    }
+
+    public String getSAMLAssertions(String SAMLart) {
+        return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "<SOAP:Body>\n" +
+                "<samlp:Request xmlns:samlp=\"urn:oasis:names:tc:SAML:1.0:protocol\"\n" +
+                "MajorVersion=\"1\"\n" +
+                "MinorVersion=\"1\">\n" +
+                "<samlp:AssertionArtifact xmlns:samlp=\"urn:oasis:names:tc:SAML:1.0:protocol\">"+SAMLart+"</samlp:AssertionArtifact>\n" +
+                "</samlp:Request>\n" +
                 "</SOAP:Body>\n" +
                 "</SOAP:Envelope>";
     }

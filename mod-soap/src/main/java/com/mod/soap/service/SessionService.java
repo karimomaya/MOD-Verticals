@@ -88,7 +88,7 @@ public class SessionService {
     public User login(){
         Utils utils = new Utils();
         Http http = new Http(property);
-        String data = "{\"userName\" : \"admin\", \"password\" : \"" + property.getProperty("password") + "\"}";
+        String data = "{\"userName\" : \"admin\", \"password\" : \"" + property.getProperty("password") + "\", \"targetResourceId\" : \""+property.getProperty("resourceId")+"\" }";
         String res = http.cordysRequestWithContentType(property.getProperty("otds.url"),"application/json",data );
 
         String ticket = utils.readJSONField(res,"ticket");
@@ -96,21 +96,19 @@ public class SessionService {
         String token = utils.readJSONField(res,"token");
 
         UserDetails userDetails = new UserDetails();
-        res = http.cordysRequest(userDetails.getAssetionArtifactMessage(ticket));
-
-        Document doc = utils.convertStringToXMLDocument(res);
-        java.lang.System.out.println(doc);
-
-        Node node = doc.getElementsByTagName("samlp:AssertionArtifact").item(0);
-        String SAMLart = node.getTextContent();
+//        res = http.cordysRequest(userDetails.getAssetionArtifactMessage(ticket));
+//
+//        Document doc = utils.convertStringToXMLDocument(res);
+//        java.lang.System.out.println(doc);
+//
+//        Node node = doc.getElementsByTagName("samlp:AssertionArtifact").item(0);
+//        String SAMLart = node.getTextContent();
 //        http.setSAMLart("MDEQ7kYAUafouLmLceBrw6AE1Uo8oCCqIf813YKy1brQsvifASbqXmxJ");
-        http.setSAMLart(SAMLart);
+//        http.setSAMLart(SAMLart);
 
-        res = http.cordysRequest(userDetails.impersonateUser(ticket,"omarsabry"));
+        res = http.cordysRequest(userDetails.getUserDetailsWithTicket(ticket));
 
         java.lang.System.out.println(res);
-
-
 
 //        res = http.cordysRequest(userDetails.getUserDetails());
 //        doc = Utils.convertStringToXMLDocument( res );
@@ -120,6 +118,7 @@ public class SessionService {
 //        User userHelper =  userHelperRepository.getUserDetail(cn).get(0);
 //        setSession(SAMLart, userHelper);
 //        return userHelper;
+
         return null;
     }
 
