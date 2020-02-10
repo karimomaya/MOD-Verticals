@@ -1,8 +1,13 @@
 package com.mod.soap.endpoint;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mod.soap.dao.model.Config;
+import com.mod.soap.dao.model.Security;
+import com.mod.soap.dao.model.SecurityConfig;
 import com.mod.soap.dao.model.User;
 import com.mod.soap.dao.repository.ConfigRepository;
+import com.mod.soap.dao.repository.SecurityRepository;
 import com.mod.soap.dao.repository.UserRepository;
 import com.mod.soap.model.RequestNumber;
 import com.mod.soap.model.SecurityAccess;
@@ -13,6 +18,7 @@ import com.mod.soap.request.CustomSecurityResponse;
 import com.mod.soap.request.RequestNumberRequest;
 import com.mod.soap.request.RequestNumberResponse;
 import com.mod.soap.service.SessionService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -29,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by karim.omaya on 12/7/2019.
@@ -50,6 +57,8 @@ public class RequestNumberEndPoint {
     ConfigRepository configRepository;
     @Autowired
     SessionService sessionService;
+    @Autowired
+    SecurityRepository securityRepository;
 
 
     @Autowired
@@ -95,8 +104,38 @@ public class RequestNumberEndPoint {
 
             if (user == null) user = sessionService.login(securityRequest.getSamlart());
 
+            if (user == null){
+                SecurityAccess securityAccess = new SecurityAccess();
+                securityAccess.setAccess(false);
+                customSecurityResponse.setSecurityAccess(securityAccess);
+                continue;
+            }
+
+
+            Optional<Security> securityOptional = securityRepository.findByTargetAndType(securityRequest.getTarget(), securityRequest.getType());
+
+
+            if (!securityOptional.isPresent()){
+                SecurityAccess securityAccess = new SecurityAccess();
+                securityAccess.setAccess(false);
+                customSecurityResponse.setSecurityAccess(securityAccess);
+                continue;
+            }
+
+            Security security = securityOptional.get();
+
+            String config = security.getConfig();
+
 
             System.out.println("Voila you can find it by target and type");
+            System.out.println(config);
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                SecurityConfig securityConfig = objectMapper.readValue(config, SecurityConfig.class);
+                System.out.print(securityConfig.getOutput());
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
 
 
             SecurityAccess securityAccess = new SecurityAccess();
@@ -137,4 +176,6 @@ public class RequestNumberEndPoint {
     public String getProperty(String pPropertyKey) {
         return env.getProperty(pPropertyKey);
     }
+
+
 }

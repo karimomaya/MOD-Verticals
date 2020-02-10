@@ -28,6 +28,7 @@
             <xs:element name="type" type="xs:int"/>
             <xs:element name="samlart" type="xs:string"/>
             <xs:element name="target" type="xs:string"/>
+            <xs:element name="input" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

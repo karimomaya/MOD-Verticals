@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.*;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "samlart", "type", "target"
+        "samlart", "type", "target", "input"
 })
 public class SecurityRequest {
     @XmlElement(name = "samlart", required = false)
@@ -16,7 +16,16 @@ public class SecurityRequest {
     int type;
     @XmlElement(name = "target", required = false)
     String target;
+    @XmlElement(name = "input", required = false)
+    String input;
 
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
 
     public String getSamlart() {
         return samlart;
