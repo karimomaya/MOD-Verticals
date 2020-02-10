@@ -96,15 +96,15 @@ public class SessionService {
         String token = utils.readJSONField(res,"token");
 
         UserDetails userDetails = new UserDetails();
-//        res = http.cordysRequest(userDetails.getAssetionArtifactMessage(ticket));
+        res = http.cordysRequest(userDetails.getAssetionArtifactMessage(ticket));
 
-//        Document doc = utils.convertStringToXMLDocument(res);
-//        java.lang.System.out.println(doc);
+        Document doc = utils.convertStringToXMLDocument(res);
+        java.lang.System.out.println(doc);
 
-//        Node node = doc.getElementsByTagName("samlp:AssertionArtifact").item(0);
-//        String SAMLart = node.getTextContent();
+        Node node = doc.getElementsByTagName("samlp:AssertionArtifact").item(0);
+        String SAMLart = node.getTextContent();
 //        http.setSAMLart("MDEQ7kYAUafouLmLceBrw6AE1Uo8oCCqIf813YKy1brQsvifASbqXmxJ");
-//        http.setSAMLart(ticket);
+        http.setSAMLart(SAMLart);
 
         res = http.cordysRequest(userDetails.impersonateUser(ticket,"omarsabry"));
 

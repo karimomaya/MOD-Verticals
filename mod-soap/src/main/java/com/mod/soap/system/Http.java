@@ -44,7 +44,7 @@ public class Http {
         header = new Header();
         header.setName("SAMLart");
         header.setValue(SAMLart);
-//        this.SAMLart = SAMLart;
+        this.SAMLart = SAMLart;
     }
 
     public String cordysRequest(String data){
@@ -62,7 +62,7 @@ public class Http {
         String response;
         try {
             method.setRequestEntity(new StringRequestEntity(data, "text/xml", "UTF-8"));
-            method.setRequestHeader(header);
+//            method.setRequestHeader(header);
             statusCode = this.client.executeMethod(method);
             response = method.getResponseBodyAsString();
             java.lang.System.out.println(response);
@@ -84,7 +84,7 @@ public class Http {
         String response;
         try {
             method.setRequestEntity(new StringRequestEntity(data, contentType, "UTF-8"));
-            method.setRequestHeader(header);
+//            method.setRequestHeader(header);
             statusCode = this.client.executeMethod(method);
             response = method.getResponseBodyAsString();
             java.lang.System.out.println(response);
@@ -100,6 +100,6 @@ public class Http {
 
     public String getCordysURL(){
 
-        return domain+"/home/"+organizationName+"/com.eibus.web.soap.Gateway.wcp?SAMLart="+this.SAMLart;
+        return domain+"/home/"+organizationName+"/com.eibus.web.soap.Gateway.wcp";
     }
 }
