@@ -1,6 +1,8 @@
 package com.mod.soap.dao.model;
 
 import lombok.Data;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -17,10 +19,12 @@ public class User {
     @Id
     @Column(name="UserEntityId")
     long id;
+    @Column(name="UserId")
     String username;
     String DisplayName;
     String RoleName;
-    String UnitTypeCode;
-    String UnitCode;
+    String UserUnitTypeCode;
+    @NotFound(action = NotFoundAction.IGNORE)
+    String UserUnitCode;
 
 }
