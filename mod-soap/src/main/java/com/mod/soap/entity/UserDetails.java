@@ -27,11 +27,11 @@ public class UserDetails extends Entity {
                 "</SOAP:Envelope>";
     }
 
-    public String impersonateUser(String token, String username){
+    public String impersonateUser(String ticket, String username){
         return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
                 "  <SOAP:Header>\n" +
                 "    <OTAuthentication xmlns=\"urn:api.ecm.opentext.com\">\n" +
-                "      <AuthenticationToken>"+token+"</AuthenticationToken>\n" +
+                "      <AuthenticationToken>"+ticket+"</AuthenticationToken>\n" +
                 "    </OTAuthentication>\n" +
                 "  </SOAP:Header>\n" +
                 "  <SOAP:Body>\n" +
@@ -39,6 +39,25 @@ public class UserDetails extends Entity {
                 "      <userName>"+username+"</userName>\n" +
                 "    </ImpersonateUser>\n"+
                 "  </SOAP:Body>\n" +
+                "</SOAP:Envelope>";
+    }
+
+    public String getAssetionArtifactMessage(String ticket) {
+        return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "<SOAP:Header>\n" +
+                "  <OTAuthentication xmlns=\"urn:api.bpm.acme.com\">\n" +
+                "    <AuthenticationToken>" + ticket + "</AuthenticationToken>\n" +
+                "  </OTAuthentication>\n" +
+                "</SOAP:Header>\n" +
+                "<SOAP:Body>\n" +
+                "  <samlp:Request xmlns:samlp=\"urn:oasis:names:tc:SAML:1.0:protocol\" MajorVersion=\"1\" MinorVersion=\"1\" IssueInstant=\"2014-05-20T15:29:49.156Z\" RequestID=\"a5470c392e-264e-9537-56ac-4397b1b416d\">\n" +
+                "    <samlp:AuthenticationQuery>\n" +
+                "      <saml:Subject xmlns:saml=\"urn:oasis:names:tc:SAML:1.0:assertion\">\n" +
+                "        <saml:NameIdentifier Format=\"urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified\"></saml:NameIdentifier>\n" +
+                "      </saml:Subject>\n" +
+                "    </samlp:AuthenticationQuery>\n" +
+                "  </samlp:Request>\n" +
+                "</SOAP:Body>\n" +
                 "</SOAP:Envelope>";
     }
 

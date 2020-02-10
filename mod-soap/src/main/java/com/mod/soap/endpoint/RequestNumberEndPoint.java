@@ -91,9 +91,11 @@ public class RequestNumberEndPoint {
         List<SecurityRequest> securityRequests = request.getSecurityRequest();
 
         for (SecurityRequest securityRequest : securityRequests){
-            User user = sessionService.getSession(securityRequest.getSamlart());
+//            User user = sessionService.getSession(securityRequest.getSamlart());
+//
+//            if (user == null) user = sessionService.login();
 
-            if (user == null) user = sessionService.login(securityRequest.getSamlart());
+            User user = sessionService.login();
 
 
             System.out.println("Voila you can find it by target and type");

@@ -1,5 +1,7 @@
 package com.mod.soap.system;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -29,6 +31,22 @@ public class Utils {
         catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public static String readJSONField(String json, String name) {
+        try {
+            if (name != null) {
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode jsonNode = mapper.readTree(json);
+                jsonNode = jsonNode.get(name);
+                return (jsonNode == null ? null : jsonNode.textValue());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 
