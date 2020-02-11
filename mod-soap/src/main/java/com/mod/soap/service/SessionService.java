@@ -124,6 +124,7 @@ public class SessionService {
 
     public User login(String SAMLart){
         Http http = new Http(SAMLart, property);
+
         UserDetails userDetails = new UserDetails();
         String res = http.cordysRequest(userDetails.getUserDetails());
         Document doc = Utils.convertStringToXMLDocument( res );
@@ -131,6 +132,13 @@ public class SessionService {
         String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
         cn = property.configureCN(cn);
         User userHelper =  userHelperRepository.getUserDetail(cn).get(0);
+        String data = "{\"userName\" : \"admin\", \"password\" : \"" + property.getProperty("password") + "\", \"targetResourceId\" : \""+property.getProperty("resourceId")+"\" }";
+        res = http.cordysRequestWithContentType(property.getProperty("otds.url"),"application/json",data );
+
+        String ticket = Utils.readJSONField(res,"ticket");
+
+        userHelper.setTicket(ticket);
+
         setSession(SAMLart, userHelper);
         return userHelper;
     }

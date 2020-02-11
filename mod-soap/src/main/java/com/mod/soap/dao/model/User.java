@@ -4,10 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by karim.omaya on 12/15/2019.
@@ -26,5 +23,6 @@ public class User {
     String UserUnitTypeCode;
     @NotFound(action = NotFoundAction.IGNORE)
     String UserUnitCode;
-
+    @Transient
+    String ticket;
 }

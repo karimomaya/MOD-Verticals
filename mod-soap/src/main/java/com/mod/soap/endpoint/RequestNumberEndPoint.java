@@ -1,11 +1,9 @@
 package com.mod.soap.endpoint;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mod.soap.dao.model.Config;
-import com.mod.soap.dao.model.Security;
-import com.mod.soap.dao.model.SecurityConfig;
-import com.mod.soap.dao.model.User;
+import com.mod.soap.dao.model.*;
 import com.mod.soap.dao.repository.ConfigRepository;
 import com.mod.soap.dao.repository.SecurityRepository;
 import com.mod.soap.dao.repository.UserRepository;
@@ -100,11 +98,11 @@ public class RequestNumberEndPoint {
         List<SecurityRequest> securityRequests = request.getSecurityRequest();
 
         for (SecurityRequest securityRequest : securityRequests){
-//            User user = sessionService.getSession(securityRequest.getSamlart());
+            User user = sessionService.getSession(securityRequest.getSamlart());
 //
-//            if (user == null) user = sessionService.login();
+            if (user == null) user = sessionService.login(securityRequest.getSamlart());
 
-            User user = sessionService.login();
+//            User user = sessionService.login();
 
             if (user == null){
                 SecurityAccess securityAccess = new SecurityAccess();
@@ -129,11 +127,26 @@ public class RequestNumberEndPoint {
             String config = security.getConfig();
 
 
+
+            if ((!securityRequest.getInput().equals("?") || !securityRequest.getInput().equals("PARAMETER") || !securityRequest.equals(" ")) && securityRequest.getInput().length() > 1 ){
+
+                String[] inputs = securityRequest.getInput().split(",");
+
+                for (int i =0; i< inputs.length; i++){
+                    config = config.replace("$"+i , inputs[i] );
+                }
+            }
+
             System.out.println("Voila you can find it by target and type");
             System.out.println(config);
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);;
             try {
                 SecurityConfig securityConfig = objectMapper.readValue(config, SecurityConfig.class);
+
+                securityConfig = securityConfig.setSecurityType(security.getType()).build();
+                securityConfig.execute(user);
+
+//                securityQuery.execute();
                 System.out.print(securityConfig.getOutput());
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
