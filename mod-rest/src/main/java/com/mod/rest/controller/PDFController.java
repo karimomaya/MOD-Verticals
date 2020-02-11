@@ -79,7 +79,8 @@ public class PDFController {
             XMLWorkerFontProvider fontProvider =
                     new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
 
-            fontProvider.register("resources/fonts/NotoNaskhArabic-Regular.ttf");
+//            fontProvider.register("resources/fonts/NotoNaskhArabic-Regular.ttf");
+            fontProvider.register("C:/Windows/Fonts/arial.ttf");
             CssAppliers cssAppliers = new CssAppliersImpl(fontProvider);
 
             document.open();

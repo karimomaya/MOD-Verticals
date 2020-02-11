@@ -46,15 +46,19 @@ public class MeetingController {
     @GetMapping("generate-minutes-of-meeting/{meetingId}")
     @ResponseBody
     public ResponseEntity<byte[]> generateMinutesOfMeetings(@PathVariable("meetingId") long meetingId){
+        System.out.println("generate meeting pdf: " + meetingId);
+
         HttpHeaders respHeaders = new HttpHeaders();
         Optional<Meeting> meetingOptional = meetingRepository.getMeetingData(meetingId);
         ArrayList<MeetingAttendee> meetingAttendee = meetingAttendeeRepository.getMeetingAttendeeData(meetingId);
         ArrayList<MinuteOfMeeting> minutesOfMeeting = minuteOfMeetingRepository.getMinutesOfMeeting(meetingId);
         if (meetingOptional.isPresent()) {
+
             Meeting meeting = meetingOptional.get();
             ArrayList<Meeting> arrayList = new ArrayList();
             arrayList.add(meeting);
             String templateName = pdfService.getTemplateName(meeting);
+            System.out.println("get template name: " + templateName);
 
             try {
                 File file = pdfService.generate(arrayList,"pdf-template/"+templateName+".html", "meeting-data");
