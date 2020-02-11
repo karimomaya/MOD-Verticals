@@ -38,6 +38,7 @@ import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class PDFService {
     public File generate(List<?> objects, String filename, String tagName) throws Exception {
         if (objects.size() == 0)
             return new File(filename);
-
+        System.out.println("generate tag name: " + tagName + " using filename: " + filename);
 
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
         NodeList nodes = document.getElementsByTagName(tagName+"-replacer");
@@ -157,12 +158,18 @@ public class PDFService {
 
         File file = File.createTempFile("template", ".html");
 
-        FileWriter writer = new FileWriter(file);
+
+        System.out.println("create temp file on: " + file.getAbsolutePath());
+
+        Writer writer = null;
+        BufferedWriter out = null;
+
+        writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
+//        FileWriter writer = new FileWriter(file);
         StreamResult result = new StreamResult(writer);
         transformer.transform(source, result);
 
 
-        System.out.println(file.getAbsolutePath());
 
 
 
@@ -208,6 +215,7 @@ public class PDFService {
     }
 
     public byte[] generatePDF(String filename) {
+        System.out.println("generate PDF using file name: " + filename);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         File tempFile = null;
         try {
@@ -219,8 +227,13 @@ public class PDFService {
             XMLWorkerFontProvider fontProvider =
                     new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
 
+            System.out.println("try to read font: NotoNaskhArabic");
             fontProvider.register("resources/fonts/NotoNaskhArabic-Regular.ttf");
+//            fontProvider.register("C:/Windows/Fonts/arabtype.ttf");
+            System.out.println("read Success");
+            System.out.println("try to apply CSS");
             CssAppliers cssAppliers = new CssAppliersImpl(fontProvider);
+            System.out.println("apply Success");
 
             document.open();
 
@@ -253,9 +266,11 @@ public class PDFService {
             document.close();
         }
         catch (IOException e){
+            e.printStackTrace();
             System.out.println(e);
         }
         catch (DocumentException e){
+            e.printStackTrace();
             System.out.println(e);
         }
         return byteArrayOutputStream.toByteArray();
