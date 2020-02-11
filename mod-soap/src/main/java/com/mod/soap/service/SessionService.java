@@ -1,8 +1,5 @@
 package com.mod.soap.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mod.soap.dao.model.User;
 import com.mod.soap.entity.UserDetails;
 import com.mod.soap.dao.repository.UserRepository;
@@ -19,7 +16,6 @@ import org.w3c.dom.Node;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
@@ -85,41 +81,30 @@ public class SessionService {
         }
     }
 
-    public User login(){
+    public User loginWithUsername(String username){
         Utils utils = new Utils();
         Http http = new Http(property);
-        String data = "{\"userName\" : \"admin\", \"password\" : \"" + property.getProperty("password") + "\", \"targetResourceId\" : \""+property.getProperty("resourceId")+"\" }";
-        String res = http.cordysRequestWithContentType(property.getProperty("otds.url"),"application/json",data );
 
+        // get admin ticket
+        String data = "{\"userName\" : \"admin\", \"password\" : \"" + property.getProperty("password") + "\" }";
+        String res = http.cordysRequestWithContentType(property.getProperty("otds.url"),"application/json",data );
         String ticket = utils.readJSONField(res,"ticket");
 
-        String token = utils.readJSONField(res,"token");
+        //get user ticket with otds impersonate user
+        data = "{\"ticket\" : \""+ticket+"\", \"userName\" : \"" +username+ "\" }";
+        res = http.cordysRequestWithContentType(property.getProperty("impersonate.url"),"application/json",data);
+        ticket = utils.readJSONField(res,"ticket");
 
+        //get user details with user ticket
         UserDetails userDetails = new UserDetails();
-//        res = http.cordysRequest(userDetails.getAssetionArtifactMessage(ticket));
-//
-//        Document doc = utils.convertStringToXMLDocument(res);
-//        java.lang.System.out.println(doc);
-//
-//        Node node = doc.getElementsByTagName("samlp:AssertionArtifact").item(0);
-//        String SAMLart = node.getTextContent();
-//        http.setSAMLart("MDEQ7kYAUafouLmLceBrw6AE1Uo8oCCqIf813YKy1brQsvifASbqXmxJ");
-//        http.setSAMLart(SAMLart);
-
         res = http.cordysRequest(userDetails.getUserDetailsWithTicket(ticket));
+        Document doc = Utils.convertStringToXMLDocument( res );
+        Node node = doc.getElementsByTagName("GetUserDetailsResponse").item(0);
+        String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
+        cn = property.configureCN(cn);
+        User userHelper =  userHelperRepository.getUserDetail(cn).get(0);
 
-        java.lang.System.out.println(res);
-
-//        res = http.cordysRequest(userDetails.getUserDetails());
-//        doc = Utils.convertStringToXMLDocument( res );
-//        node = doc.getElementsByTagName("GetUserDetailsResponse").item(0);
-//        String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
-//        cn = property.configureCN(cn);
-//        User userHelper =  userHelperRepository.getUserDetail(cn).get(0);
-//        setSession(SAMLart, userHelper);
-//        return userHelper;
-
-        return null;
+        return userHelper;
     }
 
     public User login(String SAMLart){

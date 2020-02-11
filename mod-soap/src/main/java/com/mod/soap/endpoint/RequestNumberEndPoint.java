@@ -98,11 +98,10 @@ public class RequestNumberEndPoint {
         List<SecurityRequest> securityRequests = request.getSecurityRequest();
 
         for (SecurityRequest securityRequest : securityRequests){
-            User user = sessionService.getSession(securityRequest.getSamlart());
-//
-            if (user == null) user = sessionService.login(securityRequest.getSamlart());
+//            User user = sessionService.getSession(securityRequest.getSamlart());
+//            if (user == null) user = sessionService.login(securityRequest.getSamlart());
 
-//            User user = sessionService.login();
+            User user = sessionService.loginWithUsername("omarsabry");
 
             if (user == null){
                 SecurityAccess securityAccess = new SecurityAccess();

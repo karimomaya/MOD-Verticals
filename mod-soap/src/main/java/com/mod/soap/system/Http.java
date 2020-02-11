@@ -84,7 +84,7 @@ public class Http {
         String response;
         try {
             method.setRequestEntity(new StringRequestEntity(data, contentType, "UTF-8"));
-//            method.setRequestHeader(header);
+            method.setRequestHeader(header);
             statusCode = this.client.executeMethod(method);
             response = method.getResponseBodyAsString();
             java.lang.System.out.println(response);
