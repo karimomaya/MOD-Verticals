@@ -41,16 +41,11 @@ public class UserDetails extends Entity {
     }
 
     public String impersonateUser(String ticket, String username){
-//        return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-//                "  <SOAP:Body>\n" +
-//                "    <ImpersonateUser xmlns=\"urn:Core.service.livelink.opentext.com\">\n"+
-//                "      <userName>"+username+"</userName>\n" +
-//                "    </ImpersonateUser>\n"+
-//                "  </SOAP:Body>\n" +
-//                "</SOAP:Envelope>";
-
         return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
                 "  <SOAP:Header>\n" +
+                "    <OTAuthentication xmlns=\"urn:api.bpm.opentext.com\">\n" +
+                "      <AuthenticationToken>"+ticket+"</AuthenticationToken>\n" +
+                "    </OTAuthentication>\n" +
                 "    <OTAuthentication xmlns=\"urn:api.ecm.opentext.com\">\n" +
                 "      <AuthenticationToken>"+ticket+"</AuthenticationToken>\n" +
                 "    </OTAuthentication>\n" +
