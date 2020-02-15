@@ -23,6 +23,8 @@ public class User {
     String UserUnitTypeCode;
     @NotFound(action = NotFoundAction.IGNORE)
     String UserUnitCode;
+    @NotFound(action = NotFoundAction.IGNORE)
+    String roleCode;
     @Transient
     String ticket;
 }

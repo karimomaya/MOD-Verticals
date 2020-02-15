@@ -33,9 +33,10 @@ public class SecurityConfig {
     }
 
 
-    public SecurityConfig build(){
+    public SecurityQuery build(User user){
+        securityQuery.setUser(user);
         processOutputNode(output, 0);
-        return this;
+        return this.securityQuery;
     }
 
     public SecurityConfig build(int securityType){
@@ -44,34 +45,7 @@ public class SecurityConfig {
         return this;
     }
 
-    public boolean execute(User user){
-        if (SecurityType.ROLE_TYPE.WEBSERVICE == securityQuery.getSecurityType()){
-            String template = securityQuery.getSecurityType().getTemplate();
-            System.out.println(template);
-            template = template.replace("{ticket}", user.getTicket());
-            String methodName = webservice.findPath("method").asText();
-            String namespace = webservice.findPath("namespace").asText();
-            template = template.replaceAll("\\{method\\}", methodName);
-            template = template.replace("{namespace}", namespace);
 
-            ObjectMapper xmlMapper = new XmlMapper();
-
-            try {
-                String params = xmlMapper.writer().writeValueAsString(webservice.findPath("param"));
-                params = params.replace("<ObjectNode>","");
-                params = params.replace("</ObjectNode>","");
-
-                template = template.replace("{params}", params);
-                System.out.println(template);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-//            template = template.replace("{ticket}", user.getTicket());
-
-//{ticket} {method}  {namespace} {params}
-        }
-        return false;
-    }
 
     private void processOutputNode(JsonNode jsonNode, int depth) {
         if (jsonNode.isValueNode()) {

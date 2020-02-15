@@ -16,6 +16,8 @@ import com.mod.soap.request.CustomSecurityResponse;
 import com.mod.soap.request.RequestNumberRequest;
 import com.mod.soap.request.RequestNumberResponse;
 import com.mod.soap.service.SessionService;
+import com.mod.soap.system.Http;
+import com.mod.soap.system.Property;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -57,7 +59,8 @@ public class RequestNumberEndPoint {
     SessionService sessionService;
     @Autowired
     SecurityRepository securityRepository;
-
+    @Autowired
+    Property property;
 
     @Autowired
     public RequestNumberEndPoint(RequestNumberRepository RequestNumberRepository) {
@@ -143,8 +146,21 @@ public class RequestNumberEndPoint {
             try {
                 SecurityConfig securityConfig = objectMapper.readValue(config, SecurityConfig.class);
 
-                securityConfig = securityConfig.setSecurityType(security.getType()).build();
-                securityConfig.execute(user);
+
+
+                SecurityQuery securityQuery = securityConfig.setSecurityType(security.getType()).build(user);
+
+                if (securityQuery.getSecurityType() == SecurityType.WEBSERVICE){
+                    String webservice  = securityQuery.setWebservice(securityConfig.getWebservice()).prepareWebservice();
+                    Http http = new Http(property);
+                    String res = http.cordysRequest(webservice);
+                    boolean canAccess = securityQuery.evaluateWebserviceResponse(res);
+                    SecurityAccess securityAccess = new SecurityAccess();
+                    securityAccess.setAccess(canAccess);
+
+                    customSecurityResponse.setSecurityAccess(securityAccess);
+
+                }
 
 //                securityQuery.execute();
                 System.out.print(securityConfig.getOutput());
@@ -153,25 +169,12 @@ public class RequestNumberEndPoint {
             }
 
 
-            SecurityAccess securityAccess = new SecurityAccess();
-            securityAccess.setAccess(true);
 
-            customSecurityResponse.setSecurityAccess(securityAccess);
         }
 
-
-
-        HttpServletRequest httpServletRequest = getHttpServletRequest();
-        Enumeration<String> enums =  httpServletRequest.getHeaderNames();
-        while (enums.hasMoreElements()) {
-            String param = enums.nextElement();
-            System.out.println(param);
-            System.out.println(getHttpHeaderValue(param));
-        }
 
 
         return customSecurityResponse;
-//        return response;
     }
 
 
