@@ -59,4 +59,7 @@ public interface TaskRepository extends GenericRepository<Task,Long> {
 
     @Query(value = "{call MOD_RM_SP_GetInProgressDelayedClosedTaskRisksReportCount( :integrationIds, :createdBy )}", nativeQuery = true)
     Long getInProgressDelayedClosedTaskRisksReportCount( @Param("integrationIds") String integrationIds, @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_getTasksRelatedToDiscussionPointAndMeeting( :meetingId, :discussionPointId )}", nativeQuery = true)
+    Long getTasksRelatedToDiscussionPointAndMeeting( @Param("meetingId") long meetingId, @Param("discussionPointId") long discussionPointId);
 }

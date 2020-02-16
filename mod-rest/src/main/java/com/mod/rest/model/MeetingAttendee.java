@@ -18,6 +18,8 @@ public class MeetingAttendee {
     String displayName;
     Integer status;
     String roleName;
+
+
     public String getStatusType(){
         switch (this.status){
             case 1:

@@ -75,7 +75,7 @@ public class PDFService {
                     // create TD
                     Element td = document.createElement("td");
 
-                    if (i ==0 ) td.setAttribute("class", "padding");
+//                    if (i ==0 ) td.setAttribute("class", "padding");
 
                     try {
                         Method method =  cls.getMethod(nodes.item(i).getTextContent());
@@ -93,9 +93,9 @@ public class PDFService {
 
                         if (!o.equals("")){
                             if (Utils.isArabicText(innerText)){
-                                td.setAttribute("dir", "rtl");
+//                                td.setAttribute("dir", "rtl");
                             }else {
-                                td.setAttribute("class", "ltr");
+                                td.setAttribute("class", "english-font");
                             }
 
                         }

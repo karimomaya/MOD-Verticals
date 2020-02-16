@@ -21,6 +21,25 @@ import java.util.concurrent.TimeUnit;
  * Created by karim.omaya on 10/30/2019.
  */
 public class Utils {
+    public static String getHoursFromDate(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int h = cal.get(Calendar.HOUR_OF_DAY);
+        int m = cal.get(Calendar.MINUTE);
+        String hour = (h <= 9)? "0"+ h: h+"";
+        String minutes = (m <= 9)? "0"+ m: m+"";
+        return hour +":" + minutes;
+    }
+
+    public static String getArabicNameOfDay(Date date){
+        String[] days= {"سبت", "حد", "اتنين", "ثلاثاء" , "اربعاء" , "خميس" , "جمعة"};
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+
+        return days[day];
+    }
 
     public static String minifier(String fileLocation) throws IOException {
         final URL url = new URL("https://javascript-minifier.com/raw");

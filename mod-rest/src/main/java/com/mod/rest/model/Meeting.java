@@ -42,6 +42,21 @@ public class Meeting {
     Room room;
 
 
+    public String getMeetingRoomName(){
+        return this.room.getRoomName();
+    }
+    public String getHourOfMeeting(){
+        return Utils.getHoursFromDate(this.startDate);
+    }
+
+    public String getMeetingSubject() {
+        return "محضر اجتماع "+ this.Subject;
+    }
+
+    public String getDayOfWeek(){
+        return Utils.getArabicNameOfDay(this.startDate);
+    }
+
     public String getOwnerName(){
         return owner.getDisplayName();
     }

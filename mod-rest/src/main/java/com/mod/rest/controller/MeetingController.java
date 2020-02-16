@@ -3,9 +3,7 @@ package com.mod.rest.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mod.rest.model.*;
-import com.mod.rest.repository.MeetingAttendeeRepository;
-import com.mod.rest.repository.MeetingRepository;
-import com.mod.rest.repository.MinuteOfMeetingRepository;
+import com.mod.rest.repository.*;
 import com.mod.rest.service.PDFService;
 import com.mod.rest.system.ResponseBuilder;
 import org.json.JSONArray;
@@ -41,7 +39,9 @@ public class MeetingController {
     @Autowired
     MeetingAttendeeRepository meetingAttendeeRepository;
     @Autowired
-    MinuteOfMeetingRepository minuteOfMeetingRepository;
+    DiscussionPointRepository discussionPointRepository;
+    @Autowired
+    TaskRepository taskRepository;
 
     @GetMapping("generate-minutes-of-meeting/{meetingId}")
     @ResponseBody
@@ -51,7 +51,12 @@ public class MeetingController {
         HttpHeaders respHeaders = new HttpHeaders();
         Optional<Meeting> meetingOptional = meetingRepository.getMeetingData(meetingId);
         ArrayList<MeetingAttendee> meetingAttendee = meetingAttendeeRepository.getMeetingAttendeeData(meetingId);
-        ArrayList<MinuteOfMeeting> minutesOfMeeting = minuteOfMeetingRepository.getMinutesOfMeeting(meetingId);
+        ArrayList<DiscussionPoint> discussionPoints = discussionPointRepository.getDiscussionPoints(meetingId);
+//        ArrayList<Task> tasks = taskRepository.getTasksRelatedToDiscussionPointAndMeeting(meetingId);
+        int count = 0;
+        for (DiscussionPoint discussionPoint : discussionPoints){
+            discussionPoint.setNumber(++count);
+        }
         if (meetingOptional.isPresent()) {
 
             Meeting meeting = meetingOptional.get();
@@ -62,9 +67,11 @@ public class MeetingController {
 
             try {
                 File file = pdfService.generate(arrayList,"pdf-template/"+templateName+".html", "meeting-data");
+                file = pdfService.generate(arrayList, file.toURI().getPath(), "meeting-subject");
                 file = pdfService.generate(arrayList, file.toURI().getPath(), "meeting-description");
+
                 file = pdfService.generate(meetingAttendee, file.toURI().getPath(), "attendee-data");
-                file = pdfService.generate(minutesOfMeeting, file.toURI().getPath(), "minute-of-meeting");
+                file = pdfService.generate(discussionPoints, file.toURI().getPath(), "discussion-point");
                 byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
                 respHeaders.setContentLength(bytes.length);
                 respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);

@@ -17,5 +17,7 @@ public class Room {
     @Id
     long Id;
 
+    String roomName;
+
 
 }
