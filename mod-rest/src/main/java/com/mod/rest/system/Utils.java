@@ -32,13 +32,13 @@ public class Utils {
     }
 
     public static String getArabicNameOfDay(Date date){
-        String[] days= {"سبت", "حد", "اتنين", "ثلاثاء" , "اربعاء" , "خميس" , "جمعة"};
+        String[] days= {"حد", "اتنين", "ثلاثاء" , "اربعاء" , "خميس" , "جمعة", "سبت"};
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
         int day = cal.get(Calendar.DAY_OF_WEEK);
 
-        return days[day];
+        return days[day-1];
     }
 
     public static String minifier(String fileLocation) throws IOException {

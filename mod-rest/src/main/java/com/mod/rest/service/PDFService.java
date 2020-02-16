@@ -108,11 +108,12 @@ public class PDFService {
 
                 }
                 if (!notAddd) tableBody.appendChild(tr);
+            }
 
-                int length = nodes.getLength();
-                for(int i = 0 ; i < length ; i++){
-                    tableBody.removeChild(nodes.item(0));
-                }
+
+            int length = nodes.getLength();
+            for(int i = 0 ; i < length ; i++){
+                tableBody.removeChild(nodes.item(0));
             }
         }
         else {

@@ -7,10 +7,7 @@ import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -47,6 +44,48 @@ public class TaskReportHelper {
     String entityBWSId;
     String source;
     Integer integrationId;
+    @Transient
+    String number;
+
+    public void setNumber(int position){
+        String result = "البند ";
+        this.number =  result + convertPositionToWord(position);
+    }
+
+    public String getNumber(){
+        return this.number;
+    }
+
+    public String convertPositionToWord(int position){
+        switch (position){
+            case 1:
+                return "الأول";
+            case 2:
+                return "الثاني";
+            case 3:
+                return "الثالث";
+            case 4:
+                return "الرابع";
+            case 5:
+                return "الخامس";
+            case 6:
+                return "السادس";
+            case 7:
+                return "السابع";
+            case 8:
+                return "الثامن";
+            case 9:
+                return "التاسع";
+            case 10:
+                return "العاشر";
+            case 11:
+                return "الحادي عشر";
+            case 12:
+                return "الثاني عشر";
+            default:
+                return position+"";
+        }
+    }
 
     @ColumnName(key = "اسم")
     public String getTaskName(){

@@ -45,6 +45,7 @@ public class Meeting {
     public String getMeetingRoomName(){
         return this.room.getRoomName();
     }
+
     public String getHourOfMeeting(){
         return Utils.getHoursFromDate(this.startDate);
     }
@@ -60,4 +61,5 @@ public class Meeting {
     public String getOwnerName(){
         return owner.getDisplayName();
     }
+
 }

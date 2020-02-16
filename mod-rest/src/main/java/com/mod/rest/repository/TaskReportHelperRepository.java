@@ -5,6 +5,7 @@ import com.mod.rest.model.TaskReportHelper;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,4 +34,6 @@ public interface TaskReportHelperRepository extends GenericRepository<TaskReport
     @Query(value = "{call MOD_TM_SP_FinishedAndDelayedTaskReportProject(:userIds, :userId, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
     List<TaskReportHelper> getFinishedAndDelayedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
 
+    @Query(value = "{call MOD_RM_SP_getTasksRelatedToDiscussionPointAndMeeting( :meetingId, :discussionPointId )}", nativeQuery = true)
+    ArrayList<TaskReportHelper> getTasksRelatedToDiscussionPointAndMeeting(@Param("meetingId") long meetingId, @Param("discussionPointId") long discussionPointId);
 }
