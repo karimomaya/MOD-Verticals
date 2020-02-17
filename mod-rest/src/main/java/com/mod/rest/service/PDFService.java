@@ -51,11 +51,14 @@ public class PDFService {
 
     @Autowired
     Environment config;
+    @Autowired
+    LoggerService loggerService;
 
     public File generate(List<?> objects, String filename, String tagName) throws Exception {
         if (objects.size() == 0)
             return new File(filename);
         System.out.println("generate tag name: " + tagName + " using filename: " + filename);
+        loggerService.write('i',"PDF Service generate tag name: " + tagName + " using filename: " + filename);
 
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
         NodeList nodes = document.getElementsByTagName(tagName+"-replacer");
@@ -159,7 +162,7 @@ public class PDFService {
 
         File file = File.createTempFile("template", ".html");
 
-
+        loggerService.write('i', "create temp file on: " + file.getAbsolutePath());
         System.out.println("create temp file on: " + file.getAbsolutePath());
 
         Writer writer = null;

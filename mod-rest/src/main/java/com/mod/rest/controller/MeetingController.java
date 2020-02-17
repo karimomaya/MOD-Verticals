@@ -2,6 +2,7 @@ package com.mod.rest.controller;
 
 import com.mod.rest.model.*;
 import com.mod.rest.repository.*;
+import com.mod.rest.service.LoggerService;
 import com.mod.rest.service.PDFService;
 import com.mod.rest.system.ResponseBuilder;
 import org.json.JSONArray;
@@ -32,6 +33,8 @@ public class MeetingController {
     @Autowired
     PDFService pdfService;
     @Autowired
+    LoggerService loggerService;
+    @Autowired
     MeetingRepository meetingRepository;
     @Autowired
     MeetingAttendeeRepository meetingAttendeeRepository;
@@ -44,12 +47,14 @@ public class MeetingController {
     @ResponseBody
     public ResponseEntity<byte[]> generateMinutesOfMeetings(@PathVariable("meetingId") long meetingId){
         System.out.println("generate meeting pdf: " + meetingId);
-
+        loggerService.write('i',"Exporting PDF to meeting of Id: "+meetingId);
         HttpHeaders respHeaders = new HttpHeaders();
+        loggerService.write('i',"Get Meeting Data");
         Optional<Meeting> meetingOptional = meetingRepository.getMeetingData(meetingId);
+        loggerService.write('i',"Get Discussion Points");
         ArrayList<DiscussionPoint> discussionPoints = discussionPointRepository.getDiscussionPoints(meetingId);
 //        ArrayList<Task> tasks = taskRepository.getTasksRelatedToDiscussionPointAndMeeting(meetingId);
-
+        loggerService.write('i',"Get meeting attendees");
         ArrayList<MeetingAttendee> tempMeetingAttendee = meetingAttendeeRepository.getMeetingAttendeeData(meetingId);
         ArrayList<MeetingAttendee> meetingAttendee = new ArrayList<>();
         for(MeetingAttendee attendee : tempMeetingAttendee){
@@ -58,6 +63,7 @@ public class MeetingController {
             }
         }
 
+        loggerService.write('i', "Get meeting Tasks");
         ArrayList<TaskReportHelper> meetingTasks = new ArrayList<>();
         int count = 0;
         for (DiscussionPoint discussionPoint : discussionPoints){
@@ -73,26 +79,38 @@ public class MeetingController {
         if (meetingOptional.isPresent()) {
 
             Meeting meeting = meetingOptional.get();
+            loggerService.write('i',"Meeting Data: "+meeting);
+            loggerService.write('i',"Discussion Points: "+ discussionPoints);
+            loggerService.write('i',"Meeting Attendees: "+ meetingAttendee);
+            loggerService.write('i',"Meeting Tasks: "+ meetingTasks);
             ArrayList<Meeting> arrayList = new ArrayList();
             arrayList.add(meeting);
+
             String templateName = pdfService.getTemplateName(meeting);
             System.out.println("get template name: " + templateName);
+            loggerService.write('i',"Template Name: "+templateName);
 
             try {
+                loggerService.write('i',"Editing template with meeting data");
                 File file = pdfService.generate(arrayList,"pdf-template/"+templateName+".html", "meeting-data");
                 file = pdfService.generate(arrayList, file.toURI().getPath(), "meeting-subject");
+                loggerService.write('i',"Editing template with meeting attendees");
                 file = pdfService.generate(meetingAttendee, file.toURI().getPath(), "attendee-data");
+                loggerService.write('i',"Editing template with discussion points");
                 file = pdfService.generate(discussionPoints, file.toURI().getPath(), "discussion-point");
+                loggerService.write('i',"Editing template with meeting tasks");
                 file = pdfService.generate(meetingTasks, file.toURI().getPath(), "meeting-task");
+                loggerService.write('i',"PDF Service Generate PDF");
                 byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
                 respHeaders.setContentLength(bytes.length);
                 respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
                 respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
                 respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=attachment.pdf" );
-
+                loggerService.write('i',"Generate PDF Finished");
                 return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 
             } catch (Exception e) {
+                loggerService.write('e',e.getMessage());
                 e.printStackTrace();
             }
         }

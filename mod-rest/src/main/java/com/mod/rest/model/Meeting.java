@@ -62,4 +62,8 @@ public class Meeting {
         return owner.getDisplayName();
     }
 
+    public String toString(){ return "ID="+this.getId()+" Subject="+this.getSubject()+" Description="+this.getDescription()
+            +" status="+this.getStatus();
+    }
+
 }
