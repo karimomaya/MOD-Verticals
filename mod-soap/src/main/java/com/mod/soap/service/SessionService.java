@@ -86,7 +86,7 @@ public class SessionService {
         Http http = new Http(property);
 
         // get admin ticket
-        String data = "{\"userName\" : \"admin\", \"password\" : \"" + property.getProperty("password") + "\" }";
+        String data = "{\"userName\" : \""+property.getProperty("logged.in.user")+"\", \"password\" : \"" + Utils.decrypt(property.getProperty("password")) + "\" }";
         String res = http.cordysRequestWithContentType(property.getProperty("otds.url"),"application/json",data );
         String ticket = utils.readJSONField(res,"ticket");
 

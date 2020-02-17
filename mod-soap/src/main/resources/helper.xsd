@@ -8,6 +8,7 @@
                 <!--<xs:element name="userId" type="xs:long"/>-->
                 <!--<xs:element name="code" type="xs:string"/>-->
                 <!--<xs:element name="target" type="xs:string"/>-->
+                <xs:element name="username" type="xs:string"/>
                 <xs:element name="SecurityRequest" type="tns:SecurityRequest" minOccurs="0"
                             maxOccurs="unbounded"/>
             </xs:sequence>
@@ -25,8 +26,6 @@
 
     <xs:complexType name="SecurityRequest">
         <xs:sequence>
-            <xs:element name="type" type="xs:int"/>
-            <xs:element name="samlart" type="xs:string"/>
             <xs:element name="target" type="xs:string"/>
             <xs:element name="input" type="xs:string"/>
         </xs:sequence>
