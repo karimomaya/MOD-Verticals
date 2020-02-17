@@ -9,5 +9,5 @@ import java.util.Optional;
  */
 public interface SecurityRepository extends GenericRepository<Security, Long> {
 
-    Optional<Security> findByTargetAndType(String target, int type);
+    Optional<Security> findByTarget(String target);
 }

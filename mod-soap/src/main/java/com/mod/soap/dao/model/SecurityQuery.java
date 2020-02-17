@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mod.soap.system.Utils;
+import lombok.Data;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -16,11 +17,13 @@ import java.util.Map;
 /**
  * Created by karim on 2/10/20.
  */
+@Data
 public class SecurityQuery {
     private SecurityType securityType; //
     private Map<String, Object> orOperator;
     private Map<String, Object> andOperator;
     private Map<String, Object> anonymousAssertion;
+    private String template;
     private User user;
     JsonNode webservice;
     private String key;
@@ -49,6 +52,56 @@ public class SecurityQuery {
         boolean evaluator = evaluateOrOperatorFromXML(nl);
         evaluator &= evaluateAndOperatorFromXML(nl);
         return evaluator;
+    }
+
+    public boolean evaluateRoleCode(){
+        String[] targets = template.split(",");
+        boolean evaluate = false;
+        for (int i= 0; i< targets.length; i++){
+            if (user.getRoleCode().equals(targets[i])) evaluate = true;
+        }
+        return evaluate;
+    }
+
+    public boolean evaluateUnitCode(){
+        String[] targets = template.split(",");
+        boolean evaluate = false;
+        for (int i= 0; i< targets.length; i++){
+            if (user.getUserUnitCode().equals(targets[i])) evaluate = true;
+        }
+        return evaluate;
+    }
+
+    public boolean evaluateUnitTypeCode(){
+        int target = convertCodeToId(template);
+        int current = convertCodeToId(user.UserUnitTypeCode);
+        if(current >= target) return true;
+        return false;
+    }
+
+    private int convertCodeToId(String code){
+        switch(code){
+            case "MSM": // وزير
+                return 9;
+            case "USM": // وكيل وزارة
+                return 8;
+            case "AAM": // وكيل مساعد
+                return 7;
+            case "EXM": // رئيس إدارة تنفيذية
+                return 6;
+            case "OFC": //مكتب
+                return 5;
+            case "DIR": //مدير مديرية
+                return 4;
+            case "DIV": // رئيس شعبة
+                return 3;
+            case "SEC": // رئيس قسم
+                return 2;
+            case "STF":// ركن
+                return 1;
+            default:
+                return 1;
+        }
     }
 
 
@@ -145,6 +198,12 @@ public class SecurityQuery {
     public void setSecurityType(int securityType){
         if (securityType == 4){
             this.securityType = SecurityType.WEBSERVICE;
+        }else if(securityType == 3){
+            this.securityType = SecurityType.UNIT_TYPE_Code;
+        } else if(securityType == 2){
+            this.securityType = SecurityType.UNIT_CODE;
+        } else if(securityType == 1){
+            this.securityType = SecurityType.ROLE_CODE;
         }
     }
 
@@ -178,6 +237,7 @@ public class SecurityQuery {
         template = updateWebserviceTemplate(template);
         return template;
     }
+
 
     private String updateWebserviceTemplate(String template) {
 

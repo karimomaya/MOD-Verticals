@@ -17,7 +17,10 @@ import java.util.function.Consumer;
  */
 @Data
 public class SecurityConfig {
-    JsonNode webservice ;
+    String unitTypeCode;
+    String unitCode;
+    String roleCode;
+    JsonNode webservice;
     JsonNode output;
     SecurityQuery securityQuery;
 
@@ -35,7 +38,19 @@ public class SecurityConfig {
 
     public SecurityQuery build(User user){
         securityQuery.setUser(user);
-        processOutputNode(output, 0);
+        if (securityQuery.getSecurityType() == SecurityType.WEBSERVICE){
+            processOutputNode(output, 0);
+        }else if (securityQuery.getSecurityType() == SecurityType.UNIT_TYPE_Code){
+            String template = securityQuery.getSecurityType().getTemplate();
+            securityQuery.setTemplate(template.replace("{code}", unitTypeCode));
+        }else if(securityQuery.getSecurityType() == SecurityType.UNIT_CODE){
+            String template = securityQuery.getSecurityType().getTemplate();
+            securityQuery.setTemplate(template.replace("{code}", unitCode));
+        }else if(securityQuery.getSecurityType() == SecurityType.ROLE_CODE){
+            String template = securityQuery.getSecurityType().getTemplate();
+            securityQuery.setTemplate(template.replace("{code}", unitCode));
+        }
+
         return this.securityQuery;
     }
 

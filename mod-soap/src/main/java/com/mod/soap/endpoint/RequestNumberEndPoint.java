@@ -100,21 +100,18 @@ public class RequestNumberEndPoint {
 
         List<SecurityRequest> securityRequests = request.getSecurityRequest();
 
+        User user = sessionService.loginWithUsername(request.getUsername());
+
+        if (user == null){
+            SecurityAccess securityAccess = new SecurityAccess();
+            securityAccess.setAccess(false);
+            customSecurityResponse.setSecurityAccess(securityAccess);
+            return customSecurityResponse;
+        }
+
         for (SecurityRequest securityRequest : securityRequests){
-//            User user = sessionService.getSession(securityRequest.getSamlart());
-//            if (user == null) user = sessionService.login(securityRequest.getSamlart());
 
-            User user = sessionService.loginWithUsername("omarsabry");
-
-            if (user == null){
-                SecurityAccess securityAccess = new SecurityAccess();
-                securityAccess.setAccess(false);
-                customSecurityResponse.setSecurityAccess(securityAccess);
-                continue;
-            }
-
-
-            Optional<Security> securityOptional = securityRepository.findByTargetAndType(securityRequest.getTarget(), securityRequest.getType());
+            Optional<Security> securityOptional = securityRepository.findByTarget(securityRequest.getTarget());
 
 
             if (!securityOptional.isPresent()){
@@ -128,8 +125,6 @@ public class RequestNumberEndPoint {
 
             String config = security.getConfig();
 
-
-
             if ((!securityRequest.getInput().equals("?") || !securityRequest.getInput().equals("PARAMETER") || !securityRequest.equals(" ")) && securityRequest.getInput().length() > 1 ){
 
                 String[] inputs = securityRequest.getInput().split(",");
@@ -139,39 +134,35 @@ public class RequestNumberEndPoint {
                 }
             }
 
-            System.out.println("Voila you can find it by target and type");
-            System.out.println(config);
-            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);;
+            ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             try {
                 SecurityConfig securityConfig = objectMapper.readValue(config, SecurityConfig.class);
 
-
-
                 SecurityQuery securityQuery = securityConfig.setSecurityType(security.getType()).build(user);
+
+                boolean canAccess = false;
 
                 if (securityQuery.getSecurityType() == SecurityType.WEBSERVICE){
                     String webservice  = securityQuery.setWebservice(securityConfig.getWebservice()).prepareWebservice();
                     Http http = new Http(property);
                     String res = http.cordysRequest(webservice);
-                    boolean canAccess = securityQuery.evaluateWebserviceResponse(res);
-                    SecurityAccess securityAccess = new SecurityAccess();
-                    securityAccess.setAccess(canAccess);
-
-                    customSecurityResponse.setSecurityAccess(securityAccess);
-
+                    canAccess = securityQuery.evaluateWebserviceResponse(res);
+                } else if (securityQuery.getSecurityType() == SecurityType.UNIT_TYPE_Code){
+                    canAccess = securityQuery.evaluateUnitTypeCode();
+                } else if (securityQuery.getSecurityType() == SecurityType.UNIT_CODE){
+                    canAccess = securityQuery.evaluateUnitCode();
+                } else if (securityQuery.getSecurityType() == SecurityType.ROLE_CODE){
+                    canAccess = securityQuery.evaluateRoleCode();
                 }
+                SecurityAccess securityAccess = new SecurityAccess();
+                securityAccess.setAccess(canAccess);
+                customSecurityResponse.setSecurityAccess(securityAccess);
 
-//                securityQuery.execute();
-                System.out.print(securityConfig.getOutput());
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
 
-
-
         }
-
-
 
         return customSecurityResponse;
     }

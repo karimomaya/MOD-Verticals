@@ -14,11 +14,22 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "securityRequest"
+        "securityRequest", "username"
 })
 public class CustomSecurityRequest {
     @XmlElement(name = "SecurityRequest", required = true)
     protected List<SecurityRequest> securityRequest;
+
+    @XmlElement(name = "username", required = true)
+    protected String username;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public List<SecurityRequest> getSecurityRequest() {
         return securityRequest;
