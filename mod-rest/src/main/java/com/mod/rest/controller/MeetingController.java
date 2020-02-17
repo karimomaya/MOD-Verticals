@@ -47,9 +47,17 @@ public class MeetingController {
 
         HttpHeaders respHeaders = new HttpHeaders();
         Optional<Meeting> meetingOptional = meetingRepository.getMeetingData(meetingId);
-        ArrayList<MeetingAttendee> meetingAttendee = meetingAttendeeRepository.getMeetingAttendeeData(meetingId);
         ArrayList<DiscussionPoint> discussionPoints = discussionPointRepository.getDiscussionPoints(meetingId);
 //        ArrayList<Task> tasks = taskRepository.getTasksRelatedToDiscussionPointAndMeeting(meetingId);
+
+        ArrayList<MeetingAttendee> tempMeetingAttendee = meetingAttendeeRepository.getMeetingAttendeeData(meetingId);
+        ArrayList<MeetingAttendee> meetingAttendee = new ArrayList<>();
+        for(MeetingAttendee attendee : tempMeetingAttendee){
+            if(attendee.getAttendedMeeting()){
+                meetingAttendee.add(attendee);
+            }
+        }
+
         ArrayList<TaskReportHelper> meetingTasks = new ArrayList<>();
         int count = 0;
         for (DiscussionPoint discussionPoint : discussionPoints){
@@ -61,6 +69,7 @@ public class MeetingController {
             }
 
         }
+
         if (meetingOptional.isPresent()) {
 
             Meeting meeting = meetingOptional.get();

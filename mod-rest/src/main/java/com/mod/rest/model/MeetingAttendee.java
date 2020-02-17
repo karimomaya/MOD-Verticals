@@ -18,7 +18,32 @@ public class MeetingAttendee {
     String displayName;
     Integer status;
     String roleName;
+    Boolean attendedMeeting;
+    Boolean isExternal;
+    // Internal Attendee
+    String userDisplayName;
+    String RoleName;
+    String title;
+    // External Attendee
+    String nameArabic;
+    String positionArabic;
+    String entityName;
 
+    public String getAttendeeName(){
+        if(this.isExternal){
+            return this.nameArabic;
+        }else{
+            return this.userDisplayName;
+        }
+    }
+
+    public String getAttendeeRole(){
+        if(this.isExternal){
+            return this.positionArabic;
+        }else{
+            return this.RoleName;
+        }
+    }
 
     public String getStatusType(){
         switch (this.status){

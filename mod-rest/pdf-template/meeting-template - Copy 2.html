@@ -23,8 +23,8 @@ table.specific-class td:first-child {
 
 table td {
     border: 1px solid #9e9e9e;
-    background-color: white;
-    color: black;
+    background-color: black;
+    color: white;
     padding: 5px
 }
 
@@ -35,19 +35,13 @@ table td {
 }
 
 th {
-	color: black;
+	color: white;
     font-weight: bold;
     font-size: 14px;
-    background-color: #9e9e9e;
+    background-color: #c9a869;
     text-align: left;
     padding: 5px;
 }
-
-.table-gold th {
-    background-color:#c9a869;
-    color: white;
-}
-
 .email-wrapper{
     height: 768px;
     display:block;
@@ -135,7 +129,7 @@ img {
                 <span style="margin: 10px ; font-weight: bold;" >محضر الاجتماع:</span>
             </div>
             
-            <table >
+            <table>
                 <thead>
                     <tr>
                         <th>اليوم</th>
@@ -159,6 +153,7 @@ img {
             </table>
 
 
+
              <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
                  <span style="margin: 10px ; font-weight: bold;" >الحضور:</span>
              </div>
@@ -176,15 +171,11 @@ img {
                     <attendee-data-replacer>getAttendeeRole</attendee-data-replacer>
                 </tbody>
             </table>
-
-             <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
-                 <span style="margin: 10px ; font-weight: bold;" >جدول الأعمال:</span>
-             </div>
-            <table  style="font-family: Noto Naskh Arabic">
+	  
+            <table style="font-family: Noto Naskh Arabic">
                 <thead>
                 <tr>
-                    <th dir="rtl">رقم البند</th>
-                    <th dir="rtl">نقطة النقاش</th>
+                    <th dir="rtl" colspan="2">جدول الأعمال</th>
                 </tr>
                 </thead>
                 <tbody id="meeting-data">	
