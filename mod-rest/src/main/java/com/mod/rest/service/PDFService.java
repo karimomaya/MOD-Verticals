@@ -75,6 +75,7 @@ public class PDFService {
                 Element tr = document.createElement("tr");
                 boolean notAddd = false;
                 for(int i = 0 ; i < nodes.getLength() ; i++){
+//                    count ps trs
                     // create TD
                     Element td = document.createElement("td");
 
@@ -126,7 +127,7 @@ public class PDFService {
                 for(int i = 0 ; i < length ; i++){
                     Node parent = nodes.item(0).getParentNode();
 
-                    Element div = document.createElement("span");
+                    Element div = document.createElement("p");
                     div.setAttribute("dir", "rtl");
                     Method method =  cls.getMethod(nodes.item(0).getTextContent());
                     Object o = method.invoke(object);

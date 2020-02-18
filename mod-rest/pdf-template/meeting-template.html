@@ -108,7 +108,10 @@ th {
 img {
 	width: 200px;
 }
+.page-break {
 
+    page-break-before: always;
+}
 </style>
 
 </head>
@@ -132,7 +135,7 @@ img {
          </div>
          <div class="template-data" dir="rtl">
             <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
-                <span style="margin: 10px ; font-weight: bold;" >محضر الاجتماع:</span>
+                <p style="margin: 10px ; font-weight: bold;" >محضر الاجتماع:</p>
             </div>
             
             <table >
@@ -160,7 +163,7 @@ img {
 
 
              <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
-                 <span style="margin: 10px ; font-weight: bold;" >الحضور:</span>
+                 <p style="margin: 10px ; font-weight: bold;" >الحضور:</p>
              </div>
             <table style="font-family: Noto Naskh Arabic">
                 <thead>
@@ -177,8 +180,10 @@ img {
                 </tbody>
             </table>
 
+            <span class="page-break"></span>
+
              <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
-                 <span style="margin: 10px ; font-weight: bold;" >جدول الأعمال:</span>
+                 <p style="margin: 10px ; font-weight: bold;" >جدول الأعمال:</p>
              </div>
             <table  style="font-family: Noto Naskh Arabic">
                 <thead>
@@ -195,7 +200,7 @@ img {
             </table>
 
             <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
-                <span style="margin: 10px ; font-weight: bold;" >التوجيهات والتوصيات:</span>
+                <p style="margin: 10px ; font-weight: bold;" >التوجيهات والتوصيات:</p>
             </div>
             <table style="font-family: Noto Naskh Arabic">
                 <thead>
