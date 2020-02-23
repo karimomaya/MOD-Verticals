@@ -2,6 +2,7 @@ package com.mod.soap.endpoint;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mod.soap.dao.model.*;
 import com.mod.soap.dao.repository.ConfigRepository;
@@ -9,7 +10,7 @@ import com.mod.soap.dao.repository.SecurityRepository;
 import com.mod.soap.dao.repository.UserRepository;
 import com.mod.soap.model.RequestNumber;
 import com.mod.soap.model.SecurityAccess;
-import com.mod.soap.model.SecurityRequest;
+import com.mod.soap.request.SecurityRequest;
 import com.mod.soap.repository.RequestNumberRepository;
 import com.mod.soap.request.CustomSecurityRequest;
 import com.mod.soap.request.CustomSecurityResponse;
@@ -18,7 +19,6 @@ import com.mod.soap.request.RequestNumberResponse;
 import com.mod.soap.service.SessionService;
 import com.mod.soap.system.Http;
 import com.mod.soap.system.Property;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -32,8 +32,7 @@ import org.springframework.ws.transport.http.HttpServletConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,44 +108,34 @@ public class RequestNumberEndPoint {
             return customSecurityResponse;
         }
 
+
+        HashMap<String, String > previousResponse = new HashMap<>();
+
+
         for (SecurityRequest securityRequest : securityRequests){
 
             Optional<Security> securityOptional = securityRepository.findByTarget(securityRequest.getTarget());
 
 
             if (!securityOptional.isPresent()){
-                SecurityAccess securityAccess = new SecurityAccess();
-                securityAccess.setAccess(false);
-                customSecurityResponse.setSecurityAccess(securityAccess);
+                customSecurityResponse.setSecurityAccess(addResponseToSecurity(false, securityRequest.getTarget()));
                 continue;
             }
 
             Security security = securityOptional.get();
 
-            String config = security.getConfig();
-
-            if ((!securityRequest.getInput().equals("?") || !securityRequest.getInput().equals("PARAMETER") || !securityRequest.equals(" ")) && securityRequest.getInput().length() > 1 ){
-
-                String[] inputs = securityRequest.getInput().split(",");
-
-                for (int i =0; i< inputs.length; i++){
-                    config = config.replace("$"+i , inputs[i] );
-                }
-            }
+            String config = prepareSecurityConfig(security, securityRequest,user);
 
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             try {
                 SecurityConfig securityConfig = objectMapper.readValue(config, SecurityConfig.class);
 
-                SecurityQuery securityQuery = securityConfig.setSecurityType(security.getType()).build(user);
+                SecurityQuery securityQuery = securityConfig.setSecurityType(security.getType()).newBuilder(user);
 
                 boolean canAccess = false;
 
                 if (securityQuery.getSecurityType() == SecurityType.WEBSERVICE){
-                    String webservice  = securityQuery.setWebservice(securityConfig.getWebservice()).prepareWebservice();
-                    Http http = new Http(property);
-                    String res = http.cordysRequest(webservice);
-                    canAccess = securityQuery.evaluateWebserviceResponse(res);
+                    canAccess = evaluateWebservice(request, securityRequest, securityConfig,securityQuery,  previousResponse);
                 } else if (securityQuery.getSecurityType() == SecurityType.UNIT_TYPE_Code){
                     canAccess = securityQuery.evaluateUnitTypeCode();
                 } else if (securityQuery.getSecurityType() == SecurityType.UNIT_CODE){
@@ -154,9 +143,8 @@ public class RequestNumberEndPoint {
                 } else if (securityQuery.getSecurityType() == SecurityType.ROLE_CODE){
                     canAccess = securityQuery.evaluateRoleCode();
                 }
-                SecurityAccess securityAccess = new SecurityAccess();
-                securityAccess.setAccess(canAccess);
-                customSecurityResponse.setSecurityAccess(securityAccess);
+
+                customSecurityResponse.setSecurityAccess(addResponseToSecurity(canAccess, security.getTarget()));
 
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -165,6 +153,63 @@ public class RequestNumberEndPoint {
         }
 
         return customSecurityResponse;
+    }
+
+    private SecurityAccess addResponseToSecurity(boolean response, String target) {
+        SecurityAccess securityAccess = new SecurityAccess();
+        securityAccess.setAccess(response);
+        securityAccess.setTarget(target);
+        return securityAccess;
+    }
+
+
+    private boolean evaluateWebservice(CustomSecurityRequest request, SecurityRequest securityRequest, SecurityConfig securityConfig, SecurityQuery securityQuery,  HashMap<String, String > previousResponse){
+        String response = "";
+
+        if (request.getPreviousTargetTag() != null){
+
+            if (previousResponse.containsKey(request.getPreviousTargetTag())){
+                response = previousResponse.get(request.getPreviousTargetTag());
+            }else {
+                response = getResponseFromWebservice(securityQuery, securityConfig.getWebservice());
+                previousResponse.put(securityRequest.getTarget(), response);
+
+            }
+        }else {
+            response = getResponseFromWebservice(securityQuery, securityConfig.getWebservice());
+            previousResponse.put(securityRequest.getTarget(), response);
+        }
+
+        return securityQuery.evaluateNewWebserviceResponse(response);
+    }
+
+
+    private String prepareSecurityConfig(Security security, SecurityRequest securityRequest, User user){
+        String config = security.getConfig();
+
+        if ((!securityRequest.getInput().equals("?") || !securityRequest.getInput().equals("PARAMETER") || !securityRequest.equals(" ")) && securityRequest.getInput().length() > 1 ){
+
+            String[] inputs = securityRequest.getInput().split(",");
+
+            for (int i =0; i< inputs.length; i++){
+                config = config.replaceAll("\\$"+i , inputs[i] );
+            }
+        }
+
+        config = config.replaceAll("\\$userId" , user.getId()+"" );
+        config = config.replaceAll("\\$userPath" , user.getUnitPathById());
+        config = config.replaceAll("\\$roleName" , user.getRoleName());
+        config = config.replaceAll("\\$userRoleCode" , user.getRoleCode());
+        config = config.replaceAll("\\$unitTypeCode" , user.getUserUnitTypeCode());
+        config = config.replaceAll("\\$unitCode" , user.getUserUnitCode());
+        config = config.replaceAll("\\$username" , user.getUsername());
+        return config.replaceAll("\\$displayName" , user.getDisplayName());
+    }
+
+    private String getResponseFromWebservice(SecurityQuery securityQuery, JsonNode jsonWebservice){
+        String webservice  = securityQuery.setWebservice(jsonWebservice).prepareWebservice();
+        Http http = new Http(property);
+        return http.cordysRequest(webservice);
     }
 
 

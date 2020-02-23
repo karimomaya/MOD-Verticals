@@ -1,4 +1,4 @@
-package com.mod.soap.model;
+package com.mod.soap.request;
 
 import javax.xml.bind.annotation.*;
 
@@ -10,11 +10,10 @@ import javax.xml.bind.annotation.*;
         "target", "input"
 })
 public class SecurityRequest {
-
-    @XmlElement(name = "target", required = false)
-    String target;
-    @XmlElement(name = "input", required = false)
-    String input;
+    @XmlElement(name = "target", required = true)
+    public String target;
+    @XmlElement(name = "input", required = true)
+    public String input;
 
     public String getInput() {
         return input;
@@ -23,7 +22,6 @@ public class SecurityRequest {
     public void setInput(String input) {
         this.input = input;
     }
-
 
     public String getTarget() {
         return target;

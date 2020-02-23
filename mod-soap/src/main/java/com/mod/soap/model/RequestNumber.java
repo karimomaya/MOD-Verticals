@@ -95,7 +95,7 @@ public class RequestNumber {
                 buildOutput(convertPatternToDate(word));
             } else if (userMattacher.find()) {
                 word = word.substring(userMattacher.end(), word.length());
-                Optional<User> userOptional = userRepository.findById(Long.parseLong(this.userId));
+                Optional<User> userOptional = userRepository.getUserDetail(Long.parseLong(this.userId));
                 if (!userOptional.isPresent()) continue;
                 User user = userOptional.get();
 

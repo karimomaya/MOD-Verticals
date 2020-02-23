@@ -102,9 +102,9 @@ public class SessionService {
         Node node = doc.getElementsByTagName("GetUserDetailsResponse").item(0);
         String cn = node.getFirstChild().getChildNodes().item(0).getTextContent();
         cn = property.configureCN(cn);
-        User userHelper =  userHelperRepository.getUserDetail(cn).get(0);
-
-        return userHelper;
+        User user =  userHelperRepository.getUserDetail(cn).get(0);
+        user.setTicket(ticket);
+        return user;
     }
 
     public User login(String SAMLart){

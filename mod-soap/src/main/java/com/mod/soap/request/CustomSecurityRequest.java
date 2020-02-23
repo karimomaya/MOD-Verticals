@@ -1,7 +1,5 @@
 package com.mod.soap.request;
 
-import com.mod.soap.model.SecurityRequest;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -14,14 +12,26 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "securityRequest", "username"
+        "securityRequest", "username", "previousTargetTag"
 })
 public class CustomSecurityRequest {
-    @XmlElement(name = "SecurityRequest", required = true)
-    protected List<SecurityRequest> securityRequest;
+    @XmlElement(name = "securityRequest", required = true)
+    protected ArrayList<SecurityRequest> securityRequest;
 
     @XmlElement(name = "username", required = true)
     protected String username;
+
+    @XmlElement(name = "previousTargetTag", required = false)
+    protected String previousTargetTag;
+
+
+    public String getPreviousTargetTag() {
+        return previousTargetTag;
+    }
+
+    public void setPreviousTargetTag(String previousTargetTag) {
+        this.previousTargetTag = previousTargetTag;
+    }
 
     public String getUsername() {
         return username;
@@ -35,9 +45,8 @@ public class CustomSecurityRequest {
         return securityRequest;
     }
 
-    public void setSecurityAccess(SecurityRequest securityRequest) {
-        if (this.securityRequest == null ) this.securityRequest = new ArrayList<>();
-        this.securityRequest.add(securityRequest);
+    public void setSecurityRequest(ArrayList<SecurityRequest> securityRequest) {
+        this.securityRequest = securityRequest;
     }
 }
 

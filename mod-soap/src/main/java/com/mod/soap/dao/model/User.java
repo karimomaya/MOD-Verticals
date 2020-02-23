@@ -25,6 +25,8 @@ public class User {
     String UserUnitCode;
     @NotFound(action = NotFoundAction.IGNORE)
     String roleCode;
+    @NotFound(action = NotFoundAction.IGNORE)
+    String UnitPathById;
     @Transient
     String ticket;
 }
