@@ -27,10 +27,34 @@ public class MinificationService {
         downloadedFiles = new ArrayList<String>();
         waitingQueue = new LinkedList<String>();
 
+        String[] dependency = new String[]{"/cordys/thirdparty/jquery/jquery.js",
+                "/cordys/html5/cordys.html5sdk.js",
+                "/cordys/html5/demo/GeneralSYS_GENERAL/pages/navbar/controller/navbar-controller.js",
+                "/cordys/html5/demo/commons/javascripts/ui/bootstrap.bundle.min.js",
+                "/cordys/html5/demo/commons/javascripts/ui/selectize.js",
+                "/cordys/html5/demo/commons/javascripts/ui/main.js",
+                "/cordys/html5/demo/commons/javascripts/ui/owl.carousel.min.js",
+                "/cordys/html5/demo/commons/javascripts/ui/sidebar.js",
+                "/cordys/html5/demo/commons/javascripts/ui/wow.min.js",
+                "/cordys/html5/demo/commons/javascripts/request.js",
+                "/cordys/html5/demo/commons/javascripts/translate.js",
+                "/cordys/html5/demo/commons/javascripts/security.js",
+                "/cordys/html5/demo/commons/javascripts/cordys.js",
+                "/cordys/html5/demo/commons/javascripts/system.js",
+                "/cordys/html5/demo/commons/javascripts/dom.js",
+                "/cordys/html5/demo/commons/javascripts/knockout-3.5.0-min.js",
+                "/cordys/html5/demo/commons/javascripts/knockout.validation.js",
+                "/cordys/html5/demo/commons/javascripts/validation.js",
+                "/cordys/html5/demo/commons/javascripts/configURL.js",
+                "/cordys/html5/demo/commons/javascripts/crypto.js",
+                "/cordys/html5/demo/commons/javascripts/ui/gijgo.min.js",
+                "/cordys/html5/demo/commons/javascripts/ui/jquery.flexslider.js"};
+        //    "/cordys/html5/demo/commons/javascripts/ui/snackbar.js"]
+
 
         String controllerPath = "/home/karim/Desktop/Projects/UAE - MOD/demo/"+projectName+"/pages/"+entityName+"/controller/"+mainController+".js";
         waitingQueue.add(controllerPath);
-        start();
+        init();
 
 
     }
@@ -56,22 +80,14 @@ public class MinificationService {
                 writeToLog('i',  "minimized file: "+ fileLocation );
                 downloadedFiles.add(fileLocation);
 
+
                 String controllerName = getControllerName(fileContent);
 
-
-                if (controllerName == null){
-                    writeOutput(fileContent);
-                    execute();
-                }else {
-
+                if (controllerName != null){
                     String scriptsStr = getScripts(fileContent, controllerName);
-
                     fileContent = fileContent.replace(scriptsStr, "[]");
-                    writeOutput(fileContent);
-
                     if (scriptsStr.equals(".js") ){
                         writeToLog('i', "No Scripts found for:  " + controllerName);
-                        execute();
                     }else {
                         String[] scripts = scriptsStr.split(",");
                         for (int i=0 ; i<  scripts.length ; i++){
@@ -80,9 +96,37 @@ public class MinificationService {
                             writeToLog('i', "found Scripts: " + fileLoc);
 
                         }
-                        execute();
                     }
                 }
+
+                writeOutput(fileContent);
+                execute();
+
+
+//                if (controllerName == null){
+//                    writeOutput(fileContent);
+//                    execute();
+//                }else {
+//
+//                    String scriptsStr = getScripts(fileContent, controllerName);
+//
+//                    fileContent = fileContent.replace(scriptsStr, "[]");
+//                    writeOutput(fileContent);
+//
+//                    if (scriptsStr.equals(".js") ){
+//                        writeToLog('i', "No Scripts found for:  " + controllerName);
+//                        execute();
+//                    }else {
+//                        String[] scripts = scriptsStr.split(",");
+//                        for (int i=0 ; i<  scripts.length ; i++){
+//                            String fileLoc = scripts[i].replace("/cordys/html5/demo/", "/home/karim/Desktop/Projects/UAE - MOD/demo/");
+//                            waitingQueue.add(fileLoc);
+//                            writeToLog('i', "found Scripts: " + fileLoc);
+//
+//                        }
+//                        execute();
+//                    }
+//                }
 
 
 
@@ -92,7 +136,7 @@ public class MinificationService {
             else {
                 writeToLog('i', "redundancy file: " + fileLocation );
             }
-
+///home/karim/Desktop/Projects/UAE - MOD/demo/TaskManagement/pages/task/controller/task-index-controller.js.js
 
         } catch (IOException e) {
             writeToLog('e',e.toString());
@@ -161,7 +205,7 @@ public class MinificationService {
         return false;
     }
 
-    private void start(){
+    private void init(){
 
         writeToLog('i', "Start Minification Service");
         File file = new File(outputFile);

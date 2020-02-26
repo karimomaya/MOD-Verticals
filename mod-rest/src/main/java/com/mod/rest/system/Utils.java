@@ -32,7 +32,7 @@ public class Utils {
     }
 
     public static String getArabicNameOfDay(Date date){
-        String[] days= {"حد", "اتنين", "ثلاثاء" , "اربعاء" , "خميس" , "جمعة", "سبت"};
+        String[] days= {"الأحد", "الأثنين", "الثلاثاء" , "الأربعاء" , "الخميس" , "الجمعة", "السبت"};
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 

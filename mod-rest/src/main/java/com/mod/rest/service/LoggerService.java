@@ -37,6 +37,7 @@ public class LoggerService {
     public void write(char type, String text){ // e, i
         try {
             file = new File("Logs/MyLogFile.log");
+            file.getParentFile().mkdirs();
             fr = new FileWriter(file, true);
             br = new BufferedWriter(fr);
 
