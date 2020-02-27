@@ -8,6 +8,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -46,6 +47,9 @@ public class TaskReportHelper {
     Integer integrationId;
     @Transient
     String number;
+//    @NotFound(action = NotFoundAction.IGNORE)
+    @Transient
+    ArrayList<TaskPerformer> performers;
 
     public void setNumber(int position){
         String result = "البند ";
@@ -152,6 +156,16 @@ public class TaskReportHelper {
             return p.getName();
         }
         return "";
+    }
+
+    public String getPerformersNames() {
+        String names = "";
+        char newline = (char)0x202C;
+        for(TaskPerformer performer : this.performers) {
+            names +=  performer.getDisplayName() + ", ";
+            names +=  performer.getDisplayName() + ", ";
+        }
+        return names.substring(0,names.length()-2);
     }
 
     private Object removeNullValue(Object object){

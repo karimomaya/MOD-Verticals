@@ -42,6 +42,8 @@ public class MeetingController {
     DiscussionPointRepository discussionPointRepository;
     @Autowired
     TaskReportHelperRepository taskReportHelperRepository;
+    @Autowired
+    TaskPerformerRepository taskPerformerRepository;
 
     @GetMapping("generate-minutes-of-meeting/{meetingId}")
     @ResponseBody
@@ -70,6 +72,8 @@ public class MeetingController {
             discussionPoint.setNumber(++count);
             ArrayList<TaskReportHelper> tasks = taskReportHelperRepository.getTasksRelatedToDiscussionPointAndMeeting(meetingId, discussionPoint.getId());
             for (TaskReportHelper task : tasks){
+                ArrayList<TaskPerformer> performers = taskPerformerRepository.getPerformersByTaskId(1,1000000,task.getId());
+                task.setPerformers(performers);
                 task.setNumber(count);
                 meetingTasks.add(task);
             }
