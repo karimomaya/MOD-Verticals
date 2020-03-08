@@ -30,4 +30,6 @@ public class Risk {
     boolean isDeleted;
     Date riskCloseDate;
     String riskProjectdescription;
+    Integer relatedType;
+    Integer projectName;
 }

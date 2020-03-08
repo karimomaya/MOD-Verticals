@@ -85,7 +85,7 @@ public class ReportController {
 
     @GetMapping("get/statistics/{report}")
     public ResponseBuilder<ObjectNode> reportStatistics(@RequestHeader("samlart") String SAMLart,
-                                              @PathVariable("report") String reportStr){
+        @PathVariable("report") String reportStr){
         ResponseBuilder<ObjectNode> responseBuilder = new ResponseBuilder<>();
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result= mapper.createObjectNode();

@@ -263,8 +263,13 @@ public class ReportService {
         int poistion = 0;
 
         int total = users.length;
+        int[] riskDataOpened = new int[total];
+        int[] riskDataClosed = new int[total];
 
-
+        GraphDataHelper graphDataHelperOpened = new GraphDataHelper();
+        GraphDataHelper graphDataHelperClosed = new GraphDataHelper();
+        String usedNameOpened = "";
+        String usedNameClosed = "";
 
         for(int i=0; i< users.length; i++){
 
@@ -280,28 +285,31 @@ public class ReportService {
                 continue;
             }
 
-
-            int[] riskData = new int[total];
-            riskData[i-poistion] = inProgress;
+            riskDataOpened[i-poistion] = inProgress;
+            riskDataClosed[i-poistion] = closed;
             String name = userRepository.findById(users[i]).get().getDisplayName();
             arrayList.add(name);
 
-            String usedName = name + " مفتوحه";
-            GraphDataHelper graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName(usedName);
-            graphDataHelper.setData(riskData);
-            graphDataHelpers.add(graphDataHelper);
+            usedNameOpened =  " مفتوحه";
+            usedNameClosed =  " مغلقة";
 
-            riskData = new int[total];
-            riskData[i-poistion] = closed;
-            usedName = name + " مغلقة";
-            graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName(usedName);
-            graphDataHelper.setData(riskData);
-            graphDataHelpers.add(graphDataHelper);
+//            riskData = new int[total];
+//            riskData[i-poistion] = closed;
+//            usedName = name + " مغلقة";
+//            graphDataHelper = new GraphDataHelper();
+//            graphDataHelper.setName(usedName);
+//            graphDataHelper.setData(riskData);
+//            graphDataHelpers.add(graphDataHelper);
 
 
         }
+        graphDataHelperOpened.setName(usedNameOpened);
+        graphDataHelperClosed.setName(usedNameClosed);
+        graphDataHelperClosed.setData(riskDataClosed);
+        graphDataHelperOpened.setData(riskDataOpened);
+        graphDataHelpers.add(graphDataHelperOpened);
+        graphDataHelpers.add(graphDataHelperClosed);
+
         result.put(graphDataHelpers, arrayList);
 
         return result;
@@ -327,6 +335,8 @@ public class ReportService {
             List<Risk> riskList = null;
             if (type.equals("delayedRiskReport")){
                 riskList = riskRepository.getDelayedRisks(1, Integer.MAX_VALUE,  users[i] +"");
+                if (riskList.size() == 0) continue;
+
                 int[] riskDate = new int[12];
                 for (Risk risk : riskList) {
                     int num = Utils.getMonthFromDate(risk.getRiskSolutionDate());
@@ -339,6 +349,8 @@ public class ReportService {
 
             }else if (type.equals("activityProjectRiskRelated")){
                 riskList = riskRepository.getRiskRelatedToProjectReport(1, Integer.MAX_VALUE, reportObject.getProjectIds(), users[i] +"" );
+                if (riskList.size() == 0) continue;
+
                 int[] riskDate = new int[12];
                 for (Risk risk : riskList) {
                     int num = Utils.getMonthFromDate(risk.getRiskSolutionDate());
@@ -350,7 +362,10 @@ public class ReportService {
                 graphDataHelpers.add(graphDataHelper);
 
             } else if (type.equals("userProductivityRiskReport")){
+
                 riskList = riskRepository.getClosedRisksReport(1, Integer.MAX_VALUE, users[i] +"" );
+                if (riskList.size() == 0) continue;
+
                 int[] riskDate = new int[12];
                 for (Risk risk : riskList) {
                     int num = Utils.getMonthFromDate(risk.getRiskSolutionDate());

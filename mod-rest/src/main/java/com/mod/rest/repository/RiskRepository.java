@@ -36,8 +36,6 @@ public interface RiskRepository extends GenericRepository<Risk, Long> {
     @Query(value = "{call MOD_RM_GetClosedRisksReportCount( :createdBy )}", nativeQuery = true)
     Long getClosedRisksReportCount( @Param("createdBy") String createdBy);
 
-
-
 }
 
 
