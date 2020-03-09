@@ -29,7 +29,7 @@ public class Risk {
     long createdBy;
     boolean isDeleted;
     Date riskCloseDate;
-    String riskProjectdescription;
+   // String riskProjectdescription;
     Integer relatedType;
     Integer projectName;
 }
