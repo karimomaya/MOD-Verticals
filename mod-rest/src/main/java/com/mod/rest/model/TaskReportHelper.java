@@ -163,7 +163,6 @@ public class TaskReportHelper {
         char newline = (char)0x202C;
         for(TaskPerformer performer : this.performers) {
             names +=  performer.getDisplayName() + ", ";
-            names +=  performer.getDisplayName() + ", ";
         }
         return names.substring(0,names.length()-2);
     }

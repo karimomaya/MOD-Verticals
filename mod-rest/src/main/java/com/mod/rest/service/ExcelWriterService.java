@@ -41,6 +41,7 @@ public class ExcelWriterService {
 
         if (objectList.size() == 0) return tempFile;
 
+        style = null;
         XSSFWorkbook workbook = new XSSFWorkbook();
         String sheetName = getSheetName(objectList.get(0));
         XSSFSheet sheet = workbook.createSheet(sheetName);

@@ -39,6 +39,7 @@ public class ReportObject {
     String entityName;
     String name;
     String position;
+    int supplierStatus;
 
     public ReportObject setSAMLart(String SAMLart){
         this.SAMLart = SAMLart;
