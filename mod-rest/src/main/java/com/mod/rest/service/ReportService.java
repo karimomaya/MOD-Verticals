@@ -82,10 +82,10 @@ public class ReportService {
     public <T> T execute( ReportObject reportObject){
 
         //Case طلب دعم فني
-        if (reportObject.getReportType() == 30 ) {
+        if (reportObject.getReportType() == 40 ) {
             List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(reportObject.getStartDate(),reportObject.getEndDate());
             return (T) excelWriterService.generate(technicalSupportReports);
-        }else if (reportObject.getReportType() == 31 ) {
+        }else if (reportObject.getReportType() == 41 ) {
             List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(reportObject.getStartDate(),reportObject.getEndDate());
             return (T) excelWriterService.generate(technicalSupportReports);
         }
