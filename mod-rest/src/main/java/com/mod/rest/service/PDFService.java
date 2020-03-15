@@ -20,6 +20,7 @@ import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.itextpdf.tool.xml.pipeline.html.LinkProvider;
 import com.mod.rest.annotation.PDFResources;
+import com.mod.rest.model.IdentificationCard;
 import com.mod.rest.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -119,8 +120,39 @@ public class PDFService {
             for(int i = 0 ; i < length ; i++){
                 tableBody.removeChild(nodes.item(0));
             }
-        }
-        else {
+        }else if(nodeName.equals("tr")){
+            for(Object object : objects) {
+                Class cls = object.getClass();
+
+                int length = nodes.getLength();
+                for(int i = 0 ; i < length ; i++) {
+                    Node parent = nodes.item(0).getParentNode();
+                    Element td = document.createElement("td");
+//                    if (i ==0 ) td.setAttribute("class", "padding");
+
+                    Method method = cls.getMethod(nodes.item(0).getTextContent());
+                    Object o = method.invoke(object);
+                    if (o == null) o = "";
+                    String innerText = "";
+                    if (o instanceof Date) {
+                        innerText = Utils.dateFormat((Date) o, config.getProperty("date.format"));
+                    } else {
+                        innerText = o.toString();
+                    }
+                    if (!o.equals("")) {
+                        if (Utils.isArabicText(innerText)) {
+//                                td.setAttribute("dir", "rtl");
+                        } else {
+                            td.setAttribute("class", "english-font");
+                        }
+
+                    }
+                    td.setTextContent(innerText);
+                    parent.appendChild(td);
+                    parent.removeChild(nodes.item(0));
+                }
+            }
+        }else {
             for(Object object: objects){
                 Class cls = object.getClass();
                 int length = nodes.getLength();
@@ -173,10 +205,6 @@ public class PDFService {
 //        FileWriter writer = new FileWriter(file);
         StreamResult result = new StreamResult(writer);
         transformer.transform(source, result);
-
-
-
-
 
         return file;
     }

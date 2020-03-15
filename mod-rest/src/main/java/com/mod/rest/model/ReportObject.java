@@ -42,6 +42,8 @@ public class ReportObject {
     String name;
     String position;
     String statisticsType;
+    int supplierStatus;
+
 
     public ReportObject setSAMLart(String SAMLart){
         this.SAMLart = SAMLart;

@@ -50,6 +50,8 @@ public class ReportService {
     StatisticsRepository statisticsRepository;
 	@Autowired
     TaskReportHelperRepository taskReportHelperRepository;
+	@Autowired
+    TechnicalSupportRepository technicalSupportRepository;
 
     public ReportObject buildReportObject(ReportObject reportObject){
         if (reportObject.getReportType()<= 19 || reportObject.getReportType() == 30 || reportObject.getReportType() == 34 || reportObject.getReportType() == 35 || reportObject.getReportType() == 36 || reportObject.getReportType() == 37 || reportObject.getReportType() == 38){
@@ -85,6 +87,17 @@ public class ReportService {
     }
 
     public <T> T execute(ReportObject reportObject){
+
+        //Case طلب دعم فني
+        if (reportObject.getReportType() == 40 ) {
+            List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(reportObject.getStartDate(),reportObject.getEndDate());
+            return (T) excelWriterService.generate(technicalSupportReports);
+        }else if (reportObject.getReportType() == 41 ) {
+            List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(reportObject.getStartDate(),reportObject.getEndDate());
+            return (T) excelWriterService.generate(technicalSupportReports);
+        }
+
+        // Case Contact Tracker
         if (reportObject.getReportType() == 20 ) {
             List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
             return (T) excelWriterService.generate(entityReports);
@@ -95,6 +108,8 @@ public class ReportService {
             List<IndividualReport> individualReports = individualRepository.getIndividuals(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition(),reportObject.getTags());
             return (T) excelWriterService.generate(individualReports);
         }
+
+
         if (reportObject.getReportType() == 10){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){

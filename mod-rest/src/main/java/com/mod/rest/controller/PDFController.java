@@ -21,12 +21,20 @@ import com.itextpdf.tool.xml.pipeline.html.AbstractImageProvider;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.itextpdf.tool.xml.pipeline.html.LinkProvider;
+import com.mod.rest.model.DesignSeal;
+import com.mod.rest.model.IdentificationCard;
 import com.mod.rest.model.Meeting;
 import com.mod.rest.model.Test;
+import com.mod.rest.repository.DesignSealRepository;
+import com.mod.rest.repository.IdentificationCardRepository;
 import com.mod.rest.repository.MeetingRepository;
 import com.mod.rest.service.PDFService;
 import com.mod.rest.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.*;
 import org.w3c.dom.Element;
@@ -47,9 +55,12 @@ public class PDFController {
 
     @Autowired
     PDFService pdfService;
-
     @Autowired
     MeetingRepository meetingRepository;
+    @Autowired
+    IdentificationCardRepository identificationCardRepository;
+    @Autowired
+    DesignSealRepository designSealRepository;
 
     @GetMapping("export/{text}")
     @ResponseBody
@@ -188,5 +199,85 @@ public class PDFController {
             e.printStackTrace();
 //            System.out.print(e);
         }
+    }
+
+    @GetMapping("IdentificationCard/{identificationCardId}")
+    @ResponseBody
+    public ResponseEntity<byte[]> generateIdentificationCardPDF(@PathVariable("identificationCardId") long identificationCardId){
+
+        HttpHeaders respHeaders = new HttpHeaders();
+
+        Optional<IdentificationCard> identificationCardOptional = identificationCardRepository.getIdentificationCardData(identificationCardId);
+
+        if (identificationCardOptional.isPresent()) {
+
+            IdentificationCard identificationCard = identificationCardOptional.get();
+
+            ArrayList<IdentificationCard> arrayList = new ArrayList();
+            arrayList.add(identificationCard);
+
+            String templateName = pdfService.getTemplateName(identificationCard);
+            System.out.println("get template name: " + templateName);
+
+            try {
+                File file = pdfService.generate(arrayList,"pdf-template/"+templateName+".html", "card-identification");
+                file = pdfService.generate(arrayList, file.toURI().getPath(), "card-identification-note");
+
+                byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
+                respHeaders.setContentLength(bytes.length);
+                respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=attachment.pdf" );
+
+                return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"null\"").body(null); // used to download file
+    }
+
+    @GetMapping("DesignSeal/{designSealId}")
+    @ResponseBody
+    public ResponseEntity<byte[]> generateDesignSealPDF(@PathVariable("designSealId") long designSealId){
+
+        HttpHeaders respHeaders = new HttpHeaders();
+
+        Optional<DesignSeal> designSealOptional = designSealRepository.getDesignSealData(designSealId);
+
+        if (designSealOptional.isPresent()) {
+
+            DesignSeal designSeal = designSealOptional.get();
+
+            ArrayList<DesignSeal> arrayList = new ArrayList();
+            arrayList.add(designSeal);
+
+            String templateName = pdfService.getTemplateName(designSeal);
+            System.out.println("get template name: " + templateName);
+
+            try {
+                File file = pdfService.generate(arrayList,"pdf-template/"+templateName+".html", "design-seal");
+                file = pdfService.generate(arrayList, file.toURI().getPath(), "design-seal-note");
+
+                byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
+                respHeaders.setContentLength(bytes.length);
+                respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=attachment.pdf" );
+
+                return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"null\"").body(null); // used to download file
     }
 }
