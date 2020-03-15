@@ -23,6 +23,8 @@ public class ReportService {
     @Autowired
     RiskService riskService;
     @Autowired
+    IssueService issueService;
+    @Autowired
     TaskService taskService;
     @Autowired
     TaskRepository taskRepository;
@@ -39,14 +41,18 @@ public class ReportService {
     @Autowired
     RiskRepository riskRepository;
     @Autowired
+    IssueRepository issueRepository;
+    @Autowired
     EntityRepository entityRepository;
     @Autowired
     IndividualRepository individualRepository;
 	@Autowired
-    StatisticsRepository statisticsRepository; 	@Autowired
+    StatisticsRepository statisticsRepository;
+	@Autowired
     TaskReportHelperRepository taskReportHelperRepository;
+
     public ReportObject buildReportObject(ReportObject reportObject){
-        if (reportObject.getReportType()<= 19){
+        if (reportObject.getReportType()<= 19 || reportObject.getReportType() == 30 || reportObject.getReportType() == 34 || reportObject.getReportType() == 35 || reportObject.getReportType() == 36 || reportObject.getReportType() == 37 || reportObject.getReportType() == 38){
             if (reportObject.getUserIds().equals(";")){
                 NodeList nodeList = userHelperService.getSubUsers(reportObject.getSAMLart());
                 String s = ";";
@@ -62,20 +68,23 @@ public class ReportService {
             }
         }
 
-        if (reportObject.getReportType() == 6 || reportObject.getReportType() == 14 || reportObject.getReportType() == 17) {
+        if (reportObject.getReportType() == 6 || reportObject.getReportType() == 14 || reportObject.getReportType() == 17 ) {
             if (reportObject.getRiskIds().equals("")) {
                 reportObject.setRiskIds(riskService.getRisksByUser(reportObject.getSAMLart()));
             }
-        }else if(reportObject.getReportType() == 4 || reportObject.getReportType() == 15){
+        }else if(reportObject.getReportType() == 4 || reportObject.getReportType() == 15 || reportObject.getReportType() == 35 ){
             if (reportObject.getProjectIds().equals("")) {
                 reportObject.setProjectIds(projectService.getProjectUnderHeadUnit(reportObject.getSAMLart()));
+            }
+        }else if( reportObject.getReportType() == 34 || reportObject.getReportType() == 37) {
+            if (reportObject.getIssueIds().equals("")) {
+                reportObject.setIssueIds(issueService.getIssuesByUser(reportObject.getSAMLart()));
             }
         }
         return reportObject;
     }
 
-
-    public <T> T execute( ReportObject reportObject){
+    public <T> T execute(ReportObject reportObject){
         if (reportObject.getReportType() == 20 ) {
             List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
             return (T) excelWriterService.generate(entityReports);
@@ -168,7 +177,7 @@ public class ReportService {
 
             }
         }
-        if (reportObject.getReportType() == 18){
+        if (reportObject.getReportType() == 18 || reportObject.getReportType() == 38){
 
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  riskStatisticsReportHelper(reportObject);
@@ -180,6 +189,99 @@ public class ReportService {
 
             }
         }
+        if (reportObject.getReportType() == 30){
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
+            if (reportObject.getDetectedReportType() == 0){ // graph
+                return (T)  issueReportHelper(reportObject, "delayedIssueReport");
+            }else  if (reportObject.getDetectedReportType() == 1){ // table
+                return (T) issueRepository.getDelayedIssues(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
+            } else if(reportObject.getDetectedReportType() == 2) { // count
+                return (T) issueRepository.getDelayedIssuesCount(ids);
+            } else if(reportObject.getDetectedReportType() == 3) { // file
+//                List<Risk> riskExcel = (T) riskRepository.getDelayedRisks(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
+//                return (T) excelWriterService.generate(riskExcel);
+            }
+        }
+        if (reportObject.getReportType() == 34){
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
+            if (reportObject.getDetectedReportType() == 0){ // graph
+                return (T)  reportHelper(reportObject, "delayedTaskIssueReport");
+            }else  if (reportObject.getDetectedReportType() == 1){ // table
+                return (T) taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds(), ids);
+            } else if(reportObject.getDetectedReportType() == 2) { // count
+                return (T) taskRepository.getDelayedTaskIssueReportCount( reportObject.getIssueIds(), ids);
+            } else if(reportObject.getDetectedReportType() == 3) { // file
+
+            }
+        }
+        if (reportObject.getReportType() == 35){
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
+            if (reportObject.getDetectedReportType() == 0){ // graph
+                return (T)  issueReportHelper(reportObject, "activityProjectIssueRelated");
+            }else  if (reportObject.getDetectedReportType() == 1){ // table
+                return (T) issueRepository.getIssueRelatedToProjectReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getProjectIds(), ids);
+            } else if(reportObject.getDetectedReportType() == 2) { // count
+                return (T) issueRepository.getIssueRelatedToProjectReportCount(reportObject.getProjectIds(), ids);
+            } else if(reportObject.getDetectedReportType() == 3) { // file
+
+            }
+        }
+        if (reportObject.getReportType() == 36){
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
+            if (reportObject.getDetectedReportType() == 0){ // graph
+                return (T)  issueReportHelper(reportObject, "userProductivityRiskReport");
+            }else  if (reportObject.getDetectedReportType() == 1){ // table
+                return (T) issueRepository.getClosedIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
+            } else if(reportObject.getDetectedReportType() == 2) { // count
+                return (T) issueRepository.getClosedIssuesReportCount(ids);
+            } else if(reportObject.getDetectedReportType() == 3) { // file
+
+            }
+        }
+        if (reportObject.getReportType() == 37){
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
+            if (reportObject.getDetectedReportType() == 0){ // graph
+                return (T)  reportHelper(reportObject, "inProgressDelayedClosedTaskIssuesReport");
+            }else  if (reportObject.getDetectedReportType() == 1){ // table
+                return (T) taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds(), ids);
+            } else if(reportObject.getDetectedReportType() == 2) { // count
+                return (T) taskRepository.getInProgressDelayedClosedTaskIssuesReportCount( reportObject.getIssueIds(), ids);
+            } else if(reportObject.getDetectedReportType() == 3) { // file
+
+            }
+        }
+//        if (reportObject.getReportType() == 38){
+//
+//            if (reportObject.getDetectedReportType() == 0){ // graph
+//                return (T)  riskStatisticsReportHelper(reportObject);
+//            }else  if (reportObject.getDetectedReportType() == 1){ // table
+////                return (T) riskRepository.getUserRiskStatisticsReport( reportObject.getStartDate(), reportObject.getEndDate(), ids);
+//            } else if(reportObject.getDetectedReportType() == 2) { // count
+//
+//            } else if(reportObject.getDetectedReportType() == 3) { // file
+//
+//            }
+//        }
         if (reportObject.getReportType() == 6){
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  reportHelper(reportObject, "riskReport");
@@ -272,8 +374,16 @@ public class ReportService {
         String usedNameClosed = "";
 
         for(int i=0; i< users.length; i++){
-
-            List<Statistics> statisticss = statisticsRepository.getUserRiskStatisticsReport(users[i],reportObject.getStartDate(), reportObject.getEndDate());
+            List<Statistics> statisticss = null;
+//            if(type == "risks"){
+            if(reportObject.getReportType() == 18){
+                statisticss = statisticsRepository.getUserRiskStatisticsReport(users[i],reportObject.getStartDate(), reportObject.getEndDate());
+            }else if(reportObject.getReportType() == 38) {
+                statisticss = statisticsRepository.getUserIssueStatisticsReport(users[i], reportObject.getStartDate(), reportObject.getEndDate());
+            }
+//            }else if(type == "issues") {
+//                statisticss = statisticsRepository.getUserIssueStatisticsReport(users[i],reportObject.getStartDate(), reportObject.getEndDate());
+//            }
 
             int inProgress = statisticss.get(0).getInProgress();
             int closed = statisticss.get(0).getEnded();
@@ -325,7 +435,6 @@ public class ReportService {
             System.arraycopy(oldArray, 0, newArray, 0, preserveLength);
         return newArray;
     }
-
 
     private List<GraphDataHelper> riskReportHelper(ReportObject reportObject, String type){
         List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
@@ -382,6 +491,61 @@ public class ReportService {
 
     }
 
+    private List<GraphDataHelper> issueReportHelper(ReportObject reportObject, String type){
+        List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
+        long[] users = reportObject.getUsers();
+
+        for(int i=0; i< users.length; i++){
+            List<Issue> issueList = null;
+            if (type.equals("delayedIssueReport")) {
+                issueList = issueRepository.getDelayedIssues(1, Integer.MAX_VALUE, users[i] + "");
+                if (issueList.size() == 0) continue;
+
+                int[] issueDate = new int[12];
+                for (Issue issue : issueList) {
+                    int num = Utils.getMonthFromDate(issue.getIssueEndDate());
+                    issueDate[num] += 1;
+                }
+                GraphDataHelper graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                graphDataHelper.setData(issueDate);
+                graphDataHelpers.add(graphDataHelper);
+
+            }
+            else if (type.equals("activityProjectIssueRelated")) {
+                issueList = issueRepository.getIssueRelatedToProjectReport(1, Integer.MAX_VALUE, reportObject.getProjectIds(), users[i] + "");
+                if (issueList.size() == 0) continue;
+
+                int[] issueDate = new int[12];
+                for (Issue issue : issueList) {
+                    int num = Utils.getMonthFromDate(issue.getIssueEndDate());
+                    issueDate[num] += 1;
+                }
+                GraphDataHelper graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                graphDataHelper.setData(issueDate);
+                graphDataHelpers.add(graphDataHelper);
+
+            } else if (type.equals("userProductivityRiskReport")){
+                issueList = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, users[i] +"" );
+                if (issueList.size() == 0) continue;
+
+                int[] issueDate = new int[12];
+                for (Issue issue : issueList) {
+                    int num = Utils.getMonthFromDate(issue.getIssueEndDate());
+                    issueDate[num] += 1;
+                }
+                GraphDataHelper graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                graphDataHelper.setData(issueDate);
+                graphDataHelpers.add(graphDataHelper);
+            }
+
+        }
+        return graphDataHelpers;
+
+    }
+
     public List<GraphDataHelper> reportHelper(ReportObject reportObject, String type ){
         List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
         long[] users = reportObject.getUsers();
@@ -407,6 +571,10 @@ public class ReportService {
                 taskList = taskRepository.getDelayedTaskRiskReport(1, Integer.MAX_VALUE, reportObject.getRiskIds(), users[i] +"" );
             }else if (type.equals("inProgressDelayedClosedTaskRisksReport")){
                 taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(1, Integer.MAX_VALUE, reportObject.getRiskIds(), users[i] +"" );
+            }else if (type.equals("delayedTaskIssueReport")) {
+                taskList = taskRepository.getDelayedTaskIssueReport(1, Integer.MAX_VALUE, reportObject.getIssueIds(), users[i] +"" );
+            }else if (type.equals("inProgressDelayedClosedTaskIssuesReport")) {
+                taskList = taskRepository.getDelayedTaskIssueReport(1, Integer.MAX_VALUE, reportObject.getIssueIds(), users[i] +"" );
             }
             if (taskList.size() == 0) continue;
             int[] taskDate = new int[12];

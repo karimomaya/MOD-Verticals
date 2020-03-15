@@ -18,9 +18,11 @@ public class ReportObject {
     long[] risks;
     long[] projects;
     long[] users;
+    long[] issues;
     Date startDate;
     Date endDate;
     String riskIds;
+    String issueIds;
     String projectIds;
     String userIds = ";";
     int pageNumber = 0;
@@ -39,6 +41,7 @@ public class ReportObject {
     String entityName;
     String name;
     String position;
+    String statisticsType;
 
     public ReportObject setSAMLart(String SAMLart){
         this.SAMLart = SAMLart;
@@ -57,11 +60,18 @@ public class ReportObject {
                 riskIds += risks[i];
             }
 
-        } else if (reportType == 4 || reportType == 15 ){
+        } else if (reportType == 4 || reportType == 35 || reportType == 15){
             projectIds= "";
             for (int i=0; projects !=null && i< projects.length;i++){
                 if(i > 0) projectIds += ",";
                 projectIds += projects[i];
+            }
+        }
+        else if(reportType == 34 || reportType == 37) {
+            issueIds= "";
+            for (int i=0; issues !=null && i< issues.length;i++){
+                if(i > 0) issueIds += ",";
+                issueIds += issues[i];
             }
         }
 

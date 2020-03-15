@@ -61,5 +61,16 @@ public interface TaskRepository extends GenericRepository<Task,Long> {
     @Query(value = "{call MOD_RM_SP_GetInProgressDelayedClosedTaskRisksReportCount( :integrationIds, :createdBy )}", nativeQuery = true)
     Long getInProgressDelayedClosedTaskRisksReportCount( @Param("integrationIds") String integrationIds, @Param("createdBy") String createdBy);
 
+    @Query(value = "{call MOD_RM_SP_GetDelayedTaskIssueReport(:PageNumber,:PageSize, :integrationIds , :createdBy)}", nativeQuery = true)
+    List<Task> getDelayedTaskIssueReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("integrationIds") String integrationIds , @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetDelayedTaskIssueReportCount( :integrationIds, :createdBy )}", nativeQuery = true)
+    Long getDelayedTaskIssueReportCount( @Param("integrationIds") String integrationIds, @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetInProgressDelayedClosedTaskIssuesReport(:PageNumber,:PageSize, :integrationIds , :createdBy)}", nativeQuery = true)
+    List<Task> getInProgressDelayedClosedTaskIssuesReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("integrationIds") String integrationIds , @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetInProgressDelayedClosedTaskIsuesReportCount( :integrationIds, :createdBy )}", nativeQuery = true)
+    Long getInProgressDelayedClosedTaskIssuesReportCount( @Param("integrationIds") String integrationIds, @Param("createdBy") String createdBy);
 
 }

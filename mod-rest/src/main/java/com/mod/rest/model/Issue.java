@@ -20,7 +20,7 @@ public class Issue {
     String issueName;
     Integer probability;
     Integer effect;
-    Integer effectArea;
+    String effectArea;
     Integer priority;
     Date issueStartDate;
     Date issueEndDate;
@@ -29,7 +29,7 @@ public class Issue {
     long createdBy;
     boolean isDeleted;
     Date IssueCloseDate;
-    String issueProjectdescription;
+   // String issueProjectdescription;
     String decision;
     Integer relatedType;
     Integer projectName;

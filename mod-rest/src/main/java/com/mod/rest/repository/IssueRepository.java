@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface IssueRepository extends GenericRepository<Issue, Long> {
-    @Query(value = "{call MOD_RM_SP_getIssueByName(:PageNumber,:PageSize, :createdBy, :name )}", nativeQuery = true)
+    @Query(value = "{call MOD_RM_SP_GetIssueNames(:PageNumber,:PageSize, :createdBy, :name )}", nativeQuery = true)
     List<Issue> getIssueByName(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("name") String name, @Param("createdBy") long createdBy);
 
 
