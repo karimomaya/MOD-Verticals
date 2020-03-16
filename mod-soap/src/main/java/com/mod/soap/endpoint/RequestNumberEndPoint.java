@@ -104,7 +104,10 @@ public class RequestNumberEndPoint {
 
         for (MeetingAttendee meetingAttendee : meetingAttendees){
             if (meetingAttendee.getIsExternal()){
-
+                Optional<ExternalUser> externalUserOptional = userRepository.getExternalUserDetail(meetingAttendee.getAttendeeID());
+                if(externalUserOptional.isPresent()){
+                    outlookMeeting.setAttendeeEmail(externalUserOptional.get().getEmail());
+                }
             }else {
                 Optional<User> userOptional = userRepository.getUserDetail(meetingAttendee.getAttendeeID());
                 if (userOptional.isPresent()){
