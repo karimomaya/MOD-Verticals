@@ -20,13 +20,12 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-select kpi.Id, kpi.name, kpi.startDate, kpi.endDate, kpi.[description], kpi.[type], person.DisplayName, kpi.owner
+select kpi.Id, kpi.name, kpi.startDate, kpi.endDate, kpi.[description], kpi.[type], person.DisplayName, kpi.owner, kpi.progress
 	from awdb.dbo.O2MyCompanyTaskManagementMOD_TM_entity_kpi as kpi 
-INNER JOIN O2MyCompanyTaskManagementMOD_TM_entity_Program as program on program.Id = kpi.entityId
 inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id = kpi.owner
 inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
 
-WHERE program.Id = @entityId AND kpi.[type] = @type
+WHERE kpi.entityId = @entityId AND kpi.[type] = @type
 	ORDER by kpi.name ASC
 	
 	
@@ -36,4 +35,7 @@ OFFSET @PageSize * (@PageNumber - 1) ROWS
 
 END
 
+
+
 GO
+

@@ -1,6 +1,3 @@
-USE [awdb]
-GO
-/****** Object:  StoredProcedure [dbo].[MOD_TM_SP_task_GetProjectByStatus]    Script Date: 1/5/2020 2:15:00 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -38,7 +35,8 @@ FROM [awdb].[dbo].[O2MyCompanyTaskManagementMOD_TM_entity_TaskProject] as projec
 	inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id =project.owner
 	inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
 	left join O2MyCompanyTaskManagementMOD_TM_entity_Task as task on task.taskProjectId = project.Id
-where (project.createdBy = @userId or project.owner = @userId) and project.status = @status 
+    left join  O2MyCompanyTaskManagementMOD_TM_entity_kpi as kpi on kpi.entityId = project.Id and kpi.[type]=2
+where (project.createdBy = @userId or project.owner = @userId or kpi.[owner] = @userId) and project.status = @status 
     -- and (@Progress = (CAST(sum(task.progress) as float) / (CAST(count(task.taskName)* 100 as float) ) * 100 ) or @Progress = -1) 
     and (project.startDate >=  @StartDate and  project.endDate <=  @EndDate) 
 	and (project.owner = @FilterOwner or @FilterOwner = -1) and project.name like '%'+@ProjectName+'%'
@@ -68,3 +66,5 @@ order by
 	OFFSET @PageSize * (@PageNumber - 1) ROWS
     FETCH NEXT @PageSize ROWS ONLY OPTION (RECOMPILE);
 END
+
+GO

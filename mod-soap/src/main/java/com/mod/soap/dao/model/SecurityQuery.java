@@ -446,10 +446,12 @@ public class SecurityQuery {
     }
 
     public boolean evaluateUnitTypeCode(){
-        int target = convertCodeToId(template);
-        int current = convertCodeToId(user.UserUnitTypeCode);
-        if(current >= target) return true;
-        return false;
+        String[] targets = template.split(",");
+        boolean evaluate = false;
+        for (int i= 0; i< targets.length; i++){
+            if (user.getUserUnitTypeCode().equals(targets[i])) evaluate = true;
+        }
+        return evaluate;
     }
 
     private int convertCodeToId(String code){
@@ -510,11 +512,11 @@ public class SecurityQuery {
         if (securityType == 4){
             this.securityType = SecurityType.WEBSERVICE;
         }else if(securityType == 3){
-            this.securityType = SecurityType.UNIT_TYPE_Code;
+            this.securityType = SecurityType.ROLE_CODE;
         } else if(securityType == 2){
             this.securityType = SecurityType.UNIT_CODE;
         } else if(securityType == 1){
-            this.securityType = SecurityType.ROLE_CODE;
+            this.securityType = SecurityType.UNIT_TYPE_Code;
         }
     }
 

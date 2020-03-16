@@ -1,7 +1,22 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.mod.soap"
            targetNamespace="http://www.mod.soap" elementFormDefault="qualified">
 
+    <xs:element name="SendMeetingRequest" >
+        <xs:complexType >
+            <xs:sequence>
+                <xs:element name="meetingId" type="xs:long"/>
+                <xs:element name="isUpdate" type="xs:boolean"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
+    <xs:element name="SendMeetingResponse" >
+        <xs:complexType >
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
 
 
     <xs:element name="CustomSecurityRequest" >

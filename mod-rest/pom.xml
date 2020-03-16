@@ -152,6 +152,13 @@ java -jar -Dspring.profiles.active=staging mod-rest-1.0-SNAPSHOT.jar-->
             <version>5.5.13</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.microsoft.ews-java-api</groupId>
+            <artifactId>ews-java-api</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+
     </dependencies>
 
 

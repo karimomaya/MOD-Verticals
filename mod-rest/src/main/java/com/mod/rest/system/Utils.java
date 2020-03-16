@@ -181,6 +181,8 @@ public class Utils {
     public static int getDayFromDate(Date date){ // ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"]
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
+
+
         return cal.get(Calendar.DAY_OF_MONTH)- 1; // to start from 0 not one
     }
 

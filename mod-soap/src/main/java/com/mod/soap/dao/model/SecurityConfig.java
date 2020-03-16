@@ -22,6 +22,13 @@ public class SecurityConfig {
     public SecurityConfig(){
         this.securityQuery =  new SecurityQuery();
     }
+    // 1:unit type code, 2: unit code,3: role name, 4: webservice, stored procedure
+    public SecurityConfig(String unitTypeCode, String unitCode, String roleCode){
+        this.securityQuery =  new SecurityQuery();
+        this.unitCode = unitCode;
+        this.unitTypeCode = unitTypeCode;
+        this.roleCode = roleCode;
+    }
 
 
     public SecurityConfig setSecurityType(int securityType){
