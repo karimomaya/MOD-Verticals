@@ -52,6 +52,8 @@ public class ReportService {
     TaskReportHelperRepository taskReportHelperRepository;
 	@Autowired
     TechnicalSupportRepository technicalSupportRepository;
+    @Autowired
+	RiskReportHelperRepository riskReportHelperRepository;
 
     public ReportObject buildReportObject(ReportObject reportObject){
         if (reportObject.getReportType()<= 19 || reportObject.getReportType() == 30 || reportObject.getReportType() == 34 || reportObject.getReportType() == 35 || reportObject.getReportType() == 36 || reportObject.getReportType() == 37 || reportObject.getReportType() == 38){
@@ -123,8 +125,8 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) riskRepository.getDelayedRisksCount(ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-//                List<Risk> riskExcel = (T) riskRepository.getDelayedRisks(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
-//                return (T) excelWriterService.generate(riskExcel);
+                List<RiskReportHelper> risks = riskReportHelperRepository.getDelayedRisks( 1, Integer.MAX_VALUE, ids);
+                return (T) excelWriterService.generate(risks);
             }
         }
         if (reportObject.getReportType() == 14){
@@ -140,7 +142,8 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.getDelayedTaskRiskReportCount( reportObject.getRiskIds(), ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-
+                List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTaskRiskReport(1,Integer.MAX_VALUE,reportObject.getRiskIds(),ids);
+                return (T) excelWriterService.generate(tasks);
             }
         }
 
@@ -305,7 +308,7 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cGetIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement");
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<TaskReportHelper> tasks=  taskReportHelperRepository.getIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement", 1, Integer.MAX_VALUE);
+                List<TaskReportHelper> tasks =  taskReportHelperRepository.getIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement", 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
         }else if (reportObject.getReportType() == 1) {

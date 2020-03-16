@@ -36,4 +36,11 @@ public interface TaskReportHelperRepository extends GenericRepository<TaskReport
 
     @Query(value = "{call MOD_RM_SP_getTasksRelatedToDiscussionPointAndMeeting( :meetingId, :discussionPointId )}", nativeQuery = true)
     ArrayList<TaskReportHelper> getTasksRelatedToDiscussionPointAndMeeting(@Param("meetingId") long meetingId, @Param("discussionPointId") long discussionPointId);
+
+    @Query(value = "{call MOD_RM_SP_GetDelayedTaskRiskReport(:PageNumber,:PageSize, :integrationIds , :createdBy)}", nativeQuery = true)
+    List<TaskReportHelper> getDelayedTaskRiskReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("integrationIds") String integrationIds , @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetDelayedTaskRiskReportCount( :integrationIds, :createdBy )}", nativeQuery = true)
+    Long getDelayedTaskRiskReportCount( @Param("integrationIds") String integrationIds, @Param("createdBy") String createdBy);
+
 }

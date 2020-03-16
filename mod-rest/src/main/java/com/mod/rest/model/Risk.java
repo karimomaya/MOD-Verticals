@@ -1,5 +1,6 @@
 package com.mod.rest.model;
 
+import com.mod.rest.annotation.ColumnName;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,6 @@ import java.util.Date;
 public class Risk {
     @Id
     long Id;
-
     String riskNumber;
     String riskName;
     Integer priority;
@@ -29,7 +29,7 @@ public class Risk {
     long createdBy;
     boolean isDeleted;
     Date riskCloseDate;
-   // String riskProjectdescription;
     Integer relatedType;
     Integer projectName;
+
 }
