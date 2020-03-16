@@ -1,6 +1,3 @@
-USE [awdb]
-GO
-/****** Object:  StoredProcedure [dbo].[MOD_TM_SP_read_program]    Script Date: 1/5/2020 2:09:43 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -35,7 +32,8 @@ BEGIN
 		inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id = program.owner
 		inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
 		left join O2MyCompanyTaskManagementMOD_TM_entity_TaskProject as project on project.programId = program.Id 
-where program.status = @status and (program.owner = @userId or program.createdBy = @userId) 
+        left join  O2MyCompanyTaskManagementMOD_TM_entity_kpi as kpi on kpi.entityId = project.Id and kpi.[type]=1
+where program.status = @status and (program.owner = @userId or program.createdBy = @userId or kpi.[owner] = @userId) 
 	and (program.progress = @Progress or @Progress =-1)  
 	and (program.startDate >=  @StartDate and  program.endDate <=  @EndDate) 
 	and (program.owner = @FilterOwner or @FilterOwner = -1) and program.name like '%'+@ProgramName+'%' and program.isDeleted != 1
@@ -65,3 +63,5 @@ OFFSET @PageSize * (@PageNumber - 1) ROWS
 
 	
 END
+
+GO

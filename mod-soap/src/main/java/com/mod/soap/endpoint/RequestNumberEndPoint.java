@@ -5,17 +5,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mod.soap.dao.model.*;
-import com.mod.soap.dao.repository.ConfigRepository;
-import com.mod.soap.dao.repository.SecurityRepository;
-import com.mod.soap.dao.repository.UserRepository;
+import com.mod.soap.dao.repository.*;
+import com.mod.soap.model.OutlookMeeting;
 import com.mod.soap.model.RequestNumber;
 import com.mod.soap.model.SecurityAccess;
-import com.mod.soap.request.SecurityRequest;
+import com.mod.soap.request.*;
 import com.mod.soap.repository.RequestNumberRepository;
-import com.mod.soap.request.CustomSecurityRequest;
-import com.mod.soap.request.CustomSecurityResponse;
-import com.mod.soap.request.RequestNumberRequest;
-import com.mod.soap.request.RequestNumberResponse;
 import com.mod.soap.service.SessionService;
 import com.mod.soap.system.Http;
 import com.mod.soap.system.Property;
@@ -32,9 +27,7 @@ import org.springframework.ws.transport.http.HttpServletConnection;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Created by karim.omaya on 12/7/2019.
@@ -60,11 +53,71 @@ public class RequestNumberEndPoint {
     SecurityRepository securityRepository;
     @Autowired
     Property property;
+    @Autowired
+    MeetingRepository meetingRepository;
+    @Autowired
+    MeetingAttendeeRepository meetingAttendeeRepository;
 
     @Autowired
     public RequestNumberEndPoint(RequestNumberRepository RequestNumberRepository) {
         this.RequestNumberRepository = RequestNumberRepository;
     }
+
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendMeetingRequest")
+    @ResponsePayload
+    public SendMeetingResponse sendMeeting(@RequestPayload SendMeetingRequest request) {
+
+
+        SendMeetingResponse response = new SendMeetingResponse();
+
+        long meetingId = request.getMeetingId();
+        List<MeetingAttendee> meetingAttendees = meetingAttendeeRepository.getMeetingAttendeeData(meetingId);
+        Optional<Meeting> meetingOptional = meetingRepository.getMeetingData(meetingId);
+        if (!meetingOptional.isPresent()) return response.setStatus("Meeting-Not-Present");
+
+        Meeting meeting = meetingOptional.get();
+
+
+        sendMeeting(meeting, meetingAttendees);
+
+
+
+        if (meeting.getIsPeriodic() && !request.isUpdate()){
+            ArrayList<Meeting> meetings = meetingRepository.getPeriodicMeeting(meetingId, meeting.getSubject());
+            for (Meeting meeting1: meetings){
+                if (meeting1.getId() != meetingId && !meeting1.getConflict()){
+                    sendMeeting(meeting1, meetingAttendees);
+                }
+            }
+
+        }
+
+        return response.setStatus("done");
+    }
+
+    public void sendMeeting(Meeting meeting, List<MeetingAttendee> meetingAttendees){
+        OutlookMeeting outlookMeeting = new OutlookMeeting().setSubject(meeting.getSubject())
+                .setBody(meeting.getDescription())
+                .setStartDate(meeting.getStartDate())
+                .setEndDate(meeting.getEndDate());
+
+        for (MeetingAttendee meetingAttendee : meetingAttendees){
+            if (meetingAttendee.getIsExternal()){
+                Optional<ExternalUser> externalUserOptional = userRepository.getExternalUserDetail(meetingAttendee.getAttendeeID());
+                if(externalUserOptional.isPresent()){
+                    outlookMeeting.setAttendeeEmail(externalUserOptional.get().getEmail());
+                }
+            }else {
+                Optional<User> userOptional = userRepository.getUserDetail(meetingAttendee.getAttendeeID());
+                if (userOptional.isPresent()){
+                    outlookMeeting.setAttendeeEmail(userOptional.get().getEmail());
+                }
+            }
+        }
+        outlookMeeting.send();
+    }
+
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "RequestNumberRequest")
     @ResponsePayload
@@ -128,7 +181,18 @@ public class RequestNumberEndPoint {
 
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             try {
-                SecurityConfig securityConfig = objectMapper.readValue(config, SecurityConfig.class);
+                SecurityConfig securityConfig = null;
+// 1:unit type code, 2: unit code,3: role name, 4: webservice, stored procedure
+                if(security.getType() == 4){
+                    securityConfig = objectMapper.readValue(config, SecurityConfig.class);
+                }else if(security.getType() == 1)  {
+                    securityConfig = new SecurityConfig(security.getConfig(), null, null);
+                }else if(security.getType() == 2)  {
+                    securityConfig = new SecurityConfig(null, security.getConfig(), null);
+                } else if(security.getType() == 3)  {
+                    securityConfig = new SecurityConfig(null, null, security.getConfig());
+                }
+
 
                 SecurityQuery securityQuery = securityConfig.setSecurityType(security.getType()).newBuilder(user);
 

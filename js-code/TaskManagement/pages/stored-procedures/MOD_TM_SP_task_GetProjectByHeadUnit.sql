@@ -1,6 +1,3 @@
-USE [awdb]
-GO
-/****** Object:  StoredProcedure [dbo].[MOD_TM_SP_task_GetProjectByHeadUnit]    Script Date: 1/5/2020 7:46:42 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -37,10 +34,14 @@ BEGIN
 		FROM 
 			MOD_SYS_OC_DB_Role_User_V as t1 JOIN w1 ON w1.ptr = t1.UnitId
 ) 
-select * from O2MyCompanyTaskManagementMOD_TM_entity_TaskProject where (assignToUnitId <> 0 and @unitId = 0) or (assignToUnitId in (SELECT id FROM w1) and @unitId <> 0) and isDeleted <> 1 and name like '%'+@input+'%' and endDate >=  CAST(GETDATE() AS DATE)
+select * from O2MyCompanyTaskManagementMOD_TM_entity_TaskProject where (assignToUnitId <> 0 and @unitId = 0) or (assignToUnitId in (SELECT id FROM w1) and @unitId <> 0) and isDeleted <> 1 and name like '%'+@input+'%' 
+--and endDate >=  CAST(GETDATE() AS DATE)
 and status = @status
 	order by name
 	OFFSET @PageSize * (@PageNumber - 1) ROWS
     FETCH NEXT @PageSize ROWS ONLY OPTION (RECOMPILE);
 
 END
+
+GO
+

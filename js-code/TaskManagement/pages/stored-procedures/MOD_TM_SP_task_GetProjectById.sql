@@ -1,6 +1,3 @@
-USE [awdb]
-GO
-/****** Object:  StoredProcedure [dbo].[MOD_TM_SP_task_GetProjectById]    Script Date: 1/5/2020 2:40:14 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -29,7 +26,10 @@ BEGIN
 	from O2MyCompanyTaskManagementMOD_TM_entity_TaskProject as project 
 	left join O2MyCompanyTaskManagementMOD_TM_entity_Program as program on project.programId = program.Id
     left join MOD_SYS_OC_DB_Units_ParentUnits_V as unit on project.assignToUnitId = unit.UnitId
+    left join  O2MyCompanyTaskManagementMOD_TM_entity_kpi as kpi on kpi.entityId = project.Id and kpi.[type]=2
 	inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id =project.owner
 	inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
-	where project.Id = @ProjectId  and (project.createdBy = @Owner or project.owner = @Owner) and project.isDeleted != 1
+	where project.Id = @ProjectId  and (project.createdBy = @Owner or project.owner = @Owner or kpi.[owner] = @Owner) and project.isDeleted != 1
 END
+
+GO
