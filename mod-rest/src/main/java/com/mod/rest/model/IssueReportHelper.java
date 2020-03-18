@@ -33,7 +33,6 @@ public class IssueReportHelper {
     String issueDescription;
     Date IssueCloseDate;
     String decision;
-    Integer projectName;
     Integer priority;
 
     @ManyToOne
@@ -51,6 +50,7 @@ public class IssueReportHelper {
     @JoinColumn(name = "projectName")
     @NotFound(action = NotFoundAction.IGNORE)
     Project project;
+
     @Transient
     String projectDescription;
 
@@ -86,13 +86,50 @@ public class IssueReportHelper {
     @ColumnName(key = "حالة الخطر")
     public String getState() {
         switch (this.issueStatus){
-            case 0:
-                return "منخفضة";
             case 1:
-                return "متوسطة";
+                return "مفتوح";
+            case 0:
+                return "مغلق";
             default:
                 return "";
         }
+    }
+
+    @ColumnName(key = "الاحتمالية")
+    public String getProbability() {
+        switch (this.probability){
+            case 1:
+                return "منخفضة";
+            case 2:
+                return "متوسطة";
+            case 3:
+                return "عالية";
+            default:
+                return "";
+        }
+    }
+
+    @ColumnName(key = "التأثير")
+    public String getEffect() {
+        switch (this.effect){
+            case 1:
+                return "منخفض";
+            case 2:
+                return "متوسط";
+            case 3:
+                return "عالي";
+            default:
+                return "";
+        }
+    }
+    @ColumnName(key = "نطاق التأثير")
+    public String getEffectArea() {
+        return (String) removeNullValue(this.effectArea);
+    }
+
+    @ColumnName(key = "القرار")
+    public String getDecision() {
+        return (String) removeNullValue(this.decision);
     }
 
     @ColumnName(key = "الملاحظات")

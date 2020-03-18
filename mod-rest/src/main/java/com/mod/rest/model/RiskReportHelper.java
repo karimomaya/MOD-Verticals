@@ -79,10 +79,10 @@ public class RiskReportHelper {
     @ColumnName(key = "حالة التحدي")
     public String getState() {
         switch (this.riskState){
-            case 0:
-                return "منخفضة";
             case 1:
-                return "متوسطة";
+                return "مفتوح";
+            case 0:
+                return "مغلق";
             default:
                 return "";
         }

@@ -236,7 +236,7 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) issueRepository.getDelayedIssuesCount(ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<IssueReportHelper> issues =  issueReportHelperRespository.getDelayedIssues(1,  Integer.MAX_VALUE,ids);
+                List<IssueReportHelper> issues =  issueReportHelperRespository.getDelayedIssues(1, Integer.MAX_VALUE,ids);
                 return (T) excelWriterService.generate(issues);
             }
         }
