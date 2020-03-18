@@ -24,13 +24,13 @@ public interface RiskReportHelperRepository extends GenericRepository<RiskReport
     Long getDelayedRisksCount(@Param("createdBy") String createdBy);
 
     @Query(value = "{call MOD_RM_SP_GetRisksRelatedToProjectReport(:PageNumber,:PageSize, :projectId , :createdBy)}", nativeQuery = true)
-    List<Risk> getRiskRelatedToProjectReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("projectId") String projectId, @Param("createdBy") String createdBy);
+    List<RiskReportHelper> getRiskRelatedToProjectReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("projectId") String projectId, @Param("createdBy") String createdBy);
 
     @Query(value = "{call MOD_RM_SP_GetRisksRelatedToProjectReportCount( :projectId, :createdBy )}", nativeQuery = true)
     Long getRiskRelatedToProjectReportCount(@Param("projectId") String projectId, @Param("createdBy") String createdBy);
 
     @Query(value = "{call MOD_RM_GetClosedRisksReport(:PageNumber, :PageSize, :createdBy)}", nativeQuery = true)
-    List<Risk> getClosedRisksReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy);
+    List<RiskReportHelper> getClosedRisksReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy);
 
     @Query(value = "{call MOD_RM_GetClosedRisksReportCount( :createdBy )}", nativeQuery = true)
     Long getClosedRisksReportCount(@Param("createdBy") String createdBy);

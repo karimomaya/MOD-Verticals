@@ -54,9 +54,15 @@ public class ReportService {
     TechnicalSupportRepository technicalSupportRepository;
     @Autowired
 	RiskReportHelperRepository riskReportHelperRepository;
+    @Autowired
+    IssueReportHelperRepository issueReportHelperRespository;
 
     public ReportObject buildReportObject(ReportObject reportObject){
-        if (reportObject.getReportType()<= 19 || reportObject.getReportType() == 30 || reportObject.getReportType() == 34 || reportObject.getReportType() == 35 || reportObject.getReportType() == 36 || reportObject.getReportType() == 37 || reportObject.getReportType() == 38){
+        if (reportObject.getReportType()<= 19 || reportObject.getReportType() == 30 ||
+                reportObject.getReportType() == 34 || reportObject.getReportType() == 35
+                || reportObject.getReportType() == 36 || reportObject.getReportType() == 37
+                || reportObject.getReportType() == 38){
+
             if (reportObject.getUserIds().equals(";")){
                 NodeList nodeList = userHelperService.getSubUsers(reportObject.getSAMLart());
                 String s = ";";
@@ -94,7 +100,7 @@ public class ReportService {
         if (reportObject.getReportType() == 40 ) {
             List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(reportObject.getStartDate(),reportObject.getEndDate());
             return (T) excelWriterService.generate(technicalSupportReports);
-        }else if (reportObject.getReportType() == 41 ) {
+        } else if (reportObject.getReportType() == 41 ) {
             List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(reportObject.getStartDate(),reportObject.getEndDate());
             return (T) excelWriterService.generate(technicalSupportReports);
         }
@@ -103,7 +109,7 @@ public class ReportService {
         if (reportObject.getReportType() == 20 ) {
             List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
             return (T) excelWriterService.generate(entityReports);
-        }else if (reportObject.getReportType() == 21 ) {
+        } else if (reportObject.getReportType() == 21 ) {
             List<EntityReport> entityReports = entityRepository.getPrivateEntities(1, Integer.MAX_VALUE, "", "" ,reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getIsRegistered(),reportObject.getLicenseNumber(),reportObject.getTags());
             return (T) excelWriterService.generate(entityReports);
         }else if (reportObject.getReportType() == 22 ) {
@@ -111,7 +117,7 @@ public class ReportService {
             return (T) excelWriterService.generate(individualReports);
         }
 
-
+        //•	تقرير التحديات المتأخرة
         if (reportObject.getReportType() == 10){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -120,7 +126,7 @@ public class ReportService {
             }
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  riskReportHelper(reportObject, "delayedRiskReport");
-            }else  if (reportObject.getDetectedReportType() == 1){ // table
+            } else  if (reportObject.getDetectedReportType() == 1){ // table
                 return (T) riskRepository.getDelayedRisks(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) riskRepository.getDelayedRisksCount(ids);
@@ -129,6 +135,7 @@ public class ReportService {
                 return (T) excelWriterService.generate(risks);
             }
         }
+        //•	تقرير المهام المتأخرةالمتعلقة بالتحديات
         if (reportObject.getReportType() == 14){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -137,16 +144,16 @@ public class ReportService {
             }
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  reportHelper(reportObject, "delayedTaskRiskReport");
-            }else  if (reportObject.getDetectedReportType() == 1){ // table
+            } else  if (reportObject.getDetectedReportType() == 1){ // table
                 return (T) taskRepository.getDelayedTaskRiskReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getRiskIds(), ids);
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.getDelayedTaskRiskReportCount( reportObject.getRiskIds(), ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTaskRiskReport(1,Integer.MAX_VALUE,reportObject.getRiskIds(),ids);
+                List<TaskReportHelper> tasks =  taskReportHelperRepository.getDelayedTaskRiskReport(1,  Integer.MAX_VALUE,reportObject.getRiskIds(),ids);
                 return (T) excelWriterService.generate(tasks);
             }
         }
-
+        //•	تقرير التحديات المرتبطة بمشروع/نشاط معين
         if (reportObject.getReportType() == 15){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -155,14 +162,16 @@ public class ReportService {
             }
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  riskReportHelper(reportObject, "activityProjectRiskRelated");
-            }else  if (reportObject.getDetectedReportType() == 1){ // table
+            } else  if (reportObject.getDetectedReportType() == 1){ // table
                 return (T) riskRepository.getRiskRelatedToProjectReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getProjectIds(), ids);
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) riskRepository.getRiskRelatedToProjectReportCount(reportObject.getProjectIds(), ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-
+                List<RiskReportHelper> risks = riskReportHelperRepository.getRiskRelatedToProjectReport( 1, Integer.MAX_VALUE, reportObject.getProjectIds(),ids);
+                return (T) excelWriterService.generate(risks);
             }
         }
+        //•	تقارير إنتاجية مستخدم/مستخدمين في فترة محددة في مواجهة التحديات.
         if (reportObject.getReportType() == 16){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -171,14 +180,17 @@ public class ReportService {
             }
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  riskReportHelper(reportObject, "userProductivityRiskReport");
-            }else  if (reportObject.getDetectedReportType() == 1){ // table
+            } else  if (reportObject.getDetectedReportType() == 1){ // table
                 return (T) riskRepository.getClosedRisksReport(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) riskRepository.getClosedRisksReportCount(ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
+                List<RiskReportHelper> risks = riskReportHelperRepository.getClosedRisksReport( 1, Integer.MAX_VALUE,ids);
+                return (T) excelWriterService.generate(risks);
 
             }
         }
+        //•	تقرير المهام المنجزة/ المتأخرة في حل تحدي
         if (reportObject.getReportType() == 17){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -187,26 +199,30 @@ public class ReportService {
             }
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  reportHelper(reportObject, "inProgressDelayedClosedTaskRisksReport");
-            }else  if (reportObject.getDetectedReportType() == 1){ // table
+            } else  if (reportObject.getDetectedReportType() == 1){ // table
                 return (T) taskRepository.getInProgressDelayedClosedTaskRisksReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getRiskIds(), ids);
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.getInProgressDelayedClosedTaskRisksReportCount( reportObject.getRiskIds(), ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-
+                List<TaskReportHelper> tasks =  taskReportHelperRepository.getInProgressDelayedClosedTaskRisksReport(1,  Integer.MAX_VALUE,reportObject.getRiskIds(),ids);
+                return (T) excelWriterService.generate(tasks);
             }
         }
+        //18 -> •	تقارير إحصائية بالتحديات وحالتها في فترة محددة
+        //38 -> •	تقارير إحصائية بالمخاطر وحالتها في فترة محددة
         if (reportObject.getReportType() == 18 || reportObject.getReportType() == 38){
 
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  riskStatisticsReportHelper(reportObject);
-            }else  if (reportObject.getDetectedReportType() == 1){ // table
-//                return (T) riskRepository.getUserRiskStatisticsReport( reportObject.getStartDate(), reportObject.getEndDate(), ids);
+            } else  if (reportObject.getDetectedReportType() == 1){ // table
+
             } else if(reportObject.getDetectedReportType() == 2) { // count
 
             } else if(reportObject.getDetectedReportType() == 3) { // file
 
             }
         }
+        ////•	تقرير المخاطر المتأخرة
         if (reportObject.getReportType() == 30){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -220,10 +236,11 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) issueRepository.getDelayedIssuesCount(ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-//                List<Risk> riskExcel = (T) riskRepository.getDelayedRisks(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
-//                return (T) excelWriterService.generate(riskExcel);
+                List<IssueReportHelper> issues =  issueReportHelperRespository.getDelayedIssues(1,  Integer.MAX_VALUE,ids);
+                return (T) excelWriterService.generate(issues);
             }
         }
+        //•	تقرير المهام المتأخرةالمتعلقة بالمخاطر
         if (reportObject.getReportType() == 34){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -237,9 +254,11 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.getDelayedTaskIssueReportCount( reportObject.getIssueIds(), ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-
+                List<TaskReportHelper> tasks =  taskReportHelperRepository.getDelayedTaskIssueReport(1,  Integer.MAX_VALUE,reportObject.getIssueIds(),ids);
+                return (T) excelWriterService.generate(tasks);
             }
         }
+        //•	تقرير المخاطر المرتبطة بمشروع/نشاط معين
         if (reportObject.getReportType() == 35){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -253,9 +272,11 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) issueRepository.getIssueRelatedToProjectReportCount(reportObject.getProjectIds(), ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-
+                List<IssueReportHelper> issues =  issueReportHelperRespository.getIssueRelatedToProjectReport(1, Integer.MAX_VALUE, reportObject.getProjectIds(), ids);
+                return (T) excelWriterService.generate(issues);
             }
         }
+        //•	تقارير إنتاجية مستخدم/مستخدمين في فترة محددة في مواجهة المخاطر.
         if (reportObject.getReportType() == 36){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -269,9 +290,11 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) issueRepository.getClosedIssuesReportCount(ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-
+                List<IssueReportHelper> issues =  issueReportHelperRespository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids);
+                return (T) excelWriterService.generate(issues);
             }
         }
+        //•	تقرير المهام المنجزة/ المتأخرة في حل خطر
         if (reportObject.getReportType() == 37){
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
@@ -285,21 +308,10 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.getInProgressDelayedClosedTaskIssuesReportCount( reportObject.getIssueIds(), ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
-
+                List<TaskReportHelper> tasks =  taskReportHelperRepository.getInProgressDelayedClosedTaskIssuesReport(1, Integer.MAX_VALUE, reportObject.getIssueIds(), ids);
+                return (T) excelWriterService.generate(tasks);
             }
         }
-//        if (reportObject.getReportType() == 38){
-//
-//            if (reportObject.getDetectedReportType() == 0){ // graph
-//                return (T)  riskStatisticsReportHelper(reportObject);
-//            }else  if (reportObject.getDetectedReportType() == 1){ // table
-////                return (T) riskRepository.getUserRiskStatisticsReport( reportObject.getStartDate(), reportObject.getEndDate(), ids);
-//            } else if(reportObject.getDetectedReportType() == 2) { // count
-//
-//            } else if(reportObject.getDetectedReportType() == 3) { // file
-//
-//            }
-//        }
         if (reportObject.getReportType() == 6){
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  reportHelper(reportObject, "riskReport");
@@ -333,7 +345,7 @@ public class ReportService {
                 List<TaskReportHelper> tasks = taskReportHelperRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
-        }  else if (reportObject.getReportType() == 3) {
+        }else if (reportObject.getReportType() == 3) {
             if (reportObject.getDetectedReportType() == 0) { // graph
                 return (T) reportDateHelper(reportObject, "CompletedTaskReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
@@ -364,9 +376,7 @@ public class ReportService {
                 List<TaskReportHelper> tasks =  taskService.getTaskReportHelperProjectBasedOnStatus(reportObject.getStatus(), reportObject.getUserIds(), reportObject.getProjectIds(), reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getSAMLart());
                 return (T) excelWriterService.generate(tasks);
             }
-
         }
-
         return null;
     }
 
@@ -378,10 +388,9 @@ public class ReportService {
         List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
         UserHelper user = sessionService.getSession(reportObject.getSAMLart());
         user.getId();
+
         long[] users = reportObject.getUsers();
-
         int poistion = 0;
-
         int total = users.length;
         int[] riskDataOpened = new int[total];
         int[] riskDataClosed = new int[total];
@@ -393,15 +402,11 @@ public class ReportService {
 
         for(int i=0; i< users.length; i++){
             List<Statistics> statisticss = null;
-//            if(type == "risks"){
             if(reportObject.getReportType() == 18){
                 statisticss = statisticsRepository.getUserRiskStatisticsReport(users[i],reportObject.getStartDate(), reportObject.getEndDate());
             }else if(reportObject.getReportType() == 38) {
                 statisticss = statisticsRepository.getUserIssueStatisticsReport(users[i], reportObject.getStartDate(), reportObject.getEndDate());
             }
-//            }else if(type == "issues") {
-//                statisticss = statisticsRepository.getUserIssueStatisticsReport(users[i],reportObject.getStartDate(), reportObject.getEndDate());
-//            }
 
             int inProgress = statisticss.get(0).getInProgress();
             int closed = statisticss.get(0).getEnded();
@@ -420,16 +425,6 @@ public class ReportService {
 
             usedNameOpened =  " مفتوحه";
             usedNameClosed =  " مغلقة";
-
-//            riskData = new int[total];
-//            riskData[i-poistion] = closed;
-//            usedName = name + " مغلقة";
-//            graphDataHelper = new GraphDataHelper();
-//            graphDataHelper.setName(usedName);
-//            graphDataHelper.setData(riskData);
-//            graphDataHelpers.add(graphDataHelper);
-
-
         }
         graphDataHelperOpened.setName(usedNameOpened);
         graphDataHelperClosed.setName(usedNameClosed);
@@ -439,7 +434,6 @@ public class ReportService {
         graphDataHelpers.add(graphDataHelperClosed);
 
         result.put(graphDataHelpers, arrayList);
-
         return result;
 
     }
@@ -529,8 +523,7 @@ public class ReportService {
                 graphDataHelper.setData(issueDate);
                 graphDataHelpers.add(graphDataHelper);
 
-            }
-            else if (type.equals("activityProjectIssueRelated")) {
+            } else if (type.equals("activityProjectIssueRelated")) {
                 issueList = issueRepository.getIssueRelatedToProjectReport(1, Integer.MAX_VALUE, reportObject.getProjectIds(), users[i] + "");
                 if (issueList.size() == 0) continue;
 
@@ -558,10 +551,8 @@ public class ReportService {
                 graphDataHelper.setData(issueDate);
                 graphDataHelpers.add(graphDataHelper);
             }
-
         }
         return graphDataHelpers;
-
     }
 
     public List<GraphDataHelper> reportHelper(ReportObject reportObject, String type ){

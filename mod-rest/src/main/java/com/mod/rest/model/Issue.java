@@ -29,7 +29,6 @@ public class Issue {
     long createdBy;
     boolean isDeleted;
     Date IssueCloseDate;
-   // String issueProjectdescription;
     String decision;
     Integer relatedType;
     Integer projectName;
