@@ -166,11 +166,17 @@ public class MeetingController {
             json.put("y", jsonArray);
             String color = "#acdce7";
             switch (meeting.getStatus()){
+                case 2:
+                    color = "#ff0000";
+                    break;
+                case 3:
+                    color = "#ff0000";
+                    break;
                 case 10:
                     color = "#0DA616";
                     break;
                 case 20:
-                    color = "#ff0000";
+                    color = "#d2d3e1";
                     break;
             }
             json.put("color", color);
