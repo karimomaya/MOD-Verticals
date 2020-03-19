@@ -10,7 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DecimalStyle;
+import java.time.format.FormatStyle;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by omar.sabry on 1/8/2020.
@@ -41,6 +48,10 @@ public class Meeting {
     @NotFound(action = NotFoundAction.IGNORE)
     Room room;
 
+
+    public String getArabicDate(){
+        return Utils.convertDateToArabic(this.startDate);
+    }
 
     public String getMeetingRoomName(){
         return this.room.getRoomName();

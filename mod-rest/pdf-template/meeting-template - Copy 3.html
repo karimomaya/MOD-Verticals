@@ -1,4 +1,4 @@
-<html class="rtl" lang="">
+<html class="rtl" lang="eng">
 <head>
 <style>
 
@@ -141,10 +141,10 @@ img {
             <table >
                 <thead>
                     <tr>
-                        <th style="width: 400px;">اليوم</th>
-                        <th style="width: 100px;">التاريخ</th>
-                        <th style="width: 100px;">الزمن</th>
-                        <th style="width: 100px;">المكان</th>
+                        <th>اليوم</th>
+                        <th width="100px">التاريخ</th>
+                        <th width="50px">الزمن</th>
+                        <th width="100px">المكان</th>
                     </tr>
                 </thead>
                 <tbody >
@@ -155,7 +155,7 @@ img {
                         <td>المكان: الدور السابع</td>
                     </tr> -->
                     <meeting-data-replacer>getDayOfWeek</meeting-data-replacer>
-                    <meeting-data-replacer>getArabicDate</meeting-data-replacer>
+                    <meeting-data-replacer>getStartDate</meeting-data-replacer>
                     <meeting-data-replacer>getHourOfMeeting</meeting-data-replacer>
                     <meeting-data-replacer>getMeetingRoomName</meeting-data-replacer>
                 </tbody>
@@ -168,9 +168,9 @@ img {
             <table style="font-family: Noto Naskh Arabic">
                 <thead>
                 <tr>
-                    <th dir="rtl" style="width: 400px;">الدرجة/ الرتبة</th>
-                    <th dir="rtl" style="width: 400px;">الأسم</th>
-                    <th dir="rtl" >المنصب</th>
+                    <th  dir="rtl">الدرجة/ الرتبة</th>
+                    <th width="100px" dir="rtl">الأسم</th>
+                    <th width="100px" dir="rtl" >المنصب</th>
                 </tr>
                 </thead>
                 <tbody id="meeting-data">	
@@ -189,7 +189,7 @@ img {
                 <thead>
                 <tr>
                     <th dir="rtl">رقم البند</th>
-                    <th dir="rtl" style="width: 20px;">نقطة النقاش</th>
+                    <th dir="rtl">نقطة النقاش</th>
                 </tr>
                 </thead>
                 <tbody id="meeting-data">	
@@ -205,11 +205,11 @@ img {
             <table style="font-family: Noto Naskh Arabic">
                 <thead>
                 <tr>
-                    <th dir="rtl" style="width: 30px;">رقم البند</th>
-                    <th dir="rtl" style="width: 30px;">الملاحظات والتوجيهات</th>
-                    <th dir="rtl" style="width: 50px;">المسؤول</th>
-                    <th dir="rtl">التاريخ من</th>
-                    <th dir="rtl" style="width: 30  px;">التاريخ إلى</th>
+                    <th dir="rtl">رقم البند</th>
+                    <th width="150px" dir="rtl">الملاحظات والتوجيهات</th>
+                    <th width="100px" dir="rtl">المسؤول</th>
+                    <th width="50px" dir="rtl">التاريخ من</th>
+                    <th width="50px" dir="rtl">التاريخ إلي</th>
                 </tr>
                 </thead>
                 <tbody id="meeting-data">	
@@ -217,8 +217,8 @@ img {
                     <meeting-task-replacer>getNumber</meeting-task-replacer>
                     <meeting-task-replacer>getDescription</meeting-task-replacer>
                     <meeting-task-replacer>getPerformersNames</meeting-task-replacer>
-                    <meeting-task-replacer>getArabicTaskStartDate</meeting-task-replacer>
-                    <meeting-task-replacer>getArabicTaskDueDate</meeting-task-replacer>
+                    <meeting-task-replacer>getTaskStartDate</meeting-task-replacer>
+                    <meeting-task-replacer>getTaskDueDate</meeting-task-replacer>
                 </tbody>
             </table>
 		 

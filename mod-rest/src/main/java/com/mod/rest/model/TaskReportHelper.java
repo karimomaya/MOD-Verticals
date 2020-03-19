@@ -1,6 +1,7 @@
 package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
+import com.mod.rest.system.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
@@ -8,8 +9,15 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DecimalStyle;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by karim.omaya on 1/11/2020.
@@ -142,6 +150,14 @@ public class TaskReportHelper {
     @ColumnName(key = "تاريخ الانتهاء")
     public Date getTaskDueDate(){
         return this.dueDate;
+    }
+
+    public String getArabicTaskStartDate() {
+        return Utils.convertDateToArabic(this.startDate);
+    }
+
+    public String getArabicTaskDueDate(){
+        return Utils.convertDateToArabic(this.dueDate);
     }
 
     @ColumnName(key = "نسبة الأنجاز")
