@@ -226,4 +226,33 @@ public class Utils {
         }
         return result;
     }
+
+    public static String convertDateToArabic(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-d");
+        String dateString = sdf.format(date);
+        char[] arabicChars = {'٠','١','٢','٣','٤','٥','٦','٧','٨','٩'};
+        StringBuilder builder = new StringBuilder();
+        for(int i =0;i<dateString.length();i++)
+        {
+            if(dateString.charAt(i) == '-'){
+                builder.append(" , ");
+            }
+            else if(Character.isDigit(dateString.charAt(i)))
+            {
+                builder.append(arabicChars[(int)(dateString.charAt(i))-48]);
+            }
+            else
+            {
+                builder.append(dateString.charAt(i));
+            }
+        }
+        dateString = builder.toString();
+        return dateString;//        Locale arabicLocale = Locale.forLanguageTag("ar");
+//        DateTimeFormatter arabicDateFormatter
+//                = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+//                .withLocale(arabicLocale)
+//                .withDecimalStyle(DecimalStyle.of(arabicLocale));
+//        LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//        return localDate.format(arabicDateFormatter);
+    }
 }
