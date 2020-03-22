@@ -1,0 +1,231 @@
+<html class="rtl" lang="eng">
+<head>
+<style>
+
+table {
+	width: 100%;
+	color: #9e9e9e;
+    font-size: 16px;
+    /* border: 1px solid #9e9e9e;
+    margin-top: 20px; */
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table.specific-class td:first-child {
+    background-color: #9e9e9e;
+    color: black;
+}
+
+.english-font {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+table td {
+    border: 1px solid #9e9e9e;
+    background-color: white;
+    color: black;
+    padding: 5px
+}
+
+
+
+.center {
+	text-align: center;
+}
+
+th {
+	color: black;
+    font-weight: bold;
+    font-size: 14px;
+    background-color: #9e9e9e;
+    text-align: left;
+    padding: 5px;
+}
+
+.table-gold th {
+    background-color:#c9a869;
+    color: white;
+}
+
+.email-wrapper{
+    height: 768px;
+    display:block;
+    padding: 0;
+    margin: 0 auto;
+}
+.email-header{
+    width: 100%;
+}
+.email-template-body{
+    background-color: #fff;
+    display: block;
+    margin-top:30px;
+}
+.template-body-header{
+    display: flex;
+    flex-direction: row-reverse;
+}
+.template-subject-main{
+ display: inline-block;
+ width: 100%;
+ vertical-align: top;
+
+}
+.template-subject-title{
+    color: #c9a869;
+    font-weight: bold;
+    font-size: 18px;
+
+}
+.template-subject-text{
+    color: #9e9e9e;
+    font-size: 21px;
+    text-align: center;
+    text-decoration: underline;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.template-data{
+    display: block;
+}
+
+.template-data-item{
+    width: 33%;
+    display: inline-grid;
+}
+.template-data-label{
+    color: #bfbfbf
+}
+.template-data-info{
+    color: #606060;
+    padding: 10px 0;
+}
+.padding {
+	padding-right: 40px;
+}
+
+img {
+	width: 200px;
+}
+.page-break {
+
+    page-break-before: always;
+}
+</style>
+
+</head>
+
+<body style="font-family: Noto Naskh Arabic">
+    <div class="email-wrapper">
+     <div class="email-header">
+         <img src="UAElogo.png"/>
+     </div>
+     <div class="email-template-body">
+         <div class="template-subject">
+             
+             <div class="template-subject-main">
+                 
+                 <div class="template-subject-text" dir="rtl">
+                    <meeting-subject-replacer>getMeetingSubject</meeting-subject-replacer>
+                </div>
+             </div>
+
+
+         </div>
+         <div class="template-data" dir="rtl">
+            <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
+                <p style="margin: 10px ; font-weight: bold;" >محضر الاجتماع:</p>
+            </div>
+            
+            <table >
+                <thead>
+                    <tr>
+                        <th>اليوم</th>
+                        <th width="100px">التاريخ</th>
+                        <th width="50px">الزمن</th>
+                        <th width="100px">المكان</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <!-- <tr>
+                        <td>اليوم: الثلاثاء</td>
+                        <td>التاريخ: 10-11-2019</td>
+                        <td>الزمن: 0:90</td>
+                        <td>المكان: الدور السابع</td>
+                    </tr> -->
+                    <meeting-data-replacer>getDayOfWeek</meeting-data-replacer>
+                    <meeting-data-replacer>getStartDate</meeting-data-replacer>
+                    <meeting-data-replacer>getHourOfMeeting</meeting-data-replacer>
+                    <meeting-data-replacer>getMeetingRoomName</meeting-data-replacer>
+                </tbody>
+            </table>
+
+
+             <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
+                 <p style="margin: 10px ; font-weight: bold;" >الحضور:</p>
+             </div>
+            <table style="font-family: Noto Naskh Arabic">
+                <thead>
+                <tr>
+                    <th  dir="rtl">الدرجة/ الرتبة</th>
+                    <th width="100px" dir="rtl">الأسم</th>
+                    <th width="100px" dir="rtl" >المنصب</th>
+                </tr>
+                </thead>
+                <tbody id="meeting-data">	
+                    <attendee-data-replacer>getTitle</attendee-data-replacer>
+                    <attendee-data-replacer>getAttendeeName</attendee-data-replacer>
+                    <attendee-data-replacer>getAttendeeRole</attendee-data-replacer>
+                </tbody>
+            </table>
+
+            <span class="page-break"></span>
+
+             <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
+                 <p style="margin: 10px ; font-weight: bold;" >جدول الأعمال:</p>
+             </div>
+            <table  style="font-family: Noto Naskh Arabic">
+                <thead>
+                <tr>
+                    <th dir="rtl">رقم البند</th>
+                    <th dir="rtl">نقطة النقاش</th>
+                </tr>
+                </thead>
+                <tbody id="meeting-data">	
+                   
+                    <discussion-point-replacer>getNumber</discussion-point-replacer>
+                    <discussion-point-replacer>getDiscussionPoint</discussion-point-replacer>
+                </tbody>
+            </table>
+
+            <div style="background-color: #c9a869; width: 100%; display: block; color: white;">
+                <p style="margin: 10px ; font-weight: bold;" >التوجيهات والتوصيات:</p>
+            </div>
+            <table style="font-family: Noto Naskh Arabic">
+                <thead>
+                <tr>
+                    <th dir="rtl">رقم البند</th>
+                    <th width="150px" dir="rtl">الملاحظات والتوجيهات</th>
+                    <th width="100px" dir="rtl">المسؤول</th>
+                    <th width="50px" dir="rtl">التاريخ من</th>
+                    <th width="50px" dir="rtl">التاريخ إلي</th>
+                </tr>
+                </thead>
+                <tbody id="meeting-data">	
+                    
+                    <meeting-task-replacer>getNumber</meeting-task-replacer>
+                    <meeting-task-replacer>getDescription</meeting-task-replacer>
+                    <meeting-task-replacer>getPerformersNames</meeting-task-replacer>
+                    <meeting-task-replacer>getTaskStartDate</meeting-task-replacer>
+                    <meeting-task-replacer>getTaskDueDate</meeting-task-replacer>
+                </tbody>
+            </table>
+		 
+             </div>
+         </div>
+         
+
+     </div>
+</body>
+</html>

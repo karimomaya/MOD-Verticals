@@ -7,6 +7,7 @@ import com.mod.rest.model.GraphDataHelper;
 import com.mod.rest.model.ReportObject;
 import com.mod.rest.model.Task;
 import com.mod.rest.model.UserHelper;
+import com.mod.rest.repository.UserRepository;
 import com.mod.rest.service.ReportService;
 import com.mod.rest.service.SessionService;
 import com.mod.rest.system.Pagination;
@@ -23,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by karim.omaya on 12/27/2019.
@@ -40,6 +38,8 @@ public class ReportController {
     ReportService reportService;
     @Autowired
     SessionService sessionService;
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("export/{report}/{samlart}")
     @ResponseBody
@@ -142,6 +142,13 @@ public class ReportController {
                 responseBuilder.setPagination(pagination);
                 result.put("graph", Utils.writeObjectIntoString(graphDataHelpers));
                 result.put("tasks", Utils.writeObjectIntoString(tasks));
+
+                long[] users = reportObject.getUsers();
+                String[] xaxis = new String[users.length];
+                for(int i = 0; i < users.length; i++){
+                    xaxis[i] = userRepository.findById(users[i]).get().getDisplayName();
+                }
+                result.put("xaxis", Utils.writeObjectIntoString(xaxis));
 
                 responseBuilder.status(ResponseCode.SUCCESS);
 

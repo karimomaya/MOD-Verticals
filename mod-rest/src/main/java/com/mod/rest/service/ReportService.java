@@ -609,7 +609,7 @@ public class ReportService {
         }
     }
 
-    public List<GraphDataHelper> userProductivityReportDateHelper( ReportObject reportObject){
+    public List<GraphDataHelper> userProductivityReportDateHelper(ReportObject reportObject){
         List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
         long days = Utils.differenceBetweenTwoDates(reportObject.getStartDate(), reportObject.getEndDate());
         long[] users = reportObject.getUsers();
@@ -623,38 +623,39 @@ public class ReportService {
         for(int i=0; i< users.length; i++){
             List<Task> taskList = null;
             String user = ";"+  users[i] +";";
-
             taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
-
 
             if (taskList.size() == 0) continue;
 
-            int[] taskDate = new int[arraySize];
+
             for (Task task : taskList) {
-//                if(task.getProgress() == 100){
-//                    completedTasks[i] += 1;
-//                }else {
-//                    if (task.getDueDate().before(new Date())) {
-//                        delayedTasks[i] += 1;
-//                    } else {
-//                        inProgressTasks[i] += 1;
-//                    }
-//                }
-                int num = 0;
-                if (arraySize == 7){
-                    num = Utils.getDayNameFromDate(task.getDueDate());
-                }else if (arraySize == 31){
-                    num = Utils.getDayFromDate(task.getDueDate());
-                }else if (arraySize == 12){
-                    num = Utils.getMonthFromDate(task.getDueDate());
+                if(task.getProgress() == 100){
+                    completedTasks[i] += 1;
+                }else {
+                    if (task.getDueDate().before(new Date())) {
+                        delayedTasks[i] += 1;
+                    } else {
+                        inProgressTasks[i] += 1;
+                    }
                 }
-                taskDate[num] += 1;
             }
-            GraphDataHelper graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-            graphDataHelper.setData(taskDate);
-            graphDataHelpers.add(graphDataHelper);
+//            taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
         }
+        GraphDataHelper graphDataHelper = new GraphDataHelper();
+        graphDataHelper.setName("مهام منجزة");
+        graphDataHelper.setData(completedTasks);
+        graphDataHelpers.add(graphDataHelper);
+
+        graphDataHelper = new GraphDataHelper();
+        graphDataHelper.setName("مهام تحت التنفيذ");
+        graphDataHelper.setData(inProgressTasks);
+        graphDataHelpers.add(graphDataHelper);
+
+        graphDataHelper = new GraphDataHelper();
+        graphDataHelper.setName("مهام متأخرة");
+        graphDataHelper.setData(delayedTasks);
+        graphDataHelpers.add(graphDataHelper);
+
         return graphDataHelpers;
     }
 
@@ -668,9 +669,9 @@ public class ReportService {
         for(int i=0; i< users.length; i++){
             List<Task> taskList = null;
             String user = ";"+  users[i] +";";
-//            if(type == "UserProductivityReport"){
-//                taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
-//            }else
+            if(type == "UserProductivityReport"){
+                taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
+            }else
             if(type == "CompletedTaskReport"){
                 UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
                 taskList = taskRepository.getCompletedTaskReport(user, userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(), 1, Integer.MAX_VALUE);
