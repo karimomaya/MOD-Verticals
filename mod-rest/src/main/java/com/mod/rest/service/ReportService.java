@@ -387,7 +387,7 @@ public class ReportService {
             if (reportObject.getDetectedReportType() == 0) { // graph
                 return (T) taskReportHelper(reportObject, "TaskAssignmentReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
-                return (T) taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1, reportObject.getPageNumber(), reportObject.getPageSize());
+                return (T) taskService.addUserToTask(taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1, reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if (reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1);
             } else if (reportObject.getDetectedReportType() == 3) { // file
@@ -705,11 +705,11 @@ public class ReportService {
 
         if(type == "DelayedTaskReport"){
             graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName("مهام لم تبدأ");
+            graphDataHelper.setName("مهام متأخرة");
             graphDataHelper.setData(delayedTasks);
             graphDataHelpers.add(graphDataHelper);
             graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName("مهام تحت التنفيذ");
+            graphDataHelper.setName("مهام منجزة");
             graphDataHelper.setData(completedTasks);
             graphDataHelpers.add(graphDataHelper);
         }
@@ -805,7 +805,9 @@ public class ReportService {
             int[] countArray = new int[5];
             for (Task task : taskList){
                 int assignmentType = task.getTypeOfAssignment();
-                countArray[assignmentType-1] += 1;
+                if(assignmentType > 0 && assignmentType < 6){
+                    countArray[assignmentType-1] += 1;
+                }
             }
 
             graphDataHelper = new GraphDataHelper();

@@ -1,13 +1,22 @@
 package com.mod.rest.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mod.rest.model.ReportObject;
 import com.mod.rest.model.Task;
 import com.mod.rest.model.TaskPerformerHelper;
 import com.mod.rest.repository.TaskPerformerHelperRepository;
+import com.mod.rest.repository.TaskRepository;
 import com.mod.rest.repository.UserRepository;
 import com.mod.rest.service.*;
 import com.mod.rest.system.ResponseBuilder;
 import com.mod.rest.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -15,10 +24,13 @@ import org.w3c.dom.NodeList;
 import org.json.*;
 
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -30,9 +42,17 @@ import java.util.List;
 public class TaskController  {
 
     @Autowired
+    TaskService taskService;
+    @Autowired
+    TaskRepository taskRepository;
+    @Autowired
     TaskPerformerHelperRepository taskPerformerHelperRepository;
     @Autowired
     UserHelperService userHelperService;
+    @Autowired
+    PDFService pdfService;
+    @Autowired
+    ReportService reportService;
 
     @GetMapping("task-timeline/{startDate}/{endDate}/{users}/{project}/{status}")
     public ResponseBuilder<String> report(@RequestHeader("samlart") String SAMLart,
@@ -78,6 +98,45 @@ public class TaskController  {
     }
 
 
+    @GetMapping("export/pdf/{reportStr}")
+    @ResponseBody
+    public ResponseEntity<byte[]> generateTaskReportPDF(@PathVariable("reportStr") String reportStr){
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ReportObject reportObject = mapper.readValue(reportStr, ReportObject.class);
+            reportObject = reportObject.build();
+
+//            reportObject = reportService.buildReportObject(reportObject);
+
+            HttpHeaders respHeaders = new HttpHeaders();
+
+            List<Task> taskList = taskService.addUserToTask(taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1, 1, Integer.MAX_VALUE));
+
+            if(taskList.size() == 0){
+                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"null\"").body(null); // used to download file
+            }
+
+            String templateName = pdfService.getTemplateName(taskList.get(0));
+            System.out.println("get template name: " + templateName);
+
+            File file = pdfService.generate(taskList, "pdf-template/" + templateName + ".html", "task-data");
+
+            byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
+            respHeaders.setContentLength(bytes.length);
+            respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=attachment.pdf");
+
+            return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"null\"").body(null); // used to download file
+    }
+
     public JSONArray formulateJSONWithSpecificUsers( Date startDate, Date endDate, String[] users, int project, int status){
         JSONArray result = new JSONArray();
 
@@ -117,7 +176,6 @@ public class TaskController  {
         }
         return result;
     }
-
 
     private String detectTaskColor(TaskPerformerHelper task){
 
