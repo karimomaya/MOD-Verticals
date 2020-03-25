@@ -42,6 +42,7 @@ public class Task implements Serializable {
     String entityBWSId;
     String source;
     Integer integrationId;
+    Integer typeOfAssignment;
     /*@OneToMany( mappedBy="task", fetch = FetchType.EAGER)
     List<TaskPerformer> taskPerformers;*/
     @Transient

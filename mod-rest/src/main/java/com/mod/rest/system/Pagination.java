@@ -37,7 +37,7 @@ public class Pagination {
             this.hasPrevious = false;
         } else {
             // 21 / 10 =
-            this.lastPage = (int) (Math.ceil(numberOfResults / pageSize));
+            this.lastPage = (int) (Math.ceil((float)numberOfResults / (float)pageSize));
             if (this.lastPage == 0 && numberOfResults > 0){
                 this.lastPage = 1;
             }

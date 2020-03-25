@@ -25,14 +25,21 @@ public interface TaskReportHelperRepository extends GenericRepository<TaskReport
     @Query(value = "{call MOD_TM_SP_CompletedTaskReport(:userIds, :userId, :startDate, :endDate,:PageNumber,:PageSize)}", nativeQuery = true)
     List<TaskReportHelper> getCompletedTaskReport(@Param("userIds") String userIds, @Param("userId") long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
 
-    @Query(value = "{call MOD_TM_SP_DelayedTaskReportProject(:userIds, :userId, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
-    List<TaskReportHelper> getDelayedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
 
-    @Query(value = "{call MOD_TM_SP_FinishedTaskReportProject(:userIds, :userId, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
-    List<TaskReportHelper> getFinishedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
 
-    @Query(value = "{call MOD_TM_SP_FinishedAndDelayedTaskReportProject(:userIds, :userId, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
-    List<TaskReportHelper> getFinishedAndDelayedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
+    @Query(value = "{call MOD_TM_SP_DelayedTaskReportProject(:userIds, :userId, :startDate, :endDate, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
+    List<TaskReportHelper> getDelayedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
+
+    @Query(value = "{call MOD_TM_SP_FinishedTaskReportProject(:userIds, :userId, :startDate, :endDate, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
+    List<TaskReportHelper> getFinishedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
+
+    @Query(value = "{call MOD_TM_SP_FinishedAndDelayedTaskReportProject(:userIds, :userId, :startDate, :endDate, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
+    List<TaskReportHelper> getFinishedAndDelayedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
+
+
+    @Query(value = "{call MOD_TM_SP_GetTaskByAssignmentReport(:startDate, :endDate, :assignmentType, :PageNumber,:PageSize)}", nativeQuery = true)
+    List<TaskReportHelper> getTaskAssignmentReport(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("assignmentType") int assignmentType, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
+
 
     @Query(value = "{call MOD_RM_SP_getTasksRelatedToDiscussionPointAndMeeting( :meetingId, :discussionPointId )}", nativeQuery = true)
     ArrayList<TaskReportHelper> getTasksRelatedToDiscussionPointAndMeeting(@Param("meetingId") long meetingId, @Param("discussionPointId") long discussionPointId);
