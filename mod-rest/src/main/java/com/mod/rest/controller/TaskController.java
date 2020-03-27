@@ -165,7 +165,8 @@ public class TaskController  {
                 String color = detectTaskColor(task);
                 json.put("color", color);
 
-                json.put("tooltip", "Percentage: <br> "+task.getProgress()+"");
+                json.put("tooltip", task.getProgress());
+//                json.put("tooltip", "Percentage: <br> "+task.getProgress()+"");
 
                 data.put(json);
             }
@@ -179,22 +180,15 @@ public class TaskController  {
 
     private String detectTaskColor(TaskPerformerHelper task){
 
-
-
-
-
         String color  = "#165080";
         int taskStatus = task.getTaskStatus();
 
         if (taskStatus == 3){
             color = "#165080";
-        }
-
-        else {
+        }else {
 
             long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(task.getStartDate(), task.getDueDate());
             long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(task.getStartDate(), new Date());
-
 
             long expectedProgress = 90;
 
@@ -205,19 +199,18 @@ public class TaskController  {
 
             }
 
-
-
             if (task.getProgress() == 100) {
                 color  = "#38A32B";
-            }else if (task.getProgress() < expectedProgress + 10  && task.getProgress() > expectedProgress - 10 ){
-                color = "#c9a869";
-            }else if(task.getProgress() > expectedProgress   ){
+            }else if(task.getProgress() > expectedProgress ){
                 color = "#4aa472";
             }else if (task.getProgress() < expectedProgress ) {
                 color = "#d44e5a";
+            }else if (taskStatus == 1){
+                color = "#d3d3d3";
+            }else if (task.getProgress() < expectedProgress + 10  && task.getProgress() > expectedProgress - 10 ){
+                color = "#c9a869";
             }
         }
-
 
         return color;
     }
