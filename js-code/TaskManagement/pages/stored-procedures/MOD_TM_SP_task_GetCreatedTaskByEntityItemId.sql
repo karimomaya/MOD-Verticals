@@ -1,6 +1,3 @@
-USE [awdb]
-GO
-/****** Object:  StoredProcedure [dbo].[MOD_TM_SP_task_GetCreatedTaskByEntityItemId]    Script Date: 1/9/2020 5:38:24 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -36,7 +33,7 @@ inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id =task.o
 inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
 	
 	
-where task.createdBy = @Owner and task.entityItemId = @entityItemId and task.isDeleted<>1
+where (task.createdBy = @Owner or @Owner = -1) and task.entityItemId = @entityItemId and task.isDeleted<>1
 order by 
 	case when @sortBy = 'taskName' and @sortDir = 'sortAsc' 
     then task.taskName end asc, 
@@ -64,3 +61,6 @@ OFFSET @PageSize * (@PageNumber - 1) ROWS
     FETCH NEXT @PageSize ROWS ONLY OPTION (RECOMPILE);
 
 END
+
+
+GO

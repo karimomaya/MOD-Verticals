@@ -26,11 +26,12 @@ BEGIN
 	-- interfering with SELECT statements.
 	
     -- Insert statements for procedure here
-	select program.*, count(project.Id) as projectCount, person.DisplayName,
+	select program.*, count(project.Id) as projectCount, userV.RoleName, userV.DisplayName ,--person.DisplayName,
 	program.progress as programProgress
 	from O2MyCompanyTaskManagementMOD_TM_entity_Program as program 
-		inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id = program.owner
-		inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
+		--inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id = program.owner
+		--inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
+        INNER join MOD_SYS_OC_DB_Role_User_V as userV on userV.UserEntityId = program.owner
 		left join O2MyCompanyTaskManagementMOD_TM_entity_TaskProject as project on project.programId = program.Id 
         left join  O2MyCompanyTaskManagementMOD_TM_entity_kpi as kpi on kpi.entityId = project.Id and kpi.[type]=1
 where program.status = @status and (program.owner = @userId or program.createdBy = @userId or kpi.[owner] = @userId) 
@@ -39,7 +40,7 @@ where program.status = @status and (program.owner = @userId or program.createdBy
 	and (program.owner = @FilterOwner or @FilterOwner = -1) and program.name like '%'+@ProgramName+'%' and program.isDeleted != 1
 
 group by program.createdBy, program.createdBy, program.description, program.endDate, program.Id, program.name, program.notes,
-		program.owner, program.startDate, program.status, person.DisplayName , program.S_ITEM_STATUS, program.progress,
+		program.owner, program.startDate, program.status, userV.DisplayName , program.S_ITEM_STATUS, program.progress, userV.RoleName,
 		program.createdByUnitId, program.isDeleted
 order by 
 		case when @sortBy = 'programName' and @sortDir = 'sortAsc' 
@@ -47,9 +48,9 @@ order by
 		case when @sortBy = 'programName' and @sortDir = 'sortDesc' 
 		then program.name end desc,
 		case when @sortBy = 'programOwner' and @sortDir = 'sortAsc' 
-		then person.DisplayName end asc, 
+		then userV.DisplayName end asc, 
 		case when @sortBy = 'programOwner' and @sortDir = 'sortDesc' 
-		then person.DisplayName end desc,
+		then userV.DisplayName end desc,
 		case when @sortBy = 'startDate' and @sortDir = 'sortAsc' 
 		then program.startDate end asc, 
 		case when @sortBy = 'startDate' and @sortDir = 'sortDesc' 
@@ -57,11 +58,16 @@ order by
 		case when @sortBy = 'endDate' and @sortDir = 'sortAsc' 
 		then program.endDate end asc, 
 		case when @sortBy = 'endDate' and @sortDir = 'sortDesc' 
-		then program.endDate end desc
+		then program.endDate end desc,
+        case when @sortBy = 'roleName' and @sortDir = 'sortAsc' 
+		then userV.RoleName end asc, 
+		case when @sortBy = 'roleName' and @sortDir = 'sortDesc' 
+		then userV.RoleName end desc
 OFFSET @PageSize * (@PageNumber - 1) ROWS
     FETCH NEXT @PageSize ROWS ONLY OPTION (RECOMPILE);
 
 	
 END
+
 
 GO

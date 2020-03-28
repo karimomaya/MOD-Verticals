@@ -142,6 +142,7 @@ public class ReportController {
                 responseBuilder.setPagination(pagination);
                 result.put("graph", Utils.writeObjectIntoString(graphDataHelpers));
                 result.put("tasks", Utils.writeObjectIntoString(tasks));
+                result.put("tasks", Utils.writeObjectIntoString(tasks));
 
                 responseBuilder.status(ResponseCode.SUCCESS);
 

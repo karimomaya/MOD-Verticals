@@ -29,11 +29,12 @@ BEGIN
     -- Insert statements for procedure here
 	/****** Script for SelectTopNRows command from SSMS  ******/
 SELECT project.*,count(task.taskName) as taskCount,  program.name as programName,
-		person.DisplayName 
+		userv.DisplayName , userv.RoleName
 FROM [awdb].[dbo].[O2MyCompanyTaskManagementMOD_TM_entity_TaskProject] as project 
 	left join [awdb].[dbo].[O2MyCompanyTaskManagementMOD_TM_entity_Program] as program on program.Id = project.programId
-	inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id =project.owner
-	inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
+    inner JOIN MOD_SYS_OC_DB_Role_User_V as userv on userv.UserEntityId = project.[owner]
+	--inner join O2OpenTextEntityIdentityComponentsIdentity as iden on iden.Id =project.owner
+	--inner join O2OpenTextEntityIdentityComponentsPerson as person on iden.toPerson_Id = person.Id
 	left join O2MyCompanyTaskManagementMOD_TM_entity_Task as task on task.taskProjectId = project.Id
     left join  O2MyCompanyTaskManagementMOD_TM_entity_kpi as kpi on kpi.entityId = project.Id and kpi.[type]=2
 where (project.createdBy = @userId or project.owner = @userId or kpi.[owner] = @userId) and project.status = @status 
@@ -44,17 +45,17 @@ where (project.createdBy = @userId or project.owner = @userId or kpi.[owner] = @
 
 group by project.assignToUnitId, project.createdBy, project.createdByUnitId, project.description, project.endDate,
 	project.Id, project.institutionalPlan, project.name, project.notes, project.owner, project.programId, 
-	project.S_ITEM_STATUS, project.startDate, project.status, person.DisplayName, program.name, project.progress
-	,project.isDeleted
+	project.S_ITEM_STATUS, project.startDate, project.status, userv.DisplayName, program.name, project.progress
+	,project.isDeleted, userv.RoleName
 order by
 	case when @sortBy = 'projectName' and @sortDir = 'sortAsc' 
 		then project.name end asc, 
 	case when @sortBy = 'projectName' and @sortDir = 'sortDesc' 
 		then project.name end desc,
 	case when @sortBy = 'projectOwner' and @sortDir = 'sortAsc' 
-		then person.DisplayName end asc, 
+		then userv.DisplayName end asc, 
 	case when @sortBy = 'projectOwner' and @sortDir = 'sortDesc' 
-		then person.DisplayName end desc,
+		then userv.DisplayName end desc,
 	case when @sortBy = 'startDate' and @sortDir = 'sortAsc' 
 		then project.startDate end asc, 
 	case when @sortBy = 'startDate' and @sortDir = 'sortDesc' 
@@ -62,9 +63,14 @@ order by
 	case when @sortBy = 'endDate' and @sortDir = 'sortAsc' 
 		then project.endDate end asc, 
 	case when @sortBy = 'endDate' and @sortDir = 'sortDesc' 
-		then project.endDate end desc
+		then project.endDate end desc,
+        case when @sortBy = 'roleName' and @sortDir = 'sortAsc' 
+		then userv.RoleName end asc, 
+	case when @sortBy = 'roleName' and @sortDir = 'sortDesc' 
+		then userv.RoleName end desc
 	OFFSET @PageSize * (@PageNumber - 1) ROWS
     FETCH NEXT @PageSize ROWS ONLY OPTION (RECOMPILE);
 END
+
 
 GO
