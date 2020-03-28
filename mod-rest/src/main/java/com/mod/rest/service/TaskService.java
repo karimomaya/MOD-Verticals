@@ -32,73 +32,78 @@ public class TaskService {
         return tasks;
     }
 
-    public List<TaskReportHelper> getTaskReportHelperProjectBasedOnStatus(int projectStatus, String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart){
+    public List<TaskReportHelper> getTaskReportHelperProjectBasedOnStatus(int projectStatus, String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart){
         List<TaskReportHelper> tasks = null;
         if (projectStatus == 1){ // delayed
-            tasks = getDelayedTaskReportHelperProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
+            tasks = getDelayedTaskReportHelperProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         }else if(projectStatus == 2) { // finished
-            tasks = getFinishedTaskReportHelperProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
+            tasks = getFinishedTaskReportHelperProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         } else { // all
-            tasks = getFinishedAndDelayedTaskReportHelperProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
+            tasks = getFinishedAndDelayedTaskReportHelperProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         }
         return tasks;
     }
 
 
 
-    public List<Task> getTaskReportProjectBasedOnStatus(int projectStatus, String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart){
+    public List<Task> getTaskReportProjectBasedOnStatus(int projectStatus, String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart){
         List<Task> tasks = null;
         if (projectStatus == 1){ // delayed
-            tasks = getDelayedTaskReportProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
+            tasks = getDelayedTaskReportProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         }else if(projectStatus == 2) { // finished
-            tasks = getFinishedTaskReportProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
+            tasks = getFinishedTaskReportProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         } else { // all
-            tasks = getFinishedAndDelayedTaskReportProject(userIds, projectIds, pageNumber, pageSize, SAMLart);
+            tasks = getFinishedAndDelayedTaskReportProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         }
         return tasks;
     }
 
-    public List<Task> getFinishedAndDelayedTaskReportProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+    public List<Task> getFinishedAndDelayedTaskReportProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
 
         UserHelper userHelper = sessionService.getSession(SAMLart);
-        List<Task> tasks = taskRepository.getFinishedAndDelayedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+        List<Task> tasks = taskRepository.getFinishedAndDelayedTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
 
         return tasks;
     }
 
-    public List<TaskReportHelper> getFinishedAndDelayedTaskReportHelperProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+    public List<TaskReportHelper> getFinishedAndDelayedTaskReportHelperProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
 
         UserHelper userHelper = sessionService.getSession(SAMLart);
-        List<TaskReportHelper> tasks = taskReportHelperRepository.getFinishedAndDelayedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+        List<TaskReportHelper> tasks = taskReportHelperRepository.getFinishedAndDelayedTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
 
         return tasks;
     }
 
-    public List<Task> getFinishedTaskReportProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+    public List<Task> getFinishedTaskReportProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
 
         UserHelper userHelper = sessionService.getSession(SAMLart);
-        List<Task> tasks = taskRepository.getFinishedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+        List<Task> tasks = taskRepository.getFinishedTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
 
         return tasks;
     }
 
-    public List<TaskReportHelper> getFinishedTaskReportHelperProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+    public List<TaskReportHelper> getFinishedTaskReportHelperProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
 
         UserHelper userHelper = sessionService.getSession(SAMLart);
-        List<TaskReportHelper> tasks = taskReportHelperRepository.getFinishedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+        List<TaskReportHelper> tasks = taskReportHelperRepository.getFinishedTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
 
         return tasks;
     }
 
-    public List<Task> getDelayedTaskReportProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+    public List<Task> getDelayedTaskReportProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
         UserHelper userHelper = sessionService.getSession(SAMLart);
-        List<Task> tasks = taskRepository.getDelayedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+        List<Task> tasks = taskRepository.getDelayedTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
         return tasks;
     }
 
-    public List<TaskReportHelper> getDelayedTaskReportHelperProject( String userIds, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+    public List<TaskReportHelper> getDelayedTaskReportHelperProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
         UserHelper userHelper = sessionService.getSession(SAMLart);
-        List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTaskReportProject(userIds, userHelper.getId(), projectIds,  pageNumber, pageSize);
+        List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
+        return tasks;
+    }
+
+    public List<TaskReportHelper> getTaskAssignmentReport(Date startDate, Date endDate, int assignmentType, int pageNumber, int pageSize) {
+        List<TaskReportHelper> tasks = taskReportHelperRepository.getTaskAssignmentReport(startDate, endDate, assignmentType,  pageNumber, pageSize);
         return tasks;
     }
 }

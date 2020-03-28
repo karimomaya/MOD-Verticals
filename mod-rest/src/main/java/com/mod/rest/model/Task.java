@@ -1,6 +1,8 @@
 package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
+import com.mod.rest.annotation.PDFResources;
+import com.mod.rest.system.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.NotFound;
@@ -20,6 +22,7 @@ import java.util.Date;
 @Setter
 @Entity
 @Table(name = "O2MyCompanyTaskManagementMOD_TM_entity_Task")
+@PDFResources(key="task-report-template")
 public class Task implements Serializable {
 
     @Id
@@ -42,6 +45,7 @@ public class Task implements Serializable {
     String entityBWSId;
     String source;
     Integer integrationId;
+    Integer typeOfAssignment;
     /*@OneToMany( mappedBy="task", fetch = FetchType.EAGER)
     List<TaskPerformer> taskPerformers;*/
     @Transient
@@ -49,14 +53,21 @@ public class Task implements Serializable {
     @Transient
     User userOwner;
 
+    public String getArabicStartDate(){
+        return Utils.convertDateToArabic(this.startDate);
+    }
+    public String getArabicDueDate(){
+        return Utils.convertDateToArabic(this.dueDate);
+    }
+    public String getProgressPercent(){
+        return this.progress + "%";
+    }
 
+    public String getOwnerame(){
+        return this.userOwner.getDisplayName();
+    }
 
-
-
-
-
-
-
-
-
+    public String getProjectName(){
+        return this.project.getName();
+    }
 }

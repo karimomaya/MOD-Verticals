@@ -7,6 +7,7 @@ import com.mod.rest.model.GraphDataHelper;
 import com.mod.rest.model.ReportObject;
 import com.mod.rest.model.Task;
 import com.mod.rest.model.UserHelper;
+import com.mod.rest.repository.UserRepository;
 import com.mod.rest.service.ReportService;
 import com.mod.rest.service.SessionService;
 import com.mod.rest.system.Pagination;
@@ -23,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by karim.omaya on 12/27/2019.
@@ -40,6 +38,8 @@ public class ReportController {
     ReportService reportService;
     @Autowired
     SessionService sessionService;
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("export/{report}/{samlart}")
     @ResponseBody
@@ -135,12 +135,36 @@ public class ReportController {
             reportObject = reportService.buildReportObject(reportObject.setSAMLart(SAMLart));
 
             if (reportObject.getDetectedReportType() == 0){ // generate graph
-                List<GraphDataHelper> graphDataHelpers = reportService.execute(reportObject);
+
+                List<GraphDataHelper> graphDataHelpers = null;
+                String[] xaxis = null;
+
+                if(reportObject.getStatisticsType() != null){
+                    HashMap<List, List> hashMap = reportService.execute(reportObject);
+
+                    for (Map.Entry<List, List> entry : hashMap.entrySet()) {
+                        graphDataHelpers = entry.getKey();
+                        Object[] objArr =  entry.getValue().toArray();
+
+                        xaxis = Arrays.copyOf(objArr, objArr.length,String[].class);
+                    }
+                }else{
+                    graphDataHelpers = reportService.execute(reportObject);
+
+                    long[] users = reportObject.getUsers();
+                    xaxis = new String[users.length];
+                    for(int i = 0; i < users.length; i++){
+                        xaxis[i] = userRepository.findById(users[i]).get().getDisplayName();
+                    }
+                }
+
+                result.put("graph", Utils.writeObjectIntoString(graphDataHelpers));
+                result.put("xaxis", Utils.writeObjectIntoString(xaxis));
+
                 List<Task> tasks = reportService.execute(reportObject.changeDetectedReportType(1));
                 Long count = reportService.execute(reportObject.changeDetectedReportType(2));
                 Pagination pagination = Utils.generatePagination(0, reportObject.getPageSize(), count);
                 responseBuilder.setPagination(pagination);
-                result.put("graph", Utils.writeObjectIntoString(graphDataHelpers));
                 result.put("tasks", Utils.writeObjectIntoString(tasks));
                 result.put("tasks", Utils.writeObjectIntoString(tasks));
 

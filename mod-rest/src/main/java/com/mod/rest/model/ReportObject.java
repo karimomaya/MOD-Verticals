@@ -62,7 +62,7 @@ public class ReportObject {
                 riskIds += risks[i];
             }
 
-        } else if (reportType == 4 || reportType == 35 || reportType == 15){
+        } else if (reportType == 4 || reportType == 7 || reportType == 35 || reportType == 15){
             projectIds= "";
             for (int i=0; projects !=null && i< projects.length;i++){
                 if(i > 0) projectIds += ",";
