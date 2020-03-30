@@ -1,4 +1,5 @@
 package com.mod.rest.controller;
+
 import com.mod.rest.entity.ImageEntity;
 import com.mod.rest.system.ResponseCode;
 import com.mod.rest.system.Http;
@@ -44,33 +45,31 @@ public class ImageController {
         String originalPath = "";
         if (image != null) {
             originalPath = image.getPath();
-        }
-        else {
+        } else {
             Path currentRelativePath = Paths.get("");
             String s = currentRelativePath.toAbsolutePath().toString();
             String dir = configUtil.getProperty("uploadDir");
-            originalPath = s+"\\"+ dir + "\\" + type + "\\default.png";
+            originalPath = s + "\\" + dir + "\\" + type + "\\default.png";
         }
 //            originalPath = new PercentEscaper(":_.\\+ ", false).escape(originalPath);
-            Path path = Paths.get(originalPath);
+        Path path = Paths.get(originalPath);
 
-            try {
-                file = new UrlResource(path.toUri());
+        try {
+            file = new UrlResource(path.toUri());
+            String mimeType = Files.probeContentType(path);
+            respHeaders.setContentLength(file.contentLength());
+            byte[] isr = Files.readAllBytes(file.getFile().toPath());
 
-                String mimeType =  Files.probeContentType(path);
-                respHeaders.setContentLength(file.contentLength());
-                byte[] isr = Files.readAllBytes(file.getFile().toPath());
+            respHeaders.setContentType(MediaType.parseMediaType(mimeType));
 
-                respHeaders.setContentType(MediaType.parseMediaType(mimeType));
-
-                respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
 //                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFilename());
-                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + file.getFilename());
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + file.getFilename());
 
-                return new ResponseEntity<byte[]>(isr, respHeaders, HttpStatus.OK);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            return new ResponseEntity<byte[]>(isr, respHeaders, HttpStatus.OK);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"null\"").body(null); // used to download file
@@ -81,12 +80,12 @@ public class ImageController {
     public ResponseBuilder<Image> save(@RequestParam("file") MultipartFile file, @PathVariable String SAMLart, @PathVariable String id,
                                        @PathVariable String type) {
 
-        ResponseBuilder<Image> responseBuilder= new ResponseBuilder<Image>();
+        ResponseBuilder<Image> responseBuilder = new ResponseBuilder<Image>();
         responseBuilder.data(new Image()).status(ResponseCode.NO_DATA_SAVED).build();
 
         String location = imageService.store(file, id, type);
 
-        if (location != null){
+        if (location != null) {
             Image image = new Image();
             image.setParentItemId(id);
             image.setPath(location);
@@ -95,7 +94,7 @@ public class ImageController {
             Http http = new Http(SAMLart, configUtil);
             imageEntity.create(http);
             responseBuilder.data(image);
-        }else {
+        } else {
             responseBuilder.status(ResponseCode.NO_DATA_SAVED);
         }
 

@@ -34,6 +34,16 @@ public class ImageService {
         return images.get(0);
     }
 
+    public void delete(String path){
+        if (path == null) return;
+
+        File imgFile = new File(path);
+
+        if(imgFile.delete()){
+            System.out.println("Image is deleted try to add new image");
+        }
+    }
+
 
     public String store(MultipartFile file, String id, String type) {
 
@@ -41,11 +51,7 @@ public class ImageService {
             List<Image> image = imageRepository.findOneByTypeAndParentItemId(type, id);
             if (image.size()>0){
                 for (int i=0; i<image.size();i++){
-                    File imgFile = new File(image.get(i).getPath());
-
-                    if(imgFile.delete()){
-                        System.out.println("Image is deleted try to add new image");
-                    }
+                    delete(image.get(i).getPath());
                     imageRepository.delete(image.get(i));
                 }
 
@@ -67,6 +73,7 @@ public class ImageService {
                 Files.createDirectories(path);
                 System.out.println("Directory created");
             }
+
             System.out.println(path.toFile().getAbsolutePath());
 
             Date date = new Date();
