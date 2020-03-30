@@ -18,4 +18,5 @@ public class Country {
     String mapImg;
     String MODLogoImg;
     String countryName;
+    String armedforcesLogo;
 }

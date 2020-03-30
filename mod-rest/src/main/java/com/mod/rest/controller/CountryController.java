@@ -79,6 +79,11 @@ public class CountryController {
                     country.setMODLogoImg(location);
                     break;
 
+                case 5:
+                    imageService.delete(country.getArmedforcesLogo());
+                    country.setArmedforcesLogo(location);
+                    break;
+
                 default:
                     throw new Exception("invalid type");
             }
@@ -145,6 +150,12 @@ public class CountryController {
                 case 4:
                     if (country.getMODLogoImg() != null) {
                         originalPath = country.getMODLogoImg();
+                    }
+                    break;
+
+                case 5:
+                    if (country.getArmedforcesLogo() != null) {
+                        originalPath = country.getArmedforcesLogo();
                     }
                     break;
 
