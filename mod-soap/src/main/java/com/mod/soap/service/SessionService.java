@@ -44,6 +44,16 @@ public class SessionService {
         timer.start();
     }
 
+    public String loginWithAdmin(){
+        Utils utils = new Utils();
+        Http http = new Http(property);
+
+        // get admin ticket
+        String data = "{\"userName\" : \""+property.getProperty("logged.in.user")+"\", \"password\" : \"" + Utils.decrypt(property.getProperty("password")) + "\" }";
+        String res = http.cordysRequestWithContentType(property.getProperty("otds.url"),"application/json",data );
+        return utils.readJSONField(res,"ticket");
+    }
+
     public void setSession(String SAMLart, User user){
         UserSession userSession = concurrentHashMap.get(SAMLart);
         if (userSession == null) {

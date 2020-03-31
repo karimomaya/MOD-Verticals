@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mod.soap.dao.model.*;
 import com.mod.soap.dao.repository.*;
+import com.mod.soap.entity.UserDetails;
 import com.mod.soap.model.OutlookMeeting;
 import com.mod.soap.model.RequestNumber;
 import com.mod.soap.model.SecurityAccess;
@@ -14,6 +15,7 @@ import com.mod.soap.repository.RequestNumberRepository;
 import com.mod.soap.service.SessionService;
 import com.mod.soap.system.Http;
 import com.mod.soap.system.Property;
+import com.mod.soap.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -23,6 +25,10 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpServletConnection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -62,6 +68,35 @@ public class RequestNumberEndPoint {
     public RequestNumberEndPoint(RequestNumberRepository RequestNumberRepository) {
         this.RequestNumberRepository = RequestNumberRepository;
     }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetHumanTaskRequest")
+    @ResponsePayload
+    public GetHumanTaskResponse getHumanTask(@RequestPayload GetHumanTaskRequest request) {
+        GetHumanTaskResponse response = new GetHumanTaskResponse();
+        String ticket = sessionService.loginWithAdmin();
+
+        Http http = new Http(property);
+        UserDetails userDetails = new UserDetails();
+        String res = http.cordysRequest(userDetails.getHumanTasks(request.getRoleName(), request.getProcessName(), ticket));
+        Document doc = Utils.convertStringToXMLDocument(res);
+
+        NodeList nList = doc.getElementsByTagName("NOTF_TASK_INSTANCE");
+        // loop add response task ids
+
+        for (int i= 0; i < nList.getLength(); i++) {
+            Node nNode = nList.item(i);
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement = (Element) nNode;
+                TaskResponse taskResponse  = new TaskResponse();
+                taskResponse.setTaskId(eElement.getElementsByTagName("TaskId").item(0).getTextContent());
+                taskResponse.setState(eElement.getElementsByTagName("State").item(0).getTextContent());
+                response.setTaskResponse(taskResponse);
+            }
+        }
+
+        return response;
+    }
+
 
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendMeetingRequest")

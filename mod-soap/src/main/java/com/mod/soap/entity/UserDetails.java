@@ -5,6 +5,40 @@ package com.mod.soap.entity;
  */
 public class UserDetails extends Entity {
 
+    public String getHumanTasks(String roleName, String processName, String ticket){
+        return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <SOAP:Header>\n" +
+                "    <OTAuthentication xmlns=\"urn:api.bpm.opentext.com\">\n" +
+                "      <AuthenticationToken>"+ticket+"</AuthenticationToken>\n" +
+                "    </OTAuthentication>\n" +
+                "  </SOAP:Header>\n" +
+                "  <SOAP:Body>\n" +
+                "    <GetHumanTasks xmlns=\"http://schemas.cordys.com/notification/workflow/1.0\" countOnly=\"false\">\n" +
+                "      <ns0:Query xmlns:ns0=\"http://schemas.cordys.com/cql/1.0\">\n" +
+                "        <ns0:Select distinct=\"true\">\n" +
+                "          <ns0:QueryableObject>TASK_INSTANCE</ns0:QueryableObject>\n" +
+                "          <ns0:Field>TaskId</ns0:Field>\n" +
+                "<ns0:Field>State</ns0:Field>\n" +
+                "\n" +
+                "        </ns0:Select>\n" +
+                "        <ns0:Filters>\n" +
+                "            <And>\n" +
+                "                \n" +
+                "                <EQ field=\"Target\">\n" +
+                "                    <Value>role:cn="+roleName+",cn=organizational roles,o=mod,cn=cordys,cn=defaultInst,o=mod.org</Value>\n" +
+                "                </EQ>\n" +
+                "                <EQ field=\"ProcessName\">\n" +
+                "                    <Value>BP/"+processName+"</Value>\n" +
+                "                </EQ>\n" +
+                "            </And>\n" +
+                "        </ns0:Filters>\n" +
+                "        \n" +
+                "      </ns0:Query>\n" +
+                "    </GetHumanTasks>\n" +
+                "  </SOAP:Body>\n" +
+                "</SOAP:Envelope>";
+    }
+
     public String getUserDetailsWithTicket(String ticket){
         return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <SOAP:Header>\n" +
