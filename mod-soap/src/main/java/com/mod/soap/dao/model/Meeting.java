@@ -34,5 +34,7 @@ public class Meeting {
     @NotFound(action = NotFoundAction.IGNORE)
     Date periodicEndDate;
     Boolean conflict;
+    @NotFound(action = NotFoundAction.IGNORE)
+    String outlookId;
 }
 

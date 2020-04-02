@@ -2,14 +2,17 @@ package com.mod.soap.model;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
+import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.complex.MessageBody;
 import microsoft.exchange.webservices.data.property.complex.recurrence.pattern.Recurrence;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Created by karim on 3/8/20.
@@ -18,7 +21,7 @@ public class OutlookMeeting {
     ExchangeService service = null;
     String status = "";
     Appointment appointment = null;
-    public OutlookMeeting(){
+    public OutlookMeeting(String uniqueId){
 
         try {
             service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
@@ -26,7 +29,12 @@ public class OutlookMeeting {
             service.setCredentials(credentials);
             //            service.autodiscoverUrl("karim.omaya@asset.com.eg");
             service.setUrl(new URI("https://mail.asset.com.eg/ews/exchange.asmx"));
-            appointment = new Appointment(service);
+            if(uniqueId == null){
+                appointment = new Appointment(service);
+            }else{
+                appointment = Appointment.bind(service,new ItemId(uniqueId));
+            }
+
             status = "Initialized";
         } catch (Exception e) {
             status = "Failed to Initialized: " + e.getMessage();
@@ -129,6 +137,24 @@ public class OutlookMeeting {
         return this;
     }
 
+    public OutlookMeeting update(){
+        try {
+            appointment.update(ConflictResolutionMode.AutoResolve);
+            status = "Success";
+        } catch (Exception e) {
+            status = "Failed to set Periodic end Date: " + e.getMessage();
+        }
+        return this;
+    }
+
+    public String getUniqueId(){
+        try {
+            return appointment.getRootItemId().getUniqueId();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
 
 }
 

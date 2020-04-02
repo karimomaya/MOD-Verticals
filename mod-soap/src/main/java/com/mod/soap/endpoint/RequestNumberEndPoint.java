@@ -52,6 +52,8 @@ public class RequestNumberEndPoint {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    ExternalUserRepository externalUserRepository;
+    @Autowired
     ConfigRepository configRepository;
     @Autowired
     SessionService sessionService;
@@ -103,7 +105,6 @@ public class RequestNumberEndPoint {
     @ResponsePayload
     public SendMeetingResponse sendMeeting(@RequestPayload SendMeetingRequest request) {
 
-
         SendMeetingResponse response = new SendMeetingResponse();
 
         long meetingId = request.getMeetingId();
@@ -113,16 +114,13 @@ public class RequestNumberEndPoint {
 
         Meeting meeting = meetingOptional.get();
 
-
-        sendMeeting(meeting, meetingAttendees);
-
-
+        sendMeeting(meeting, meetingAttendees, request.isUpdate());
 
         if (meeting.getIsPeriodic() && !request.isUpdate()){
             ArrayList<Meeting> meetings = meetingRepository.getPeriodicMeeting(meetingId, meeting.getSubject());
             for (Meeting meeting1: meetings){
                 if (meeting1.getId() != meetingId && !meeting1.getConflict()){
-                    sendMeeting(meeting1, meetingAttendees);
+                    sendMeeting(meeting1, meetingAttendees, false);
                 }
             }
 
@@ -131,15 +129,23 @@ public class RequestNumberEndPoint {
         return response.setStatus("done");
     }
 
-    public void sendMeeting(Meeting meeting, List<MeetingAttendee> meetingAttendees){
-        OutlookMeeting outlookMeeting = new OutlookMeeting().setSubject(meeting.getSubject())
+    public void sendMeeting(Meeting meeting, List<MeetingAttendee> meetingAttendees, Boolean isUpdate){
+        OutlookMeeting outlookMeeting = null;
+
+        if(isUpdate){
+            outlookMeeting = new OutlookMeeting(meeting.getOutlookId());
+        }else {
+            outlookMeeting = new OutlookMeeting(null);
+        }
+
+        outlookMeeting = outlookMeeting.setSubject(meeting.getSubject())
                 .setBody(meeting.getDescription())
                 .setStartDate(meeting.getStartDate())
                 .setEndDate(meeting.getEndDate());
 
         for (MeetingAttendee meetingAttendee : meetingAttendees){
             if (meetingAttendee.getIsExternal()){
-                Optional<ExternalUser> externalUserOptional = userRepository.getExternalUserDetail(meetingAttendee.getAttendeeID());
+                Optional<ExternalUser> externalUserOptional = externalUserRepository.getExternalUserDetail(meetingAttendee.getAttendeeID());
                 if(externalUserOptional.isPresent()){
                     outlookMeeting.setAttendeeEmail(externalUserOptional.get().getEmail());
                 }
@@ -150,7 +156,14 @@ public class RequestNumberEndPoint {
                 }
             }
         }
-        outlookMeeting.send();
+
+        if(!isUpdate) {
+            outlookMeeting = outlookMeeting.send();
+            meeting.setOutlookId(outlookMeeting.getUniqueId());
+            meetingRepository.save(meeting);
+        }else{
+            outlookMeeting.update();
+        }
     }
 
 
