@@ -430,6 +430,7 @@ public class SecurityQuery {
     public boolean evaluateRoleCode(){
         String[] targets = template.split(",");
         boolean evaluate = false;
+        if (user.getRoleCode() == null) return false;
         for (int i= 0; i< targets.length; i++){
             if (user.getRoleCode().equals(targets[i])) evaluate = true;
         }
@@ -439,6 +440,7 @@ public class SecurityQuery {
     public boolean evaluateUnitCode(){
         String[] targets = template.split(",");
         boolean evaluate = false;
+        if (user.getUserUnitCode() == null) return false;
         for (int i= 0; i< targets.length; i++){
             if (user.getUserUnitCode().equals(targets[i])) evaluate = true;
         }
@@ -448,6 +450,7 @@ public class SecurityQuery {
     public boolean evaluateUnitTypeCode(){
         String[] targets = template.split(",");
         boolean evaluate = false;
+        if (user.getUserUnitTypeCode() == null) return false;
         for (int i= 0; i< targets.length; i++){
             if (user.getUserUnitTypeCode().equals(targets[i])) evaluate = true;
         }

@@ -49,7 +49,7 @@ public class SecurityConfig {
             securityQuery.setTemplate(template.replace("{code}", unitCode));
         }else if(securityQuery.getSecurityType() == SecurityType.ROLE_CODE){
             String template = securityQuery.getSecurityType().getTemplate();
-            securityQuery.setTemplate(template.replace("{code}", unitCode));
+            securityQuery.setTemplate(template.replace("{code}", roleCode));
         }
 
 
