@@ -61,6 +61,10 @@ public class ReportController {
 
             reportObject = reportObject.changeDetectedReportType(3);
             file = reportService.execute(reportObject);
+            if(file == null){
+                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"null\"").body(null);
+            }
             respHeaders.setContentLength(file.length());
             isr = Files.readAllBytes(file.toPath());
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);

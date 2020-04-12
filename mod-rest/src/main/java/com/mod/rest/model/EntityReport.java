@@ -1,6 +1,7 @@
 package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
+import com.mod.rest.system.Utils;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -35,31 +36,33 @@ public class EntityReport {
 
     @ColumnName(key = "اسم الجهة بالعربية")
     public String getNameArabic(){
-        return removeNullValue(nameArabic);
+        return Utils.removeNullValue(nameArabic);
     }
 
     @ColumnName(key = "اسم الجهة بالانجليزية")
     public String getNameEnglish(){
-        return removeNullValue(nameEnglish);
+        return Utils.removeNullValue(nameEnglish);
     }
 
     @ColumnName(key = "عنوان الجهة")
     public String getAddress(){
-        return removeNullValue(address);
+        return Utils.removeNullValue(address);
     }
 
     @ColumnName(key = "نوع الجهة")
     public String getType() {
         switch (type){
             case 1:
-                return "حكومية";
+                return "حكومية اتحادية";
             case 2:
-                return "شبه حكومية";
+                return "حكومية محلية";
             case 3:
+                return "شبه حكومية";
+            case 5:
                 return "هيئة دبلوماسية";
             case 4:
                 return "قطاع خاص";
-            case 5:
+            case 6:
                 return "أخرى";
         }
         return "حكومية";
@@ -76,47 +79,47 @@ public class EntityReport {
 
     @ColumnName(key = "اسم الجهة الرئيسية")
     public String getMainBranchName() {
-        return removeNullValue(mainBranchName);
+        return Utils.removeNullValue(mainBranchName);
     }
 
     @ColumnName(key = "رقم الهاتف")
     public String getPhone(){
-        return removeNullValue(phone);
+        return Utils.removeNullValue(phone);
     }
 
     @ColumnName(key = "رقم الفاكس")
     public String getFax(){
-        return removeNullValue(fax);
+        return Utils.removeNullValue(fax);
     }
 
     @ColumnName(key = "صندوق البريد")
     public String getPostalNumber(){
-        return removeNullValue(postalNumber);
+        return Utils.removeNullValue(postalNumber);
     }
 
     @ColumnName(key = "الموقع الإلكتروني")
     public String getWebsite() {
-        return removeNullValue(website);
+        return Utils.removeNullValue(website);
     }
 
     @ColumnName(key = "موقع التواصل الإجتماعي (Facebook)")
     public String getFacebookUrl() {
-        return removeNullValue(facebookUrl);
+        return Utils.removeNullValue(facebookUrl);
     }
 
     @ColumnName(key = "موقع التواصل الإجتماعي (Twitter)موقع التواصل الإجتماعي (Twitter)")
     public String getTwitterUrl() {
-        return removeNullValue(twitterUrl);
+        return Utils.removeNullValue(twitterUrl);
     }
 
     @ColumnName(key = "النشاط الرئيسي")
     public String getMainActivity() {
-        return removeNullValue(mainActivity);
+        return Utils.removeNullValue(mainActivity);
     }
 
     @ColumnName(key = "الملاحظات")
     public String getNotes() {
-        return removeNullValue(notes);
+        return Utils.removeNullValue(notes);
     }
 
     @ColumnName(key = "التسجيل في سجل الموردين")
@@ -134,19 +137,11 @@ public class EntityReport {
 
     @ColumnName(key = "المدير التنفيذى")
     public String getExecutiveOfficer() {
-        return removeNullValue(executiveOfficer);
+        return Utils.removeNullValue(executiveOfficer);
     }
 
     @ColumnName(key = "المالك")
     public String getOwner() {
-        return removeNullValue(owner);
-    }
-
-    private String removeNullValue(String value){
-        if (value == null) return "";
-        if (value.equals("null")){
-            return "";
-        }
-        return value;
+        return Utils.removeNullValue(owner);
     }
 }

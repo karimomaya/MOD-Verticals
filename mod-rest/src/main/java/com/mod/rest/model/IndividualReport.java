@@ -1,10 +1,12 @@
 package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
+import com.mod.rest.system.Utils;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Null;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,66 +39,69 @@ public class IndividualReport {
 
     @ColumnName(key = "الاسم باللغة العربية")
     public String getNameArabic() {
-        return removeNullValue(nameArabic);
+        return Utils.removeNullValue(nameArabic);
     }
 
     @ColumnName(key = "الاسم باللغة الإنجليزية")
     public String getNameEnglish() {
-        return removeNullValue(nameEnglish);
+        return Utils.removeNullValue(nameEnglish);
     }
 
     @ColumnName(key = "المنصب باللغة العربية")
     public String getPositionArabic() {
-        return removeNullValue(positionArabic);
+        return Utils.removeNullValue(positionArabic);
     }
 
     @ColumnName(key = "المنصب باللغة الإنجليزية")
     public String getPositionEnglish() {
-        return removeNullValue(positionEnglish);
+        return Utils.removeNullValue(positionEnglish);
     }
 
     @ColumnName(key = "اسم الجهة")
     public String getEntityName() {
-        return removeNullValue(entityName);
+        return Utils.removeNullValue(entityName);
     }
 
     @ColumnName(key = "الجنسية")
     public String getNationality() {
-        return removeNullValue(nationality);
+        return Utils.removeNullValue(nationality);
     }
 
     @ColumnName(key = "قم الهاتف الداخلي")
     public String getPhone() {
-        return removeNullValue(phone);
+        return Utils.removeNullValue(phone);
     }
 
     @ColumnName(key = "رقم الهاتف الجوال")
     public String getMobile() {
-        return removeNullValue(mobile);
+        return Utils.removeNullValue(mobile);
     }
 
     @ColumnName(key = "البريد الإلكتروني")
     public String getEmail() {
-        return removeNullValue(email);
+        return Utils.removeNullValue(email);
     }
 
     @ColumnName(key = "رقم الهوية")
     public String getIdentificationNumber() {
-        return removeNullValue(identificationNumber);
+        return Utils.removeNullValue(identificationNumber);
     }
 
     @ColumnName(key = "الرقم الموحد")
     public String getUnifiedNumber() {
-        return removeNullValue(unifiedNumber);
+        return Utils.removeNullValue(unifiedNumber);
     }
 
     @ColumnName(key = "رقم التصريح الأمنى")
     public String getSecurityClearanceNumber() {
-        return removeNullValue(securityClearanceNumber);
+        return Utils.removeNullValue(securityClearanceNumber);
     }
 
     @ColumnName(key = "تاريخ بداية التصريح")
     public String getSecurityStartDate() {
+        if(securityStartDate == null){
+            return "";
+        }
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(securityStartDate);
@@ -104,6 +109,9 @@ public class IndividualReport {
 
     @ColumnName(key = "تاريخ نهاية التصريح")
     public String getSecurityEndDate() {
+        if(securityEndDate == null){
+            return "";
+        }
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(securityEndDate);
@@ -111,14 +119,6 @@ public class IndividualReport {
 
     @ColumnName(key = "الملاحظات")
     public String getNotes() {
-        return removeNullValue(notes);
-    }
-
-    private String removeNullValue(String value){
-        if (value == null) return "";
-        if (value.equals("null")){
-            return "";
-        }
-        return value;
+        return Utils.removeNullValue(notes);
     }
 }

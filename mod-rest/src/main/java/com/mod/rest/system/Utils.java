@@ -259,4 +259,12 @@ public class Utils {
         }
         return directoryToBeDeleted.delete();
     }
+
+    public static String removeNullValue(String value){
+        if (value == null) return "";
+        if (value.equals("null")){
+            return "";
+        }
+        return value;
+    }
 }

@@ -1,5 +1,7 @@
 package com.mod.rest.model;
 
+import com.mod.rest.annotation.ColumnName;
+import com.mod.rest.system.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
@@ -27,5 +29,40 @@ public class User implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     String username;
     String DisplayName;
+    String title;
+    String RoleName;
+    String Phone;
+    @NotFound(action = NotFoundAction.IGNORE)
+    String facsimileTelephoneNumber;
+    String Email;
+    String notes;
 
+    @ColumnName(key = "الاسم")
+    public String getName() {
+        return Utils.removeNullValue(DisplayName);
+    }
+    @ColumnName(key = "المنصب")
+    public String getRole() {
+        return Utils.removeNullValue(RoleName);
+    }
+    @ColumnName(key = "الرتبة")
+    public String getTitle() {
+        return Utils.removeNullValue(title);
+    }
+    @ColumnName(key = "رقم الهاتف")
+    public String getPhone() {
+        return Utils.removeNullValue(Phone);
+    }
+    @ColumnName(key = "رقم الجوال")
+    public String getMobile() {
+        return Utils.removeNullValue(facsimileTelephoneNumber);
+    }
+    @ColumnName(key = "الرقم العسكري")
+    public String getMilitaryNumber() {
+        return Utils.removeNullValue(notes);
+    }
+    @ColumnName(key = "البريد الالكتروني")
+    public String getEmail() {
+        return Utils.removeNullValue(Email);
+    }
 }
