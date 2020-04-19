@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,6 +57,8 @@ public class ReportService {
 	RiskReportHelperRepository riskReportHelperRepository;
     @Autowired
     IssueReportHelperRepository issueReportHelperRespository;
+    @Autowired
+    PurchaseOrderRepository purchaseOrderRepository;
 
     public ReportObject buildReportObject(ReportObject reportObject){
         if (reportObject.getReportType()<= 19 || reportObject.getReportType() == 30 ||
@@ -97,6 +98,12 @@ public class ReportService {
     }
 
     public <T> T execute(ReportObject reportObject){
+
+        //Case طلبات شراء
+        if (reportObject.getReportType() == 50 ) {
+            List<PurchaseOrderReport> purchaseOrderReports = purchaseOrderRepository.getPurchaseOrderReport(reportObject.getStartDateString(),reportObject.getEndDateString(), reportObject.getEntityName(), 0, Integer.MAX_VALUE, reportObject.getInput());
+            return (T) excelWriterService.generate(purchaseOrderReports);
+        }
 
         //Case طلب دعم فني
         if (reportObject.getReportType() == 40 ) {

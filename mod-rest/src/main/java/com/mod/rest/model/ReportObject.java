@@ -43,6 +43,9 @@ public class ReportObject {
     String position;
     String statisticsType;
     int supplierStatus;
+    String input;
+    String startDateString;
+    String endDateString;
 
 
     public ReportObject setSAMLart(String SAMLart){

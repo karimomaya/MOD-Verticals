@@ -219,9 +219,13 @@ public class RequestNumberEndPoint {
 
 
             if (!securityOptional.isPresent()){
+                System.out.println("WARN: attributes send is null");
                 customSecurityResponse.setSecurityAccess(addResponseToSecurity(false, securityRequest.getTarget()));
                 continue;
             }
+
+            System.out.println("INFO: Try to evaluate: "+ securityRequest.getTarget());
+
 
             Security security = securityOptional.get();
 

@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Immutable
 public class TechnicalSupportReport {
     @Id
-    Integer Id;
+    Long Id;
 
     String InitiatorUnit;
     Integer total;
