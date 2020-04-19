@@ -137,9 +137,11 @@ public class SecurityQuery {
             finalDecision.add(oldValue);
 
         }
+        boolean evaluator = oldValue.getKey() == "true";
 
+        if (!evaluator) evaluator = oldValue.getKey().equals("true");
 
-        return oldValue.getKey() == "true";
+        return evaluator;
     }
 
 
