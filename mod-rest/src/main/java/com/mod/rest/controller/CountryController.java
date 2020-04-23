@@ -1,7 +1,9 @@
 package com.mod.rest.controller;
 
 import com.mod.rest.model.Country;
+import com.mod.rest.model.CountryLeader;
 import com.mod.rest.model.Image;
+import com.mod.rest.repository.CountryLeaderRepository;
 import com.mod.rest.repository.CountryRepository;
 import com.mod.rest.service.ImageService;
 import com.mod.rest.system.Config;
@@ -22,14 +24,22 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/country")
 public class CountryController {
+
     @Autowired
     CountryRepository countryRepository;
+
+    @Autowired
+    CountryLeaderRepository countryLeaderRepository;
 
     @Autowired
     ImageService imageService;
@@ -40,7 +50,8 @@ public class CountryController {
 
     @SuppressWarnings("Duplicates")
     @PostMapping("/upload/{countryId}/{type}")
-    public ResponseBuilder<Country> save(@RequestParam("file") MultipartFile file, @PathVariable int type, @PathVariable long countryId, @RequestParam String countryCode) throws Exception {
+    public ResponseBuilder<Country> save(@RequestParam("file") MultipartFile file, @PathVariable int type,
+                                         @PathVariable long countryId, @RequestParam String countryCode) throws Exception {
 
         ResponseBuilder<Country> responseBuilder = new ResponseBuilder<Country>();
         responseBuilder.data(new Country()).status(ResponseCode.NO_DATA_SAVED).build();
@@ -50,12 +61,8 @@ public class CountryController {
         if (countryOptional.isPresent()) {
             Country country = countryOptional.get();
 
-            // check if has file
 
-            // delete file
-
-            String fileId = Long.toString(countryId) + '-' + type;
-            String location = imageService.store(file, fileId, "CountryImages");
+            String location = store(file, Integer.toString(type), countryCode, "PrimaryData");
 //            java reflection
 
             switch (type) {
@@ -90,14 +97,36 @@ public class CountryController {
 
             countryRepository.save(country);
 
-            //delete default image if exists
-            Path currentRelativePath = Paths.get("");
-            String s = currentRelativePath.toAbsolutePath().toString();
-            String dir = configUtil.getProperty("uploadDir");
-            String originalPath = s + "\\" + dir + "\\" + "CountryImages" + "\\" + countryCode + "-" + type;
-            File imageDir = new File(originalPath);
-            if (imageDir.exists())
-                Utils.deleteDirectory(imageDir);
+        }
+
+
+        return null;
+    }
+
+
+    @SuppressWarnings("Duplicates")
+    @PostMapping("/leader/upload/{leaderId}/{type}")
+    public ResponseBuilder<Country> saveLeaderImages(@RequestParam("file") MultipartFile file, @PathVariable int type,
+                                                     @PathVariable long leaderId, @RequestParam String countryCode) throws Exception {
+
+        ResponseBuilder<CountryLeader> responseBuilder = new ResponseBuilder<>();
+        responseBuilder.data(new CountryLeader()).status(ResponseCode.NO_DATA_SAVED).build();
+
+        Optional<CountryLeader> countryLeaderOptional = countryLeaderRepository.findById(leaderId);
+
+        if (countryLeaderOptional.isPresent()) {
+            CountryLeader countryLeader = countryLeaderOptional.get();
+
+            String location = store(file, Integer.toString(type), countryCode, "Leader");
+
+            if (type == 1) {
+                imageService.delete(countryLeader.getPicture());
+                countryLeader.setPicture(location);
+            } else {
+                throw new Exception("invalid type");
+            }
+
+            countryLeaderRepository.save(countryLeader);
         }
 
 
@@ -115,7 +144,7 @@ public class CountryController {
         if (countryOptional.isPresent()) {
             Country country = countryOptional.get();
             String originalPath;
-            Resource file = null;
+            Resource file;
             HttpHeaders respHeaders = new HttpHeaders();
 
             System.out.println(countryCode);
@@ -123,7 +152,7 @@ public class CountryController {
             Path currentRelativePath = Paths.get("");
             String s = currentRelativePath.toAbsolutePath().toString();
             String dir = configUtil.getProperty("uploadDir");
-            originalPath = s + "\\" + dir + "\\" + "CountryImages" + "\\" + countryCode + "-" + type + "\\default.png";
+            originalPath = s + "\\" + dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + "PrimaryData" + "\\" + type + "\\default.png";
 
             switch (type) {
 
@@ -172,10 +201,9 @@ public class CountryController {
                 respHeaders.setContentType(MediaType.parseMediaType(mimeType));
 
                 respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-//                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getFilename());
                 respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + file.getFilename());
 
-                return new ResponseEntity<byte[]>(isr, respHeaders, HttpStatus.OK);
+                return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -185,6 +213,106 @@ public class CountryController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"null\"").body(null); // used to download file
 
+    }
+
+
+    @SuppressWarnings("Duplicates")
+    @GetMapping("/leader/view/{leaderId}/{type}")
+    @ResponseBody
+    public ResponseEntity<byte[]> viewLeaderImage(@PathVariable int type, @PathVariable long leaderId, @RequestParam String countryCode) throws Exception {
+
+        Optional<CountryLeader> countryLeaderOptional = countryLeaderRepository.findById(leaderId);
+
+        if (countryLeaderOptional.isPresent()) {
+            CountryLeader countryLeader = countryLeaderOptional.get();
+            String originalPath;
+            Resource file;
+            HttpHeaders respHeaders = new HttpHeaders();
+
+            System.out.println(countryCode);
+
+            Path currentRelativePath = Paths.get("");
+            String s = currentRelativePath.toAbsolutePath().toString();
+            String dir = configUtil.getProperty("uploadDir");
+            originalPath = s + "\\" + dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + "Leader" + "\\" + type + "\\default.png";
+
+            if (type == 1) {
+                if (countryLeader.getPicture() != null) {
+                    originalPath = countryLeader.getPicture();
+                }
+            } else {
+                throw new Exception("invalid type");
+            }
+
+            Path path = Paths.get(originalPath);
+            try {
+                file = new UrlResource(path.toUri());
+                String mimeType = Files.probeContentType(path);
+                respHeaders.setContentLength(file.contentLength());
+                byte[] isr = Files.readAllBytes(file.getFile().toPath());
+
+                respHeaders.setContentType(MediaType.parseMediaType(mimeType));
+
+                respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + file.getFilename());
+
+                return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+        }
+
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"null\"").body(null); // used to download file
+
+    }
+
+    @SuppressWarnings("Duplicates")
+    private String store(MultipartFile file, String id, String countryCode, String category) {
+
+
+        //delete default image if exists
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        String dir = configUtil.getProperty("uploadDir");
+
+        String directory = s + "\\" + dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + category + "\\" + id;
+
+        File imageDir = new File(directory);
+        if (imageDir.exists())
+            Utils.deleteDirectory(imageDir);
+
+
+        String location;
+        try {
+
+            Path path = Paths.get(directory);
+
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+                System.out.println("Directory created");
+            }
+
+            System.out.println(path.toFile().getAbsolutePath());
+
+            Date date = new Date();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss-SSS");
+
+
+            String fileName = df.format(date) + file.getOriginalFilename();
+
+            Path locationToStore = path.resolve(fileName);
+
+
+            Files.copy(file.getInputStream(), locationToStore);
+            location = locationToStore.toFile().getAbsolutePath();
+
+
+        } catch (Exception e) {
+            throw new RuntimeException("FAIL!");
+        }
+        return location;
     }
 
 }
