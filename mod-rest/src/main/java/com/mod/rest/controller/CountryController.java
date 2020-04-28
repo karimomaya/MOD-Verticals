@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,6 +57,7 @@ public class CountryController {
 
         ResponseBuilder<Country> responseBuilder = new ResponseBuilder<Country>();
         responseBuilder.data(new Country()).status(ResponseCode.NO_DATA_SAVED).build();
+        countryCode = URLDecoder.decode(countryCode, StandardCharsets.UTF_8.toString());
 
         Optional<Country> countryOptional = countryRepository.findById(countryId);
 
@@ -108,6 +111,7 @@ public class CountryController {
     @PostMapping("/leader/upload/{leaderId}/{type}")
     public ResponseBuilder<Country> saveLeaderImages(@RequestParam("file") MultipartFile file, @PathVariable int type,
                                                      @PathVariable long leaderId, @RequestParam String countryCode) throws Exception {
+        countryCode = URLDecoder.decode(countryCode, StandardCharsets.UTF_8.toString());
 
         ResponseBuilder<CountryLeader> responseBuilder = new ResponseBuilder<>();
         responseBuilder.data(new CountryLeader()).status(ResponseCode.NO_DATA_SAVED).build();
@@ -140,7 +144,7 @@ public class CountryController {
     public ResponseEntity<byte[]> viewFile(@PathVariable int type, @PathVariable long countryId, @RequestParam String countryCode) throws Exception {
 
         Optional<Country> countryOptional = countryRepository.findById(countryId);
-
+        countryCode = URLDecoder.decode(countryCode, StandardCharsets.UTF_8.toString());
         if (countryOptional.isPresent()) {
             Country country = countryOptional.get();
             String originalPath;
@@ -192,21 +196,24 @@ public class CountryController {
                     throw new Exception("invalid type");
             }
             Path path = Paths.get(originalPath);
-            try {
-                file = new UrlResource(path.toUri());
-                String mimeType = Files.probeContentType(path);
-                respHeaders.setContentLength(file.contentLength());
-                byte[] isr = Files.readAllBytes(file.getFile().toPath());
+            if (Files.exists(path)) {
+                try {
+                    file = new UrlResource(path.toUri());
+                    String mimeType = Files.probeContentType(path);
+                    respHeaders.setContentLength(file.contentLength());
+                    byte[] isr = Files.readAllBytes(file.getFile().toPath());
 
-                respHeaders.setContentType(MediaType.parseMediaType(mimeType));
+                    respHeaders.setContentType(MediaType.parseMediaType(mimeType));
 
-                respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + file.getFilename());
+                    respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+                    respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + file.getFilename());
 
-                return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                    return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
+
 
         }
 
@@ -222,6 +229,7 @@ public class CountryController {
     public ResponseEntity<byte[]> viewLeaderImage(@PathVariable int type, @PathVariable long leaderId, @RequestParam String countryCode) throws Exception {
 
         Optional<CountryLeader> countryLeaderOptional = countryLeaderRepository.findById(leaderId);
+        countryCode = URLDecoder.decode(countryCode, StandardCharsets.UTF_8.toString());
 
         if (countryLeaderOptional.isPresent()) {
             CountryLeader countryLeader = countryLeaderOptional.get();
@@ -245,21 +253,24 @@ public class CountryController {
             }
 
             Path path = Paths.get(originalPath);
-            try {
-                file = new UrlResource(path.toUri());
-                String mimeType = Files.probeContentType(path);
-                respHeaders.setContentLength(file.contentLength());
-                byte[] isr = Files.readAllBytes(file.getFile().toPath());
+            if (Files.exists(path)) {
+                try {
+                    file = new UrlResource(path.toUri());
+                    String mimeType = Files.probeContentType(path);
+                    respHeaders.setContentLength(file.contentLength());
+                    byte[] isr = Files.readAllBytes(file.getFile().toPath());
 
-                respHeaders.setContentType(MediaType.parseMediaType(mimeType));
+                    respHeaders.setContentType(MediaType.parseMediaType(mimeType));
 
-                respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + file.getFilename());
+                    respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+                    respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=" + file.getFilename());
 
-                return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                    return new ResponseEntity<>(isr, respHeaders, HttpStatus.OK);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
+
 
         }
 
