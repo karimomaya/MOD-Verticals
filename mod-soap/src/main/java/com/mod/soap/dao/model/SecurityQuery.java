@@ -214,22 +214,23 @@ public class SecurityQuery {
         if(evaluator.size() == 0) return true;
 
           for (AbstractMap.SimpleEntry<String, Object> s : evaluator){
-            String output = "";
+            ArrayList<String> output = new ArrayList<>();
             for(int k=0;k<nl.getLength();k++){
-                output =  getTagByName((Node)nl.item(k), (String) s.getKey(), "");
-                if (!output.equals("")) break;
+                output = getTagsByName((Node)nl.item(k), (String) s.getKey(), new ArrayList<>());
+//                if (!output.equals("")) break;
             }
-            if (output.equals("")){
+            if (output.size() == 0){
                 evaluate |= false;
             }else {
-                String predictedOutput = getRealValue((String)s.getValue());
-                if (containsFunctionsKeywords(predictedOutput)){
-                    evaluate |=  executeFunction(predictedOutput, output);
-                }else if (output.equals(predictedOutput)) {
-                    evaluate |= true;
-                }
-                else  {
-                    evaluate |= false;
+                for(String out : output) {
+                    String predictedOutput = getRealValue((String) s.getValue());
+                    if (containsFunctionsKeywords(predictedOutput)) {
+                        evaluate |= executeFunction(predictedOutput, out);
+                    } else if (out.equals(predictedOutput)) {
+                        evaluate |= true;
+                    } else {
+                        evaluate |= false;
+                    }
                 }
             }
 
@@ -408,6 +409,20 @@ public class SecurityQuery {
 
             NodeList nl=nodes.getChildNodes();
             for(int j=0;j<nl.getLength();j++) value =  getTagByName(nl.item(j), tagName, value);
+        }
+        return value;
+    }
+
+    public ArrayList<String> getTagsByName(Node nodes, String tagName, ArrayList<String> value){
+        if (nodes.getNodeName().equals(tagName)){
+            System.out.println("found :) ");
+            System.out.println(nodes.getNodeName()+" : "+nodes.getTextContent());
+            value.add(nodes.getTextContent());
+        }
+        if(nodes.hasChildNodes()  || nodes.getNodeType()!=3){
+
+            NodeList nl=nodes.getChildNodes();
+            for(int j=0;j<nl.getLength();j++) value =  getTagsByName(nl.item(j), tagName, value);
         }
         return value;
     }
