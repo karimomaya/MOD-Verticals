@@ -207,30 +207,59 @@ public class SecurityQuery {
         }
     }
 
+//    private boolean evaluateOrOperatorFromXMLUsingHashMap(NodeList nl, ArrayList<AbstractMap.SimpleEntry<String, Object>> evaluator){
+//        boolean evaluate = false;
+//
+//        if(evaluator.size() == 0) return true;
+//
+//          for (AbstractMap.SimpleEntry<String, Object> s : evaluator){
+//            ArrayList<String> output = new ArrayList<>();
+//            for(int k=0;k<nl.getLength();k++){
+//                output = getTagsByName((Node)nl.item(k), (String) s.getKey(), new ArrayList<>());
+////                if (!output.equals("")) break;
+//            }
+//            if (output.size() == 0){
+//                evaluate |= false;
+//            }else {
+//                for(String out : output) {
+//                    String predictedOutput = getRealValue((String) s.getValue());
+//                    if (containsFunctionsKeywords(predictedOutput)) {
+//                        evaluate |= executeFunction(predictedOutput, out);
+//                    } else if (out.equals(predictedOutput)) {
+//                        evaluate |= true;
+//                    } else {
+//                        evaluate |= false;
+//                    }
+//                }
+//            }
+//
+//        }
+//        return evaluate;
+//    }
+
 
     private boolean evaluateOrOperatorFromXMLUsingHashMap(NodeList nl, ArrayList<AbstractMap.SimpleEntry<String, Object>> evaluator){
+
         boolean evaluate = false;
 
         if(evaluator.size() == 0) return true;
 
-          for (AbstractMap.SimpleEntry<String, Object> s : evaluator){
-            ArrayList<String> output = new ArrayList<>();
+        for (AbstractMap.SimpleEntry<String, Object> s : evaluator){
+            String output = "";
             for(int k=0;k<nl.getLength();k++){
-                output = getTagsByName((Node)nl.item(k), (String) s.getKey(), new ArrayList<>());
-//                if (!output.equals("")) break;
+                output = getTagByName((Node)nl.item(k), (String) s.getKey(), "");
+                    if (!output.equals("")) break;
             }
-            if (output.size() == 0){
+            if (output == ""){
                 evaluate |= false;
             }else {
-                for(String out : output) {
-                    String predictedOutput = getRealValue((String) s.getValue());
-                    if (containsFunctionsKeywords(predictedOutput)) {
-                        evaluate |= executeFunction(predictedOutput, out);
-                    } else if (out.equals(predictedOutput)) {
-                        evaluate |= true;
-                    } else {
-                        evaluate |= false;
-                    }
+                String predictedOutput = getRealValue((String) s.getValue());
+                if (containsFunctionsKeywords(predictedOutput)) {
+                    evaluate |= executeFunction(predictedOutput, output);
+                } else if (output.equals(predictedOutput)) {
+                    evaluate |= true;
+                } else {
+                    evaluate |= false;
                 }
             }
 
