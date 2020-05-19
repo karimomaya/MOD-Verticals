@@ -47,39 +47,44 @@ public class PolicyController {
         for (PolicyMilestone milestone : milestones) {
             List<PolicyActivity> activities = policyActivityRepository.getMileStoneActivites(milestone.getId());
 
+            JSONObject json = new JSONObject();
+            json.put("name", "");
+            json.put("x", milestone.getMileStoneName());
+            JSONArray jsonArray = new JSONArray();
+            jsonArray.put(milestone.getEndDate().getTime());
+            jsonArray.put(milestone.getStartDate().getTime());
+            json.put("y", jsonArray);
+            String color = detectProgressColor(milestone.getStartDate(), milestone.getEndDate(), milestone.getProgressBar());
+            json.put("color", color);
+            json.put("tooltip", milestone.getProgressBar());
+            result.put(json);
+
+            int sequence = 1;
             for (PolicyActivity activity : activities) {
-                JSONObject object = new JSONObject();
-                object.put("name", activity.getActivity_name());
-                JSONArray data = new JSONArray();
 
-                JSONObject json = new JSONObject();
-                json.put("x", milestone.getMileStoneName());
-                JSONArray jsonArray = new JSONArray();
-
+                json = new JSONObject();
+                json.put("name", activity.getActivity_name());
+                json.put("x", ""+ sequence++ +"");
+                jsonArray = new JSONArray();
                 jsonArray.put(activity.getActivity_end_date().getTime());
                 jsonArray.put(activity.getActivity_start_date().getTime());
                 json.put("y", jsonArray);
-                String color = detectActivityColor(activity);
-
+                color = detectProgressColor(activity.getActivity_start_date(), activity.getActivity_end_date(), activity.getActivity_progress_bar());
                 json.put("color", color);
-                json.put("tooltip",activity.getActivity_progress_bar());
-
-                data.put(json);
-
-                object.put("data", data);
-                result.put(object);
+                json.put("tooltip", activity.getActivity_progress_bar());
+                result.put(json);
             }
         }
 
         return result;
     }
 
-    private String detectActivityColor(PolicyActivity activity){
+    private String detectProgressColor(Date startDate, Date endDate, Integer progress){
 
         String color  = "#165080";
 
-        long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(activity.getActivity_start_date(), activity.getActivity_end_date());
-        long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(activity.getActivity_start_date(), new Date());
+        long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(startDate, endDate);
+        long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(startDate, new Date());
 
         long expectedProgress = 90;
 
@@ -90,13 +95,13 @@ public class PolicyController {
 
         }
 
-        if (activity.getActivity_progress_bar() == 100) {
+        if (progress == 100) {
             color  = "#38A32B";
-        }else if(activity.getActivity_progress_bar() > expectedProgress ){
+        }else if(progress > expectedProgress ){
             color = "#4aa472";
-        }else if (activity.getActivity_progress_bar() < expectedProgress ) {
+        }else if (progress < expectedProgress ) {
             color = "#d44e5a";
-        }else if (activity.getActivity_progress_bar() < expectedProgress + 10  && activity.getActivity_progress_bar() > expectedProgress - 10 ){
+        }else if (progress < expectedProgress + 10  && progress > expectedProgress - 10 ){
             color = "#c9a869";
         }
 
