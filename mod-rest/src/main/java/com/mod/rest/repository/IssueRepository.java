@@ -32,6 +32,14 @@ public interface IssueRepository extends GenericRepository<Issue, Long> {
     @Query(value = "{call MOD_RM_GetClosedIssuesReportCount( :createdBy )}", nativeQuery = true)
     Long getClosedIssuesReportCount(@Param("createdBy") String createdBy);
 
+    @Query(value = "{call MOD_RM_SP_GetIssuesByPriorityThenPrecedence(:createdBy, :PageNumber,:PageSize )}", nativeQuery = true)
+    List<Issue> getIssuesByPriorityThenPrecedence(@Param("createdBy") String createdBy, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
+
+    @Query(value = "{call MOD_RM_SP_GetIssuesByPriorityThenPrecedenceCount( :createdBy )}", nativeQuery = true)
+    Long getIssuesByPriorityThenPrecedenceCount(@Param("createdBy") String createdBy);
+
+
+
 }
 
 
