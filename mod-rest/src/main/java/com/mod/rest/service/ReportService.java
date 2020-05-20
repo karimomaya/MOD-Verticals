@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -15,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import java.util.*;
+
 
 /**
  * Created by karim.omaya on 12/27/2019.
@@ -1032,25 +1034,59 @@ public class ReportService {
         } else if (type == "TaskReportFromSource"){
             long[] projects = reportObject.getProjects();
             int arraySize = projects.length;
+            if(arraySize == 0){
+                String[] projectsIds = reportObject.getProjectIds().split(",");
+                projects = new long[projectsIds.length];
+                for(int i = 0; i<projectsIds.length ; i++){
+                    projects[i] = Long.parseLong(projectsIds[i]);
+                }
+                arraySize = projects.length;
+            }
+
+            ArrayList<Integer> completedTasksAL = new ArrayList<>();
+            ArrayList<Integer> delayedTasksAL = new ArrayList<>();
+            ArrayList<Integer> inProgressTasksAL = new ArrayList<>();
             int[] completedTasks = new int[arraySize];
             int[] delayedTasks = new int[arraySize];
             int[] inProgressTasks = new int[arraySize];
+            int counter = 0;
             for(int i = 0; i < arraySize ; i++){
                 String project = projects[i] + "";
                 taskList = taskRepository.getFinishedAndDelayedTaskReportProject("", 0, reportObject.getStartDate(), reportObject.getEndDate(), project, 1, Integer.MAX_VALUE );
 
+                if(taskList.size() <= 0){
+                    continue;
+                }
+
+                completedTasksAL.add(0);
+                delayedTasksAL.add(0);
+                inProgressTasksAL.add(0);
+
                 for (Task task : taskList) {
                     if(task.getStatus() == 3 || task.getStatus() == 12){
-                        completedTasks[i] += 1;
+                        completedTasksAL.set(counter,completedTasksAL.get(counter)+1);
+//                        completedTasks[i] += 1;
                     }else if (task.getDueDate().before(new Date())) {
-                        delayedTasks[i] += 1;
+//                        delayedTasks[i] += 1;
+                        delayedTasksAL.set(counter,delayedTasksAL.get(counter)+1);
                     } else {
-                        inProgressTasks[i] += 1;
+                        inProgressTasksAL.set(counter,inProgressTasksAL.get(counter)+1);
+//                        inProgressTasks[i] += 1;
                     }
                 }
 
+                counter++;
                 String projectName = projectRepository.findById(projects[i]).get().getName();
                 xaxis.add(projectName);
+            }
+
+            completedTasks = new int[completedTasksAL.size()];
+            inProgressTasks = new int[inProgressTasksAL.size()];
+            delayedTasks = new int[delayedTasksAL.size()];
+            for(int j = 0 ; j< completedTasksAL.size(); j++){
+                completedTasks[j] = completedTasksAL.get(j);
+                delayedTasks[j] = delayedTasksAL.get(j);
+                inProgressTasks[j] = inProgressTasksAL.get(j);
             }
 
             graphDataHelper = new GraphDataHelper();

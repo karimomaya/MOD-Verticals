@@ -170,7 +170,7 @@ public class ReportController {
                 Pagination pagination = Utils.generatePagination(0, reportObject.getPageSize(), count);
                 responseBuilder.setPagination(pagination);
                 result.put("tasks", Utils.writeObjectIntoString(tasks));
-                result.put("tasks", Utils.writeObjectIntoString(tasks));
+//                result.put("tasks", Utils.writeObjectIntoString(tasks));
 
                 responseBuilder.status(ResponseCode.SUCCESS);
 
