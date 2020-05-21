@@ -15,7 +15,6 @@ import java.util.Date;
  */
 
 @Entity
-//@Table(name = "O2MyCompanyInstitutionalSupportISMOD_IS_entity_purchaseOrders")
 @Immutable
 public class PurchaseOrderReport {
     @Id
@@ -87,5 +86,4 @@ public class PurchaseOrderReport {
     public String getAmount(){
         return Utils.removeNullValue(amount);
     }
-
 }

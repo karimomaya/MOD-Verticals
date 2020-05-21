@@ -56,8 +56,6 @@ public class ReportService {
     StatisticsRepository statisticsRepository;
 	@Autowired
     TaskReportHelperRepository taskReportHelperRepository;
-	@Autowired
-    TechnicalSupportRepository technicalSupportRepository;
     @Autowired
 	RiskReportHelperRepository riskReportHelperRepository;
     @Autowired
@@ -109,16 +107,6 @@ public class ReportService {
             List<PurchaseOrderReport> purchaseOrderReports = purchaseOrderRepository.getPurchaseOrderReport(reportObject.getStartDateString(),reportObject.getEndDateString(), reportObject.getEntityName(), 0, Integer.MAX_VALUE, reportObject.getInput());
             return (T) excelWriterService.generate(purchaseOrderReports);
         }
-
-        //Case طلب دعم فني
-        if (reportObject.getReportType() == 40 ) {
-            List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(reportObject.getStartDate(),reportObject.getEndDate());
-            return (T) excelWriterService.generate(technicalSupportReports);
-        } else if (reportObject.getReportType() == 41 ) {
-            List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(reportObject.getStartDate(),reportObject.getEndDate());
-            return (T) excelWriterService.generate(technicalSupportReports);
-        }
-
         // Case Contact Tracker
         if (reportObject.getReportType() == 20 ) {
             List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
@@ -133,6 +121,7 @@ public class ReportService {
             List<User> ministryUsersReports = userRepository.getMinistryUsers(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition());
             return (T) excelWriterService.generate(ministryUsersReports);
         }
+
 
         //•	تقرير التحديات المتأخرة
         if (reportObject.getReportType() == 10){

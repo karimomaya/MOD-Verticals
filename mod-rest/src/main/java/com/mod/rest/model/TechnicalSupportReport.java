@@ -1,6 +1,7 @@
 package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
+import com.mod.rest.system.Utils;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
@@ -20,10 +21,8 @@ public class TechnicalSupportReport {
     Integer Status;
     Integer evaluation;
 
-
-
     @ColumnName(key = "جهة الطلب")
-    public String getInitiatorUnit() { return removeNullValue(InitiatorUnit); }
+    public String getInitiatorUnit() { return Utils.removeNullValue(InitiatorUnit); }
 
     @ColumnName(key = "عدد الطلبات")
     public Integer getTotal() { return total; }
@@ -57,13 +56,5 @@ public class TechnicalSupportReport {
             default:
                 return "-";
         }
-    }
-
-    private String removeNullValue(String value){
-        if (value == null) return "";
-        if (value.equals("null")){
-            return "";
-        }
-        return value;
     }
 }
