@@ -32,7 +32,7 @@ public class Meeting {
     @Id
     long Id;
     String Subject;
-    String Description;
+    String description;
     Integer MeetingType;
     Date EndDate;
 //    Date endDate;
