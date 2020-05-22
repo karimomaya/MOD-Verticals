@@ -13,5 +13,4 @@ import java.util.List;
 public interface TechnicalSupportRepository extends GenericRepository<TechnicalSupportReport, Long> {
     @Query(value = "{call MOD_DHR_SP_support_getTechnicalSupportStatistics(:startDate, :endDate)}", nativeQuery = true)
     List<TechnicalSupportReport> getTechnicalSupportStatistics(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
-
 }

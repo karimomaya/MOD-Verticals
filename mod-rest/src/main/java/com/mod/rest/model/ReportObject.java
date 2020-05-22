@@ -93,6 +93,4 @@ public class ReportObject {
         this.detectedReportType = definedType;
         return this;
     }
-
-
 }
