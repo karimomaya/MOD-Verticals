@@ -725,14 +725,21 @@ public class ReportService {
             int[] issueImportance = new int[0];
             issueList1 = issueRepository.getIssuesByPriorityThenPrecedence(ids, reportObject.getPageNumber(), reportObject.getPageSize());
             issueImportance = new int[issueList1.size()];
-            if (issueList1.size() == 0)
-                for (Issue issue : issueList1) {
-
-                     //   issueImportance[i] += 1;
-
-                    String projectName = issueRepository.findById(issue.getId()).get().getIssueName();
+            if (issueList1.size() != 0)
+                for(int j=0; j< issueList1.size(); j++) {
+                    int importance = issueList1.get(j).getEffect() * issueList1.get(j).getProbability();
+                    issueImportance[j] += importance;
+                    String projectName = issueRepository.findById(issueList1.get(j).getId()).get().getIssueName();
                     xaxis.add(projectName);
+
                 }
+//                for (Issue issue : issueList1) {
+//                    int importance = issue.getEffect() * issue.getProbability();
+//                        issueImportance [] += importance;
+//
+//                    String projectName = issueRepository.findById(issue.getId()).get().getIssueName();
+//                    xaxis.add(projectName);
+//                }
 
                    // String projectName = issueRepository.findById(Long.parseLong(reportObject.getIssueIds().split(",")[i])).get().getIssueName();
                     //xaxis.add(projectName);
