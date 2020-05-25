@@ -1,6 +1,26 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.mod.soap"
            targetNamespace="http://www.mod.soap" elementFormDefault="qualified">
 
+
+    <xs:element name="SendEmailRequest" >
+        <xs:complexType >
+            <xs:sequence>
+                <xs:element name="template" type="xs:string"/>
+                <xs:element name="emails" type="xs:string"/>
+                <xs:element name="inputs" type="xs:string"/>
+                <xs:element name="subject" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="SendEmailResponse" >
+        <xs:complexType >
+            <xs:sequence>
+                <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
     <xs:element name="SendMeetingRequest" >
         <xs:complexType >
             <xs:sequence>

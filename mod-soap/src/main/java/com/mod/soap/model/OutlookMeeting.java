@@ -2,8 +2,10 @@ package com.mod.soap.model;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
+import microsoft.exchange.webservices.data.core.enumeration.property.BodyType;
 import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
+import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
 import microsoft.exchange.webservices.data.credential.WebCredentials;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
@@ -12,7 +14,6 @@ import microsoft.exchange.webservices.data.property.complex.recurrence.pattern.R
 
 import java.net.URI;
 import java.util.Date;
-import java.util.Optional;
 
 /**
  * Created by karim on 3/8/20.
@@ -21,6 +22,8 @@ public class OutlookMeeting {
     ExchangeService service = null;
     String status = "";
     Appointment appointment = null;
+
+
     public OutlookMeeting(String uniqueId){
 
         try {
@@ -39,6 +42,24 @@ public class OutlookMeeting {
         } catch (Exception e) {
             status = "Failed to Initialized: " + e.getMessage();
         }
+    }
+    public void sendEmail(String html, String[] emails, String subject) throws Exception {
+
+        EmailMessage msg= new EmailMessage(service);
+        msg.setSubject(subject);
+
+        MessageBody msgBody = new MessageBody();
+        msgBody.setBodyType(BodyType.HTML);
+        msgBody.setText(html);
+
+
+        msg.setBody(msgBody );
+        for (int i=0; i< emails.length; i++){
+            System.out.println(emails[i]);
+            msg.getToRecipients().add(emails[i]);
+        }
+        msg.send();
+
     }
 
     public OutlookMeeting setSubject(String subject){

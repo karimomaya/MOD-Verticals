@@ -48,6 +48,7 @@ public class CompressJSController {
         StringBuilder fileContent = new StringBuilder();
         MinificationService minificationService = new MinificationService(projectName, entityName, controllerName, loggerService);
         minificationService.execute();
+//        test
 
         return responseBuilder.data(fileContent.toString()).build();
 

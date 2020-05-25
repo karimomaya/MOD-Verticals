@@ -1,0 +1,11 @@
+{
+    "webservice": {
+        "method": "ReadMOD_SYS_entity_security",
+        "namespace": "http://schemas/MyCompanyGeneralSYS_GENERAL/MOD_SYS_entity_security/operations",
+        "param": {
+            "MOD_SYS_entity_security-id": {
+                "Id": $0
+            }
+        }
+    }
+}

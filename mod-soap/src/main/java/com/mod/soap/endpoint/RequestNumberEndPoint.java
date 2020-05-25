@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mod.soap.dao.model.*;
 import com.mod.soap.dao.repository.*;
 import com.mod.soap.entity.UserDetails;
@@ -33,7 +34,10 @@ import org.w3c.dom.NodeList;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by karim.omaya on 12/7/2019.
@@ -65,6 +69,131 @@ public class RequestNumberEndPoint {
     MeetingRepository meetingRepository;
     @Autowired
     MeetingAttendeeRepository meetingAttendeeRepository;
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendEmailRequest")
+    @ResponsePayload
+    public SendEmailResponse sendEmail(@RequestPayload SendEmailRequest request) {
+
+        SendEmailResponse response = new SendEmailResponse();
+
+
+        InputStream is = null;
+        try {
+            is = new FileInputStream(request.getTemplate()+".json");
+            BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+
+            String line = buf.readLine();
+            StringBuilder sb = new StringBuilder();
+
+            while(line != null){
+                sb.append(line).append("\n");
+                line = buf.readLine();
+            }
+
+            String fileAsString = sb.toString();
+
+            String[] inputs = request.getInputs().split(",");
+
+            for (int i =0; i< inputs.length; i++){
+                fileAsString = fileAsString.replaceAll("\\$"+i , inputs[i] );
+            }
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(fileAsString);
+
+            String webservice = updateWebserviceTemplate(SecurityType.WEBSERVICE.getTemplate(), jsonNode);
+            Http http = new Http(property);
+            String webserviceResponse = http.cordysRequest(webservice);
+
+            Document dom = Utils.convertStringToXMLDocument(webserviceResponse);
+            NodeList nl=dom.getDocumentElement().getChildNodes();
+
+
+
+            is = new FileInputStream(request.getTemplate()+".html");
+            buf = new BufferedReader(new InputStreamReader(is));
+
+            line = buf.readLine();
+            sb = new StringBuilder();
+
+            while(line != null){
+                sb.append(line).append("\n");
+                line = buf.readLine();
+            }
+
+
+            fileAsString = sb.toString();
+
+
+            Pattern regex = Pattern.compile("\\((.*?)\\)");
+            Matcher regexMatcher = regex.matcher(fileAsString );
+
+            while (regexMatcher.find()) {//Finds Matching Pattern in String
+                String token = regexMatcher.group(1);
+                String value = "";
+                for(int k=0;k<nl.getLength();k++){
+                    value =  getTagByName((Node)nl.item(k), token, "");
+                    if (!value.equals("")) break;
+                }
+                fileAsString = fileAsString.replace("("+token+")", value);
+            }
+
+            OutlookMeeting outlookMeeting = new OutlookMeeting(null);
+            outlookMeeting.sendEmail(fileAsString, request.getEmails().split(","), request.getSubject());
+
+            System.out.println("Contents : " + fileAsString);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("Here");
+
+
+        return response.setStatus("done");
+    }
+
+    public String getTagByName(Node nodes, String tagName, String value){
+        if (nodes.getNodeName().equals(tagName)){
+            System.out.println("found :) ");
+            System.out.println(nodes.getNodeName()+" : "+nodes.getTextContent());
+            value =  nodes.getTextContent();
+        }
+        if(nodes.hasChildNodes()  || nodes.getNodeType()!=3){
+
+            NodeList nl=nodes.getChildNodes();
+            for(int j=0;j<nl.getLength();j++) value =  getTagByName(nl.item(j), tagName, value);
+        }
+        return value;
+    }
+
+    private String updateWebserviceTemplate(String template, JsonNode jsonNode) {
+        template = template.replace("{ticket}",  sessionService.loginWithAdmin());
+        String methodName = jsonNode.findPath("method").asText();
+        String namespace = jsonNode.findPath("namespace").asText();
+        template = template.replaceAll("\\{method\\}", methodName);
+        template = template.replace("{namespace}", namespace);
+
+        ObjectMapper xmlMapper = new XmlMapper();
+
+        try {
+            String params = xmlMapper.writer().writeValueAsString(jsonNode.findPath("param"));
+            params = params.replace("<ObjectNode>","");
+            params = params.replace("</ObjectNode>","");
+
+            template = template.replace("{params}", params);
+            System.out.println(template);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return template;
+    }
+
 
     @Autowired
     public RequestNumberEndPoint(RequestNumberRepository RequestNumberRepository) {
@@ -298,6 +427,8 @@ public class RequestNumberEndPoint {
 
         return securityQuery.evaluateNewWebserviceResponse(response);
     }
+
+
 
 
     private String prepareSecurityConfig(Security security, SecurityRequest securityRequest, User user){
