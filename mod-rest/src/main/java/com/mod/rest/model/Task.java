@@ -68,6 +68,10 @@ public class Task implements Serializable {
     }
 
     public String getProjectName(){
-        return this.project.getName();
+        if(this.project== null){
+            return "";
+        }else{
+            return this.project.getName();
+        }
     }
 }

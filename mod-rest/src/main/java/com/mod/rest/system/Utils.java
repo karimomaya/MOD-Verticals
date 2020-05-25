@@ -11,9 +11,11 @@ import java.io.*;
 import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -266,5 +268,31 @@ public class Utils {
             return "";
         }
         return value;
+    }
+
+    public static ArrayList<String> getYearlyMonthBetweenDates(Date startDate, Date endDate){
+        DateFormat formater = new SimpleDateFormat("MMM-yyyy");
+        //endDate.setMonth(endDate.getMonth()+1);
+
+        Calendar beginCalendar = Calendar.getInstance();
+        Calendar finishCalendar = Calendar.getInstance();
+
+        ArrayList<String> Dates = new ArrayList<>();
+//        try {
+            beginCalendar.setTime(startDate);
+            finishCalendar.setTime(endDate);
+            if(((Timestamp) startDate).toLocalDateTime().getMonth().getValue() != 12) { finishCalendar.add(Calendar.MONTH, 1);}
+
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+
+        while (beginCalendar.before(finishCalendar)) {
+            // add one month to date per loop
+            String date = formater.format(beginCalendar.getTime()).toUpperCase();
+            Dates.add(date);
+            beginCalendar.add(Calendar.MONTH, 1);
+        }
+        return Dates;
     }
 }

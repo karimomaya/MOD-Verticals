@@ -365,7 +365,7 @@ public class RequestNumberEndPoint {
                 SecurityConfig securityConfig = null;
 // 1:unit type code, 2: unit code,3: role name, 4: webservice, stored procedure
                 if(security.getType() == 4){
-                    securityConfig = objectMapper.readValue(config, SecurityConfig.class);
+                        securityConfig = objectMapper.readValue(config, SecurityConfig.class);
                 }else if(security.getType() == 1)  {
                     securityConfig = new SecurityConfig(security.getConfig(), null, null);
                 }else if(security.getType() == 2)  {

@@ -154,8 +154,6 @@ public class MeetingController {
 
         if (meetingList.size() == 0) return data;
 
-
-
         for (Meeting meeting : meetingList){
 //            object.put("subject", meeting.getSubject());
             JSONObject json = new JSONObject();

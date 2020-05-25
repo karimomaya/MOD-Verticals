@@ -22,6 +22,10 @@ public interface IssueReportHelperRepository extends GenericRepository<IssueRepo
 
     @Query(value = "{call MOD_RM_GetClosedIssuesReport(:PageNumber, :PageSize, :createdBy)}", nativeQuery = true)
     List<IssueReportHelper> getClosedIssuesReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy);
+
+    @Query(value = "{call MOD_RM_SP_GetIssuesByPriorityThenPrecedence(:createdBy, :PageNumber,:PageSize )}", nativeQuery = true)
+    List<IssueReportHelper> getIssuesByPriorityThenPrecedence(@Param("createdBy") String createdBy, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
+
 }
 
 
