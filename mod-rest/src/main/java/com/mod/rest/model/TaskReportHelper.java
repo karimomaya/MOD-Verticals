@@ -167,6 +167,7 @@ public class TaskReportHelper {
 
     @ColumnName(key="المشروع")
     public String getProjectName(){
+        if(this.project == null) return "";
         Project p = (Project) removeNullValue(this.project);
         if (p instanceof Project) {
             return p.getName();

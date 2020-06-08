@@ -31,6 +31,7 @@ public class User implements Serializable {
     String DisplayName;
     String title;
     String RoleName;
+    String RoleName_ar;
     String Phone;
     @NotFound(action = NotFoundAction.IGNORE)
     String facsimileTelephoneNumber;
@@ -43,7 +44,7 @@ public class User implements Serializable {
     }
     @ColumnName(key = "المنصب")
     public String getRole() {
-        return Utils.removeNullValue(RoleName);
+        return Utils.removeNullValue(RoleName_ar);
     }
     @ColumnName(key = "الرتبة")
     public String getTitle() {

@@ -38,13 +38,13 @@ public class TaskService {
             tasks = getDelayedTaskReportHelperProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         }else if(projectStatus == 2) { // finished
             tasks = getFinishedTaskReportHelperProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
+        }else if(projectStatus == 3) { // inProgress
+            tasks = getInProgressTaskReportHelperProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         } else { // all
             tasks = getFinishedAndDelayedTaskReportHelperProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         }
         return tasks;
     }
-
-
 
     public List<Task> getTaskReportProjectBasedOnStatus(int projectStatus, String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart){
         List<Task> tasks = null;
@@ -52,6 +52,8 @@ public class TaskService {
             tasks = getDelayedTaskReportProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         }else if(projectStatus == 2) { // finished
             tasks = getFinishedTaskReportProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
+        }else if(projectStatus == 3) { // inProgress
+            tasks = getInProgressTaskReportProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         } else { // all
             tasks = getFinishedAndDelayedTaskReportProject(userIds, startDate, endDate, projectIds, pageNumber, pageSize, SAMLart);
         }
@@ -99,6 +101,18 @@ public class TaskService {
     public List<TaskReportHelper> getDelayedTaskReportHelperProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
         UserHelper userHelper = sessionService.getSession(SAMLart);
         List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
+        return tasks;
+    }
+
+    public List<Task> getInProgressTaskReportProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+        UserHelper userHelper = sessionService.getSession(SAMLart);
+        List<Task> tasks = taskRepository.getInProgressTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
+        return tasks;
+    }
+
+    public List<TaskReportHelper> getInProgressTaskReportHelperProject( String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart) {
+        UserHelper userHelper = sessionService.getSession(SAMLart);
+        List<TaskReportHelper> tasks = taskReportHelperRepository.getInProgressTaskReportProject(userIds, userHelper.getId(), startDate, endDate, projectIds,  pageNumber, pageSize);
         return tasks;
     }
 

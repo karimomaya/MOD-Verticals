@@ -40,6 +40,11 @@ public interface TaskRepository extends GenericRepository<Task,Long> {
     @Query(value = "{call MOD_TM_SP_DelayedTaskReportProject(:userIds, :userId, :startDate, :endDate, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
     List<Task> getDelayedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
 
+    @Query(value = "{call MOD_TM_SP_InProgressTaskReportProjectCount(:userIds, :userId, :startDate, :endDate, :projectId)}", nativeQuery = true)
+    Long cInProgressTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("projectId") String projectId);
+    @Query(value = "{call MOD_TM_SP_InProgressTaskReportProject(:userIds, :userId, :startDate, :endDate, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)
+    List<Task> getInProgressTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("projectId") String projectId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
+
     @Query(value = "{call MOD_TM_SP_FinishedAndDelayedTaskReportProjectCount(:userIds, :userId, :startDate, :endDate, :projectId)}", nativeQuery = true)
     Long cFinishedAndDelayedTaskReportProject(@Param("userIds") String userIds, @Param("userId") long userId, @Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("projectId") String projectId);
     @Query(value = "{call MOD_TM_SP_FinishedAndDelayedTaskReportProject(:userIds, :userId, :startDate, :endDate, :projectId, :PageNumber,:PageSize)}", nativeQuery = true)

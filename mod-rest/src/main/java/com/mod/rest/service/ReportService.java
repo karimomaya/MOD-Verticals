@@ -404,22 +404,24 @@ public class ReportService {
                     return (T) taskRepository.cDelayedTaskReportProject(reportObject.getUserIds(), sessionService.getSession(reportObject.getSAMLart()).getId(), reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getProjectIds());
                 }else if (reportObject.getStatus() == 2) { // finished
                     return (T) taskRepository.cFinishedTaskReportProject(reportObject.getUserIds(), sessionService.getSession(reportObject.getSAMLart()).getId(), reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getProjectIds());
+                }else if (reportObject.getStatus() == 3) { // inProgress
+                    return (T) taskRepository.cInProgressTaskReportProject(reportObject.getUserIds(), sessionService.getSession(reportObject.getSAMLart()).getId(), reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getProjectIds());
                 }else { // all
                     return (T) taskRepository.cFinishedAndDelayedTaskReportProject(reportObject.getUserIds(), sessionService.getSession(reportObject.getSAMLart()).getId(), reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getProjectIds());
                 }
             } else if (reportObject.getDetectedReportType() == 3) { // file
-                List<TaskReportHelper> tasks =  taskService.getTaskReportHelperProjectBasedOnStatus(reportObject.getStatus(), reportObject.getUserIds(), reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getProjectIds(), reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getSAMLart());
+                List<TaskReportHelper> tasks =  taskService.getTaskReportHelperProjectBasedOnStatus(reportObject.getStatus(), reportObject.getUserIds(), reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getProjectIds(), 1, Integer.MAX_VALUE, reportObject.getSAMLart());
                 return (T) excelWriterService.generate(tasks);
             }
         }else if (reportObject.getReportType() == 8) { // if completed tasks report
             if (reportObject.getDetectedReportType() == 0) { // graph
                 return (T) taskReportHelper(reportObject, "TaskAssignmentReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
-                return (T) taskService.addUserToTask(taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1, reportObject.getPageNumber(), reportObject.getPageSize()));
+                return (T) taskService.addUserToTask(taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getType(), reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if (reportObject.getDetectedReportType() == 2) { // count
-                return (T) taskRepository.cTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1);
+                return (T) taskRepository.cTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getType());
             } else if (reportObject.getDetectedReportType() == 3) { // file
-                List<TaskReportHelper> tasks = taskService.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1, 1, Integer.MAX_VALUE);
+                List<TaskReportHelper> tasks = taskService.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getType(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
         }
@@ -861,6 +863,8 @@ public class ReportService {
             return  "DelayedTaskReportProject";
         }else if (projectStatus == 2) { // finished
             return "FinishedTaskReportProject";
+        }else if (projectStatus == 3) { // inProgress
+            return "InProgressTaskReportProject";
         }else { // all
             return "AllTaskReportProject";
         }
@@ -885,14 +889,15 @@ public class ReportService {
 
                 if (taskList.size() == 0) continue;
 
-                for (Task task : taskList) {
-                    if(task.getStatus() == 1){
-                        delayedTasks[i] += 1;
-                    }else{
-                        completedTasks[i] += 1;
-                    }
-
-                }
+                delayedTasks[i] = taskList.size();
+//                for (Task task : taskList) {
+//                    if(task.getStatus() == 1){
+//                        delayedTasks[i] += 1;
+//                    }else{
+//                        completedTasks[i] += 1;
+//                    }
+//
+//                }
             }else if(type == "UserProductivityReport"){
                 taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
 
@@ -958,14 +963,14 @@ public class ReportService {
             graphDataHelpers.add(graphDataHelper);
         }
 
-        if(type == "UserProductivityReport"){
+        if(type == "DelayedTaskReport" || type == "UserProductivityReport"){
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام متأخرة");
             graphDataHelper.setData(delayedTasks);
             graphDataHelpers.add(graphDataHelper);
         }
 
-        if(type == "DelayedTaskReport" || type == "delayedTaskRiskReport" || type == "delayedTaskIssueReport"){
+        if(type == "delayedTaskRiskReport" || type == "delayedTaskIssueReport"){
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام متأخرة");
             graphDataHelper.setData(delayedTasks);
@@ -1008,13 +1013,27 @@ public class ReportService {
 
             xaxis.add("مهام منجزة");
 
+        }else if(type == "InProgressTaskReportProject") {
+            taskList = taskRepository.getInProgressTaskReportProject("", 0, reportObject.getStartDate(), reportObject.getEndDate(),reportObject.getProjectIds(), 1, Integer.MAX_VALUE );
+            int[] taskCount = new int[1];
+            taskCount[0] = taskList.size();
+
+            graphDataHelper = new GraphDataHelper();
+            graphDataHelper.setName("مهام تحت التنفيذ");
+            graphDataHelper.setData(taskCount);
+            graphDataHelpers.add(graphDataHelper);
+
+            xaxis.add("مهام تحت التنفيذ");
+
         } else if(type == "AllTaskReportProject"){
             taskList = taskRepository.getFinishedAndDelayedTaskReportProject("", 0, reportObject.getStartDate(), reportObject.getEndDate(),reportObject.getProjectIds(), 1, Integer.MAX_VALUE );
-            int[] taskCount = new int[2];
+            int[] taskCount = new int[3];
             for(Task task : taskList){
                 if(task.getStatus() == 3 || task.getStatus() == 12){
                     taskCount[0] += 1;
                 }else if(task.getDueDate().before(new Date())){
+                    taskCount[2] += 1;
+                }else {
                     taskCount[1] += 1;
                 }
             }
@@ -1025,101 +1044,135 @@ public class ReportService {
             graphDataHelpers.add(graphDataHelper);
 
             xaxis.add("مهام منجزة");
+            xaxis.add("مهام تحت التنفيذ");
             xaxis.add("مهام متأخرة");
 
-        } else if (type == "TaskReportFromSource"){
-            long[] projects = reportObject.getProjects();
-            int arraySize = projects.length;
-            if(arraySize == 0){
-                String[] projectsIds = reportObject.getProjectIds().split(",");
-                projects = new long[projectsIds.length];
-                for(int i = 0; i<projectsIds.length ; i++){
-                    projects[i] = Long.parseLong(projectsIds[i]);
-                }
-                arraySize = projects.length;
-            }
-
-            ArrayList<Integer> completedTasksAL = new ArrayList<>();
-            ArrayList<Integer> delayedTasksAL = new ArrayList<>();
-            ArrayList<Integer> inProgressTasksAL = new ArrayList<>();
-            int[] completedTasks = new int[arraySize];
-            int[] delayedTasks = new int[arraySize];
-            int[] inProgressTasks = new int[arraySize];
-            int counter = 0;
-            for(int i = 0; i < arraySize ; i++){
-                String project = projects[i] + "";
-                taskList = taskRepository.getFinishedAndDelayedTaskReportProject("", 0, reportObject.getStartDate(), reportObject.getEndDate(), project, 1, Integer.MAX_VALUE );
-
-                if(taskList.size() <= 0){
-                    continue;
-                }
-
-                completedTasksAL.add(0);
-                delayedTasksAL.add(0);
-                inProgressTasksAL.add(0);
-
-                for (Task task : taskList) {
-                    if(task.getStatus() == 3 || task.getStatus() == 12){
-                        completedTasksAL.set(counter,completedTasksAL.get(counter)+1);
-//                        completedTasks[i] += 1;
-                    }else if (task.getDueDate().before(new Date())) {
-//                        delayedTasks[i] += 1;
-                        delayedTasksAL.set(counter,delayedTasksAL.get(counter)+1);
-                    } else {
-                        inProgressTasksAL.set(counter,inProgressTasksAL.get(counter)+1);
-//                        inProgressTasks[i] += 1;
+//        } else if (type == "TaskReportFromSource"){
+//            long[] projects = reportObject.getProjects();
+//            int arraySize = projects.length;
+//            if(arraySize == 0){
+//                String[] projectsIds = reportObject.getProjectIds().split(",");
+//                projects = new long[projectsIds.length];
+//                for(int i = 0; i<projectsIds.length ; i++){
+//                    projects[i] = Long.parseLong(projectsIds[i]);
+//                }
+//                arraySize = projects.length;
+//            }
+//
+//            ArrayList<Integer> completedTasksAL = new ArrayList<>();
+//            ArrayList<Integer> delayedTasksAL = new ArrayList<>();
+//            ArrayList<Integer> inProgressTasksAL = new ArrayList<>();
+//            int[] completedTasks = new int[arraySize];
+//            int[] delayedTasks = new int[arraySize];
+//            int[] inProgressTasks = new int[arraySize];
+//            int counter = 0;
+//            for(int i = 0; i < arraySize ; i++){
+//                String project = projects[i] + "";
+//                taskList = taskRepository.getFinishedAndDelayedTaskReportProject("", 0, reportObject.getStartDate(), reportObject.getEndDate(), project, 1, Integer.MAX_VALUE );
+//
+//                if(taskList.size() <= 0){
+//                    continue;
+//                }
+//
+//                completedTasksAL.add(0);
+//                delayedTasksAL.add(0);
+//                inProgressTasksAL.add(0);
+//
+//                for (Task task : taskList) {
+//                    if(task.getStatus() == 3 || task.getStatus() == 12){
+//                        completedTasksAL.set(counter,completedTasksAL.get(counter)+1);
+////                        completedTasks[i] += 1;
+//                    }else if (task.getDueDate().before(new Date())) {
+////                        delayedTasks[i] += 1;
+//                        delayedTasksAL.set(counter,delayedTasksAL.get(counter)+1);
+//                    } else {
+//                        inProgressTasksAL.set(counter,inProgressTasksAL.get(counter)+1);
+////                        inProgressTasks[i] += 1;
+//                    }
+//                }
+//
+//                counter++;
+//                String projectName = projectRepository.findById(projects[i]).get().getName();
+//                xaxis.add(projectName);
+//            }
+//
+//            completedTasks = new int[completedTasksAL.size()];
+//            inProgressTasks = new int[inProgressTasksAL.size()];
+//            delayedTasks = new int[delayedTasksAL.size()];
+//            for(int j = 0 ; j< completedTasksAL.size(); j++){
+//                completedTasks[j] = completedTasksAL.get(j);
+//                delayedTasks[j] = delayedTasksAL.get(j);
+//                inProgressTasks[j] = inProgressTasksAL.get(j);
+//            }
+//
+//            graphDataHelper = new GraphDataHelper();
+//            graphDataHelper.setName("مهام منجزة");
+//            graphDataHelper.setData(completedTasks);
+//            graphDataHelpers.add(graphDataHelper);
+//
+//            graphDataHelper = new GraphDataHelper();
+//            graphDataHelper.setName("مهام تحت التنفيذ");
+//            graphDataHelper.setData(inProgressTasks);
+//            graphDataHelpers.add(graphDataHelper);
+//
+//            graphDataHelper = new GraphDataHelper();
+//            graphDataHelper.setName("مهام متأخرة");
+//            graphDataHelper.setData(delayedTasks);
+//            graphDataHelpers.add(graphDataHelper);
+        } else if (type == "TaskAssignmentReport"){
+            taskList = taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getType(), 1, Integer.MAX_VALUE );
+            if(reportObject.getType() == -1){
+                int[] countArray = new int[5];
+                for (Task task : taskList){
+                    int assignmentType = task.getTypeOfAssignment();
+                    if(assignmentType > 0 && assignmentType < 6){
+                        countArray[assignmentType-1] += 1;
                     }
                 }
 
-                counter++;
-                String projectName = projectRepository.findById(projects[i]).get().getName();
-                xaxis.add(projectName);
-            }
+                graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName("مهام");
+                graphDataHelper.setData(countArray);
+                graphDataHelpers.add(graphDataHelper);
 
-            completedTasks = new int[completedTasksAL.size()];
-            inProgressTasks = new int[inProgressTasksAL.size()];
-            delayedTasks = new int[delayedTasksAL.size()];
-            for(int j = 0 ; j< completedTasksAL.size(); j++){
-                completedTasks[j] = completedTasksAL.get(j);
-                delayedTasks[j] = delayedTasksAL.get(j);
-                inProgressTasks[j] = inProgressTasksAL.get(j);
-            }
+                xaxis.add("طلب تقرير/دراسة");
+                xaxis.add("طلب معلومات");
+                xaxis.add("طلب ملخص");
+                xaxis.add("طلب ملاحظات/مرئيات");
+                xaxis.add("أخرى");
+            }else{
+                int[] countArray = new int[1];
+                countArray[0] = taskList.size();
 
-            graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName("مهام منجزة");
-            graphDataHelper.setData(completedTasks);
-            graphDataHelpers.add(graphDataHelper);
+                graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName("مهام");
+                graphDataHelper.setData(countArray);
+                graphDataHelpers.add(graphDataHelper);
 
-            graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName("مهام تحت التنفيذ");
-            graphDataHelper.setData(inProgressTasks);
-            graphDataHelpers.add(graphDataHelper);
+                String typeName = "";
 
-            graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName("مهام متأخرة");
-            graphDataHelper.setData(delayedTasks);
-            graphDataHelpers.add(graphDataHelper);
-        } else if (type == "TaskAssignmentReport"){
-            taskList = taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1, 1, Integer.MAX_VALUE );
-            int[] countArray = new int[5];
-            for (Task task : taskList){
-                int assignmentType = task.getTypeOfAssignment();
-                if(assignmentType > 0 && assignmentType < 6){
-                    countArray[assignmentType-1] += 1;
+                switch (reportObject.getType()){
+                    case 1:
+                        typeName = "طلب تقرير/دراسة";
+                        break;
+                    case 2:
+                        typeName = "طلب معلومات";
+                        break;
+                    case 3:
+                        typeName = "طلب ملخص";
+                        break;
+                    case 4:
+                        typeName = "طلب ملاحظات/مرئيات";
+                        break;
+                    case 5:
+                        typeName = "أخرى";
+                        break;
+                    default:
+                        typeName = "طلب تقرير/دراسة";
                 }
+
+                xaxis.add(typeName);
             }
-
-            graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName("مهام");
-            graphDataHelper.setData(countArray);
-            graphDataHelpers.add(graphDataHelper);
-
-            xaxis.add("طلب تقرير/دراسة");
-            xaxis.add("طلب معلومات");
-            xaxis.add("طلب ملخص");
-            xaxis.add("طلب ملاحظات/مرئيات");
-            xaxis.add("أخرى");
-
         }else if(type == "AllTaskReportRisk"){
             long[] users = reportObject.getUsers();
             long[] risks = reportObject.getRisks();

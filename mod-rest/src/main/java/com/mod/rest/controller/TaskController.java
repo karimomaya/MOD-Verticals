@@ -110,7 +110,7 @@ public class TaskController  {
 
             HttpHeaders respHeaders = new HttpHeaders();
 
-            List<Task> taskList = taskService.addUserToTask(taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), -1, 1, Integer.MAX_VALUE));
+            List<Task> taskList = taskService.addUserToTask(taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getType(), 1, Integer.MAX_VALUE));
 
             if(taskList.size() == 0){
                 return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
@@ -194,17 +194,37 @@ public class TaskController  {
 
             try
             {
+                if(diffTotal == 0){
+                    diffTotal= 1;
+                }
                 expectedProgress = (diffnow/ diffTotal)*100;
             } catch (Exception e){
-
+                e.printStackTrace();
             }
 
-            if (task.getProgress() == 100) {
-                color  = "#38A32B";
-            }else if(task.getProgress() > expectedProgress ){
-                color = "#4aa472";
-            }else if (task.getProgress() < expectedProgress ) {
-                color = "#d44e5a";
+            if(task.getProgress() > expectedProgress ){
+//                color = "#4aa472";
+                if(task.getProgress() == 100){
+                    if(task.getTargetPerformerStatus() < 2){
+                        color = "#d44e5a";
+                    }else if(task.getTargetPerformerStatus() == 2){
+                        color = "#38A32B";
+                    }
+                }else {
+                    color = "#38A32B";
+                }
+            } else if(task.getProgress() < expectedProgress){
+                if(task.getProgress() == 100){
+                    if(task.getTargetPerformerStatus() < 2){
+                        color = "#d44e5a";
+                    }else if(task.getTargetPerformerStatus() == 2){
+                        color = "#38A32B";
+                    }
+                }else {
+                    color = "#d44e5a";
+                }
+//            else if (task.getProgress() < expectedProgress) {
+//                color = "#d44e5a";
             }else if (taskStatus == 1){
                 color = "#d3d3d3";
             }else if (task.getProgress() < expectedProgress + 10  && task.getProgress() > expectedProgress - 10 ){
