@@ -23,8 +23,8 @@ public class Unit {
     String UnitPathById;
     @Column(name="ParentUnitId")
     Integer ParentUnitId;
-    @Column(name="UnitType")
-    String UnitType;
+//    @Column(name="UnitType")
+//    String UnitType;
     @Column(name="UnitManagerRoleId")
     Integer UnitManagerRoleId;
     @Column(name="UnitTypeCode")
@@ -33,8 +33,8 @@ public class Unit {
     String UnitCode;
     @Column(name="UnitOwnerRoleId")
     String UnitOwnerRoleId;
-    @Column(name="UnitTypeCodeId")
-    String UnitTypeCodeId;
+//    @Column(name="UnitTypeCodeId")
+//    String UnitTypeCodeId;
     @Column(name="UnitSerial")
     String UnitSerial;
     @Column(name="UnitName_ar")
