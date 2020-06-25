@@ -50,11 +50,12 @@ public class ProofreadingReportController {
 
         //http://localhost:8081/api/proofreadingReport/export/ar/2019-05-28/2020-05-26
         List<ProofreadingReport> proofreadingReports = proofreadingReportRepository.getProofreadingReport(startDate, endDate);
-        System.out.println(proofreadingReports);
-        unitService.substituteUnitCodes(proofreadingReports, "request_Department", lang);
-        System.out.println(lookupService.getLookupValuesByCategory("classification"));
+//        System.out.println(proofreadingReports);
+        unitService.substituteUnitCodes(proofreadingReports, "requestDepartment", lang);
+//        System.out.println(lookupService.getLookupValuesByCategory("classification"));
         lookupService.substituteLookupIds(proofreadingReports, "classification", "degreeOfConfidentiality", lang);
         lookupService.substituteLookupIds(proofreadingReports, "priority", "degreeOfPrecedence", lang);
+        lookupService.substituteLookupIds(proofreadingReports, "evaluation", "averageRating", lang);
 //        System.out.println(roleService.getRoleNamesMultilingual());
         file = excelWriterService.generate(proofreadingReports);
 

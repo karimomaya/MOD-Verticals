@@ -58,18 +58,30 @@ public class RoleService {
 
             for (PropertyDescriptor prop: props) {
                 if(prop.getName().equals(roleCodeColumnName)) {
-                    getter = cls.getDeclaredMethod(prop.getReadMethod().getName());
-                    setter = cls.getDeclaredMethod(prop.getWriteMethod().getName(), String.class);
+                    try {
+                        getter = cls.getDeclaredMethod(prop.getReadMethod().getName());
+                    } catch (NoSuchMethodException | NullPointerException e) {
+                        System.out.println("Couldn't retrieve Getter for the RoleService");
+                    }
+                    try {
+                        setter = cls.getDeclaredMethod(prop.getWriteMethod().getName(), String.class);
+                    } catch (NoSuchMethodException | NullPointerException e) {
+                        System.out.println("Couldn't retrieve Setter for the RoleService");
+                    }
                     break;
                 }
             }
 
             for (Object obj : objectList) {
-                String langSpecificRoleName = allRoles.get( (String) getter.invoke(obj) ).get(lang);
-                setter.invoke(obj, langSpecificRoleName);
+                try {
+                    String langSpecificRoleName = allRoles.get((String) getter.invoke(obj)).get(lang);
+                    setter.invoke(obj, langSpecificRoleName);
+                } catch (NullPointerException e) {
+                    System.out.println("Error occurred when calling the Getter/Setter Function in the RoleService");
+                }
             }
 
-        } catch (IntrospectionException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+        } catch (IntrospectionException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }

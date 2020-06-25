@@ -6,7 +6,6 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.Date;
 
 /**
  * Created by MinaSamir on 5/27/2020.
@@ -18,11 +17,11 @@ public class ProofreadingReportMonthly {
     @Id
     String request_Department;
     @Column(name = "word_count")
-    String word_count;
+    String wordCount;
     @Column(name = "page_count")
-    String page_count;
+    String pageCount;
     @Column(name = "number_of_requests")
-    String number_of_requests;
+    String numberOfRequests;
 
     @ColumnName(key = "جهة الطلب")
     public String getRequest_Department() {
@@ -34,17 +33,17 @@ public class ProofreadingReportMonthly {
     }
 
     @ColumnName(key = "عدد الكلمات")
-    public String getWord_count() {
-        return word_count;
+    public String getWordCount() {
+        return wordCount;
     }
 
     @ColumnName(key = "عدد الصفحات")
-    public String getPage_count() {
-        return page_count;
+    public String getPageCount() {
+        return pageCount;
     }
 
     @ColumnName(key = "عدد الطلبات")
-    public String getNumber_of_requests() {
-        return number_of_requests;
+    public String getNumberOfRequests() {
+        return numberOfRequests;
     }
 }
