@@ -18,9 +18,9 @@ public class ProofreadingReport {
     @Id
     Long Id;
     @Column(name = "request_Department")
-    String request_Department;
+    String requestDepartment;
     @Column(name = "request_name")
-    String request_name;
+    String requestName;
     @Column(name = "title")
     String title;
     @Column(name = "degreeOfConfidentiality")
@@ -28,19 +28,19 @@ public class ProofreadingReport {
     @Column(name = "degreeOfPrecedence")
     String degreeOfPrecedence;
     @Column(name = "word_count")
-    String word_count;
+    String wordCount;
     @Column(name = "page_count")
-    String page_count;
+    String pageCount;
     @Column(name = "request_status")
-    String request_status;
+    String requestStatus;
     @Column(name = "proofreader")
     String proofreader;
     @Column(name = "request_date")
-    Date request_date;
+    Date requestDate;
     @Column(name = "proofreading_done_on")
-    Date proofreading_done_on;
+    Date proofreadingDoneOn;
     @Column(name = "average_rating")
-    String average_rating;
+    String averageRating;
     @Column(name = "initiatorComments")
     String initiatorComments;
 
@@ -51,17 +51,17 @@ public class ProofreadingReport {
     }
 
     @ColumnName(key = "جهة الطلب")
-    public String getRequest_Department() {
-        return request_Department;
+    public String getRequestDepartment() {
+        return requestDepartment;
     }
 
-    public void setRequest_Department(String request_Department) {
-        this.request_Department = request_Department;
+    public void setRequestDepartment(String request_Department) {
+        this.requestDepartment = request_Department;
     }
 
     @ColumnName(key = "اسم مقدم الطلب")
-    public String getRequest_name() {
-        return request_name;
+    public String getRequestName() {
+        return requestName;
     }
 
     @ColumnName(key = "الموضوع")
@@ -88,18 +88,18 @@ public class ProofreadingReport {
     }
 
     @ColumnName(key = "عدد الكلمات")
-    public String getWord_count() {
-        return word_count;
+    public String getWordCount() {
+        return wordCount;
     }
 
     @ColumnName(key = "عدد الصفحات")
-    public String getPage_count() {
-        return page_count;
+    public String getPageCount() {
+        return pageCount;
     }
 
     @ColumnName(key = "حالة الطلب")
-    public String getRequest_status() {
-        return request_status;
+    public String getRequestStatus() {
+        return requestStatus;
     }
 
     @ColumnName(key = "المدقق")
@@ -108,18 +108,22 @@ public class ProofreadingReport {
     }
 
     @ColumnName(key = "تاريخ الطلب")
-    public Date getRequest_date() {
-        return request_date;
+    public Date getRequestDate() {
+        return requestDate;
     }
 
     @ColumnName(key = "تاريخ التسليم")
-    public Date getProofreading_done_on() {
-        return proofreading_done_on;
+    public Date getProofreadingDoneOn() {
+        return proofreadingDoneOn;
     }
 
     @ColumnName(key = "التقييم")
-    public String getAverage_rating() {
-        return average_rating;
+    public String getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(String averageRating) {
+        this.averageRating = averageRating;
     }
 
     @ColumnName(key = "ملاحظات الجهة الطالبة")

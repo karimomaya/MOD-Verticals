@@ -52,7 +52,7 @@ public class ProofreadingReportMonthlyController {
 
         //http://localhost:8081/api/proofreadingReportMonthly/export/ar/2019-05-28/2020-05-26
         List<ProofreadingReportMonthly> proofreadingReportsMonthly = proofreadingReportMonthlyRepository.getProofreadingReportMonthly(startDate, endDate);
-        System.out.println(proofreadingReportsMonthly);
+//        System.out.println(proofreadingReportsMonthly);
         unitService.substituteUnitCodes(proofreadingReportsMonthly, "request_Department", lang);
 //        System.out.println(lookupService.getLookupValuesByCategory("classification"));
 //        lookupService.substituteLookupIds(proofreadingReportsMonthly, "classification", "degreeOfConfidentiality", lang);

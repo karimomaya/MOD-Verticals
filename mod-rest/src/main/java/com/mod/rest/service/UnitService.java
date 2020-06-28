@@ -60,18 +60,30 @@ public class UnitService {
 
             for (PropertyDescriptor prop: props) {
                 if(prop.getName().equals(unitCodeColumnName)) {
-                    getter = cls.getDeclaredMethod(prop.getReadMethod().getName());
-                    setter = cls.getDeclaredMethod(prop.getWriteMethod().getName(), String.class);
+                    try {
+                        getter = cls.getDeclaredMethod(prop.getReadMethod().getName());
+                    } catch (NoSuchMethodException | NullPointerException e) {
+                        System.out.println("Couldn't retrieve Getter for the UnitService");
+                    }
+                    try {
+                        setter = cls.getDeclaredMethod(prop.getWriteMethod().getName(), String.class);
+                    } catch (NoSuchMethodException | NullPointerException e) {
+                        System.out.println("Couldn't retrieve Setter for the UnitService");
+                    }
                     break;
                 }
             }
 
             for (Object obj : objectList) {
-                String langSpecificUnitName = allUnits.get( (String) getter.invoke(obj) ).get(lang);
-                setter.invoke(obj, langSpecificUnitName);
+                try {
+                    String langSpecificUnitName = allUnits.get( (String) getter.invoke(obj) ).get(lang);
+                    setter.invoke(obj, langSpecificUnitName);
+                } catch (NullPointerException e) {
+                    System.out.println("Error occurred when calling the Getter/Setter Function in the UnitService");
+                }
             }
 
-        } catch (IntrospectionException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+        } catch (IntrospectionException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }

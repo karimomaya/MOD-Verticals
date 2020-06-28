@@ -54,18 +54,30 @@ public class LookupService {
 
             for (PropertyDescriptor prop: props) {
                 if(prop.getName().equals(lookupIdColumnName)) {
-                    getter = cls.getDeclaredMethod(prop.getReadMethod().getName());
-                    setter = cls.getDeclaredMethod(prop.getWriteMethod().getName(), String.class);
+                    try {
+                        getter = cls.getDeclaredMethod(prop.getReadMethod().getName());
+                    } catch (NoSuchMethodException | NullPointerException e) {
+                        System.out.println("Couldn't retrieve Getter for the LookupService");
+                    }
+                    try {
+                        setter = cls.getDeclaredMethod(prop.getWriteMethod().getName(), String.class);
+                    } catch (NoSuchMethodException | NullPointerException e) {
+                        System.out.println("Couldn't retrieve Setter for the LookupService");
+                    }
                     break;
                 }
             }
 
             for (Object obj : objectList) {
-                String langSpecificLookupName = allLookups.get( category ).get( (String) getter.invoke(obj) ).get(lang);
-                setter.invoke(obj, langSpecificLookupName);
+                try {
+                    String langSpecificLookupName = allLookups.get(category).get((String) getter.invoke(obj)).get(lang);
+                    setter.invoke(obj, langSpecificLookupName);
+                } catch (NullPointerException e) {
+                    System.out.println("Error occurred when calling the Getter/Setter Function in the LookupService");
+                }
             }
 
-        } catch (IntrospectionException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+        } catch (IntrospectionException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
