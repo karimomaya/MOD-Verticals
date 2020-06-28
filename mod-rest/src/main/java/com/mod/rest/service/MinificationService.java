@@ -49,10 +49,9 @@ public class MinificationService {
                 "/cordys/html5/demo/commons/javascripts/crypto.js",
                 "/cordys/html5/demo/commons/javascripts/ui/gijgo.min.js",
                 "/cordys/html5/demo/commons/javascripts/ui/jquery.flexslider.js"};
-        //    "/cordys/html5/demo/commons/javascripts/ui/snackbar.js"]
 
 
-        String controllerPath = "/home/karim/Desktop/Projects/UAE - MOD/demo/"+projectName+"/pages/"+entityName+"/controller/"+mainController+".js";
+        String controllerPath = "/home/karim/Desktop/Projects/UAE - MOD/Code/demo/"+projectName+"/pages/"+entityName+"/controller/"+mainController+".js";
         waitingQueue.add(controllerPath);
         init();
 
@@ -61,7 +60,7 @@ public class MinificationService {
 
     public MinificationService(String projectName, String entityName, String mainController){
 
-        String controllerName = "/home/karim/Desktop/Projects/UAE - MOD/demo/"+projectName+"/pages/"+entityName+"/controller/"+mainController+".js";
+        String controllerName = "/home/karim/Desktop/Projects/UAE - MOD/Code/demo/"+projectName+"/pages/"+entityName+"/controller/"+mainController+".js";
         waitingQueue.add(controllerName);
     }
 
@@ -85,17 +84,22 @@ public class MinificationService {
 
                 if (controllerName != null){
                     String scriptsStr = getScripts(fileContent, controllerName);
-                    fileContent = fileContent.replace(scriptsStr, "[]");
+
                     if (scriptsStr.equals(".js") ){
                         writeToLog('i', "No Scripts found for:  " + controllerName);
                     }else {
                         String[] scripts = scriptsStr.split(",");
+                        String scriptReplacer ="[";
                         for (int i=0 ; i<  scripts.length ; i++){
-                            String fileLoc = scripts[i].replace("/cordys/html5/demo/", "/home/karim/Desktop/Projects/UAE - MOD/demo/");
+                            if (i > 0) scriptReplacer+= ",";
+                            scriptReplacer += "\"" + scripts[i] +"\"";
+                            String fileLoc = scripts[i].replace("/cordys/html5/demo/", "/home/karim/Desktop/Projects/UAE - MOD/Code/demo/");
                             waitingQueue.add(fileLoc);
                             writeToLog('i', "found Scripts: " + fileLoc);
 
                         }
+                        scriptReplacer += "]";
+                        fileContent = fileContent.replace(scriptReplacer, "[]");
                     }
                 }
 
@@ -164,7 +168,7 @@ public class MinificationService {
 
 
     private String getControllerName(String fileContent){
-        String regexForControllerName = "dependency.execute\\(\"[A-Za-z]+\"\\)";
+        String regexForControllerName = "dependency.execute\\(\"[A-Za-z]+\"([ ]{0,9},|[ ]{0,9}\\))";
         Pattern pattern = Pattern.compile(regexForControllerName);
 
         Matcher matcher = pattern.matcher(fileContent);
@@ -180,6 +184,8 @@ public class MinificationService {
         controllerName = controllerName.replaceAll("dependency.execute", "");
         controllerName = controllerName.replaceAll("[()]", "");
         controllerName = controllerName.replaceAll("\"", "");
+        controllerName = controllerName.replace(",", "");
+        controllerName = controllerName.trim();
         return controllerName;
     }
 
