@@ -714,7 +714,7 @@ public class ReportService {
             int arraySize = issues.length;
             int[] taskCount = new int[0];
             int[] issueImportance = new int[0];
-            issueList1 = issueRepository.getIssuesByPriorityThenPrecedence(ids, reportObject.getPageNumber(), reportObject.getPageSize());
+            issueList1 = issueRepository.getIssuesByPriorityThenPrecedence(ids, 1, Integer.MAX_VALUE);
             issueImportance = new int[issueList1.size()];
             if (issueList1.size() != 0)
                 for(int j=0; j< issueList1.size(); j++) {
