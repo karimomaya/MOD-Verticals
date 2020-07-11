@@ -3,12 +3,20 @@ package com.mod.rest.system;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
@@ -24,6 +32,58 @@ import java.util.concurrent.TimeUnit;
  * Created by karim.omaya on 10/30/2019.
  */
 public class Utils {
+
+
+    public static String convertXMLDocumentToString(Document doc) {
+        try {
+            StringWriter sw = new StringWriter();
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            transformer.setOutputProperty(OutputKeys.METHOD, "html");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+            transformer.transform(new DOMSource(doc), new StreamResult(sw));
+            return sw.toString();
+        } catch (Exception ex) {
+            throw new RuntimeException("Error converting to String", ex);
+        }
+    }
+
+
+    public static File writeXMLDocumentToTempFile(Document document) throws TransformerException, IOException {
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        DOMSource source = new DOMSource(document);
+        File file = File.createTempFile("template", ".html");
+        System.out.println("create temp file on: " + file.getAbsolutePath());
+        Writer writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
+//        BufferedWriter out = null;
+//        FileWriter writer = new FileWriter(file);
+        StreamResult result = new StreamResult(writer);
+        transformer.transform(source, result);
+
+        return file;
+
+    }
+
+    public static String getInnerHTML(Node node) {
+        DOMImplementationLS lsImpl = (DOMImplementationLS) node.getOwnerDocument().getImplementation().getFeature("LS", "3.0");
+        LSSerializer lsSerializer = lsImpl.createLSSerializer();
+        lsSerializer.getDomConfig().setParameter("xml-declaration", false);
+        NodeList childNodes = node.getChildNodes();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            sb.append(lsSerializer.writeToString(childNodes.item(i)));
+        }
+        return sb.toString();
+    }
+
+
     public static String getHoursFromDate(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -161,6 +221,7 @@ public class Utils {
 
             //Parse the content to Document object
             Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
+            //here the img tag exception rise on org.w3c.dom.Document xmlString: <img> & after parse: <img />
             return doc;
         } catch (Exception e) {
             e.printStackTrace();

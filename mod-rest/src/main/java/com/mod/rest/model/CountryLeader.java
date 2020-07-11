@@ -12,6 +12,11 @@ public class CountryLeader {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "Id")
-    long id;
+    Long id;
     String picture;
+    String leaderName;
+    Long leaderId;
+    String generalInformation;
+    String leaderPosition;
+
 }

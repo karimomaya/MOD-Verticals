@@ -21,228 +21,208 @@ import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.itextpdf.tool.xml.pipeline.html.LinkProvider;
 import com.mod.rest.annotation.PDFResources;
 import com.mod.rest.system.Utils;
+import org.jsoup.Jsoup;
+import org.jsoup.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by omar.sabry on 1/8/2020.
  */
 
 @Service
-public class PDFService {
+public class PDFService implements PDFServiceI {
 
     @Autowired
     Environment config;
     @Autowired
     LoggerService loggerService;
 
+
+    public File removeNodeByTagName(String filename, String tagname) throws TransformerException, IOException {
+        org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
+        try {
+            Node element = document.getElementsByTagName(tagname).item(0);
+            element.getParentNode().removeChild(element);
+        } catch (Exception ex) {
+            loggerService.write('e', "Cannot find tag name to delete: " + tagname);
+        }
+        return Utils.writeXMLDocumentToTempFile(document);
+
+    }
+
+    protected void handlePDFTable(org.w3c.dom.Document document, List<?> objects, NodeList nodes) {
+        Node tableBody = nodes.item(0).getParentNode();
+        handleTableBody(document, objects, nodes);
+
+        int length = nodes.getLength();
+        for (int i = 0; i < length; i++) {
+            tableBody.removeChild(nodes.item(0));
+        }
+    }
+
     public File generate(List<?> objects, String filename, String tagName) throws Exception {
-        if (objects.size() == 0)
-            return new File(filename);
         System.out.println("generate tag name: " + tagName + " using filename: " + filename);
-        loggerService.write('i',"PDF Service generate tag name: " + tagName + " using filename: " + filename);
+        loggerService.write('i', "PDF Service generate tag name: " + tagName + " using filename: " + filename);
 
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
-        NodeList nodes = document.getElementsByTagName(tagName+"-replacer");
-        if (nodes.getLength() == 0) return new File(filename);
+        NodeList nodes = document.getElementsByTagName(tagName + "-replacer");
+
+        if (objects.size() == 0 || nodes.getLength() == 0)
+            return removeNodeByTagName(filename, tagName);
 
         String nodeName = nodes.item(0).getParentNode().getNodeName();
+        if (nodeName.equals("tbody")) {
+            handlePDFTable(document, objects, nodes);
 
-        if (nodeName.equals("tbody")){
-            Node tableBody =  nodes.item(0).getParentNode();
+        } else if (nodeName.equals("tr")) {
+            handlePDFTableRow(document, objects, nodes);
+        } else {
+            handlePDFTableParag(document, objects, nodes);
+        }
 
-            for(Object object : objects) {
-                Class cls = object.getClass();
-                // create TR
-                Element tr = document.createElement("tr");
-                boolean notAddd = false;
-                for(int i = 0 ; i < nodes.getLength() ; i++){
-//                    count ps trs
-                    // create TD
-                    Element td = document.createElement("td");
 
-//                    if (i ==0 ) td.setAttribute("class", "padding");
+        return Utils.writeXMLDocumentToTempFile(document);
+    }
 
-                    try {
-                        Method method =  cls.getMethod(nodes.item(i).getTextContent());
-                        Object o = method.invoke(object);
+    protected void handlePDFTableParag(org.w3c.dom.Document document, List<?> objects, NodeList nodes) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        for (Object object : objects) {
+            Class cls = object.getClass();
+            int length = nodes.getLength();
+            for (int i = 0; i < length; i++) {
+                Node parent = nodes.item(0).getParentNode();
 
-                        if (o == null)  o = "";
+                Element div = document.createElement("p");
+                div.setAttribute("dir", "rtl");
+                Method method = cls.getMethod(nodes.item(0).getTextContent());
+                Object o = method.invoke(object);
 
-                        String innerText = "";
+                String innerText = extractText(o);
 
-                        if (o instanceof Date) {
-                            innerText = Utils.dateFormat( (Date) o,config.getProperty("date.format"));
-                        }else {
-                            innerText = o.toString();
-                        }
 
-                        if (!o.equals("")){
-                            if (Utils.isArabicText(innerText)){
-//                                td.setAttribute("dir", "rtl");
-                            }else {
-                                td.setAttribute("class", "english-font");
-                            }
+                div.setTextContent(innerText);
 
-                        }
+                parent.appendChild(div);
+                parent.removeChild(nodes.item(0));
+            }
+        }
+    }
 
-                        td.setTextContent(innerText);
-                        tr.appendChild(td);
-                    }catch (Exception ex){
-                        notAddd = true;
+    protected void handlePDFTableRow(org.w3c.dom.Document document, List<?> objects, NodeList nodes) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        for (Object object : objects) {
+            Class cls = object.getClass();
+
+            int length = nodes.getLength();
+            for (int i = 0; i < length; i++) {
+                Node parent = nodes.item(0).getParentNode();
+                Element td = document.createElement("td");
+
+                Method method = cls.getMethod(nodes.item(0).getTextContent());
+                Object o = method.invoke(object);
+                if (o == null) o = "";
+
+                String innerText = extractText(o);
+
+                if (!o.equals("")) {
+                    if (Utils.isArabicText(innerText)) {
+                        td.setAttribute("dir", "rtl");
+                    } else {
+                        td.setAttribute("class", "english-font");
                     }
 
                 }
-                if (!notAddd) tableBody.appendChild(tr);
+                td.setTextContent(innerText);
+                parent.appendChild(td);
+                parent.removeChild(nodes.item(0));
             }
+        }
+    }
+
+    private String extractText(Object o) {
+        if (o == null) o = "";
+        String innerText = "";
+        if (o instanceof Date) {
+            innerText = Utils.dateFormat((Date) o, config.getProperty("date.format"));
+        } else {
+            innerText = o.toString();
+        }
+
+        return innerText;
+    }
 
 
-            int length = nodes.getLength();
-            for(int i = 0 ; i < length ; i++){
-                tableBody.removeChild(nodes.item(0));
-            }
-        }else if(nodeName.equals("tr")){
-            for(Object object : objects) {
-                Class cls = object.getClass();
+    private void handleTableBody(org.w3c.dom.Document document, List<?> objects, NodeList nodes) {
+        Node tableBody = nodes.item(0).getParentNode();
+        for (Object object : objects) {
+            Class cls = object.getClass();
 
-                int length = nodes.getLength();
-                for(int i = 0 ; i < length ; i++) {
-                    Node parent = nodes.item(0).getParentNode();
-                    Element td = document.createElement("td");
-//                    if (i ==0 ) td.setAttribute("class", "padding");
+            Element tr = document.createElement("tr");
+            boolean notAddd = false;
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Element td = document.createElement("td");
 
-                    Method method = cls.getMethod(nodes.item(0).getTextContent());
+                try {
+                    Method method = cls.getMethod(nodes.item(i).getTextContent());
                     Object o = method.invoke(object);
+
                     if (o == null) o = "";
-                    String innerText = "";
-                    if (o instanceof Date) {
-                        innerText = Utils.dateFormat((Date) o, config.getProperty("date.format"));
-                    } else {
-                        innerText = o.toString();
-                    }
+
+                    String innerText = extractText(o);
+
                     if (!o.equals("")) {
                         if (Utils.isArabicText(innerText)) {
-//                                td.setAttribute("dir", "rtl");
+                            td.setAttribute("dir", "rtl");
                         } else {
                             td.setAttribute("class", "english-font");
                         }
 
                     }
+
                     td.setTextContent(innerText);
-                    parent.appendChild(td);
-                    parent.removeChild(nodes.item(0));
+                    tr.appendChild(td);
+                } catch (Exception ex) {
+                    notAddd = true;
                 }
+
             }
-        }else {
-            for(Object object: objects){
-                Class cls = object.getClass();
-                int length = nodes.getLength();
-                for(int i = 0 ; i < length ; i++){
-                    Node parent = nodes.item(0).getParentNode();
-
-                    Element div = document.createElement("p");
-                    div.setAttribute("dir", "rtl");
-                    Method method =  cls.getMethod(nodes.item(0).getTextContent());
-                    Object o = method.invoke(object);
-
-                    if (o == null)  o = "";
-
-                    String innerText = "";
-
-                    if (o instanceof Date) {
-                        innerText = Utils.dateFormat( (Date) o,config.getProperty("date.format"));
-                    }else {
-                        innerText = o.toString();
-                    }
-
-
-                    div.setTextContent(innerText);
-
-                    parent.appendChild(div);
-                    parent.removeChild(nodes.item(0));
-                }
-            }
-//            System.out.println("else");
+            if (!notAddd) tableBody.appendChild(tr);
         }
 
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-
-        Transformer transformer = transformerFactory.newTransformer();
-
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-
-        DOMSource source = new DOMSource(document);
-
-        File file = File.createTempFile("template", ".html");
-
-        loggerService.write('i', "create temp file on: " + file.getAbsolutePath());
-        System.out.println("create temp file on: " + file.getAbsolutePath());
-
-        Writer writer = null;
-        BufferedWriter out = null;
-
-        writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
-//        FileWriter writer = new FileWriter(file);
-        StreamResult result = new StreamResult(writer);
-        transformer.transform(source, result);
-
-        return file;
     }
 
-    public String getTemplateName(Object object){
+
+    public String getTemplateName(Object object) {
         Class cls = object.getClass();
         Method[] methods = cls.getMethods();
 
-        Annotation annotation =  cls.getAnnotation(PDFResources.class);
+        Annotation annotation = cls.getAnnotation(PDFResources.class);
 
         String templateName = "";
 
-        if(annotation instanceof PDFResources){
+        if (annotation instanceof PDFResources) {
             templateName = ((PDFResources) annotation).key();
         }
         return templateName;
-    }
-
-    public byte[] convertHTMLToPDF(String filename){
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        Document document = new Document();
-
-
-        PdfWriter writer = null;
-        try {
-            writer = PdfWriter.getInstance(document,byteArrayOutputStream);
-
-            document.open();
-            XMLWorkerHelper.getInstance().parseXHtml(writer, document,
-                    new FileInputStream(filename), Charset.forName("UTF-8"));
-
-            document.close();
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return byteArrayOutputStream.toByteArray();
     }
 
     public byte[] generatePDF(String filename) {
@@ -252,7 +232,7 @@ public class PDFService {
         try {
             Document document = new Document();
 
-            PdfWriter writer = PdfWriter.getInstance(document,byteArrayOutputStream);
+            PdfWriter writer = PdfWriter.getInstance(document, byteArrayOutputStream);
             writer.setInitialLeading(12.5f);
 
             XMLWorkerFontProvider fontProvider =
@@ -295,12 +275,10 @@ public class PDFService {
             p.parse(new FileInputStream(filename), Charset.forName("UTF-8"));
 
             document.close();
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
             System.out.println(e);
-        }
-        catch (DocumentException e){
+        } catch (DocumentException e) {
             e.printStackTrace();
             System.out.println(e);
         }
@@ -308,4 +286,8 @@ public class PDFService {
 
 
     }
+
+
 }
+
+

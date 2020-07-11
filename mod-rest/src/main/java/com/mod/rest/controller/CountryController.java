@@ -2,7 +2,6 @@ package com.mod.rest.controller;
 
 import com.mod.rest.model.Country;
 import com.mod.rest.model.CountryLeader;
-import com.mod.rest.model.Image;
 import com.mod.rest.repository.CountryLeaderRepository;
 import com.mod.rest.repository.CountryRepository;
 import com.mod.rest.service.ImageService;
@@ -29,7 +28,6 @@ import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @RestController

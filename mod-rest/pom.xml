@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-<!--"C:\Program Files (x86)\JetBrains\IntelliJ IDEA 2016.3.4\plugins\maven\lib\maven3\bin\mvn" clean package
+    <!--"C:\Program Files (x86)\JetBrains\IntelliJ IDEA 2016.3.4\plugins\maven\lib\maven3\bin\mvn" clean package
 
-java -jar -Dspring.profiles.active=staging mod-rest-1.0-SNAPSHOT.jar-->
+    java -jar -Dspring.profiles.active=staging mod-rest-1.0-SNAPSHOT.jar-->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -19,23 +19,22 @@ java -jar -Dspring.profiles.active=staging mod-rest-1.0-SNAPSHOT.jar-->
     <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <!--<maven.compiler.source>1.8</maven.compiler.source>-->
+        <!--<maven.compiler.target>1.8</maven.compiler.target>-->
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <maven.resources.encoding>UTF-8</maven.resources.encoding>
+
     </properties>
 
 
     <dependencies>
+
         <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20190722</version>
         </dependency>
-
-
-
 
 
         <dependency>
@@ -145,6 +144,7 @@ java -jar -Dspring.profiles.active=staging mod-rest-1.0-SNAPSHOT.jar-->
             <version>5.5.13</version>
         </dependency>
 
+
         <!-- https://mvnrepository.com/artifact/com.itextpdf.tool/xmlworker -->
         <dependency>
             <groupId>com.itextpdf.tool</groupId>
@@ -156,6 +156,51 @@ java -jar -Dspring.profiles.active=staging mod-rest-1.0-SNAPSHOT.jar-->
             <groupId>com.microsoft.ews-java-api</groupId>
             <artifactId>ews-java-api</artifactId>
             <version>2.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>html2pdf</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.13.1</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/javax.xml.soap/javax.xml.soap-api -->
+        <dependency>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>javax.xml.soap-api</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.xml.ws/jaxws-api -->
+        <dependency>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-ri</artifactId>
+            <version>2.3.0</version>
+            <type>pom</type>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
         </dependency>
 
 
@@ -210,6 +255,6 @@ java -jar -Dspring.profiles.active=staging mod-rest-1.0-SNAPSHOT.jar-->
         </plugins>
 
     </build>
-    
+
 
 </project>
