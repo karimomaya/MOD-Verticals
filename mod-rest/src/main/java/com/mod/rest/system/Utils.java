@@ -344,7 +344,7 @@ public class Utils {
             beginCalendar.setTime(startDate);
             finishCalendar.setTime(endDate);
             if(((Timestamp) startDate).toLocalDateTime().getMonth().getValue() != ((Timestamp) endDate).toLocalDateTime().getMonth().getValue()) {
-                if(((Timestamp) startDate).toLocalDateTime().getMonth().getValue() != 12 )
+               // if(((Timestamp) startDate).toLocalDateTime().getMonth().getValue() != 12 )
                 finishCalendar.add(Calendar.MONTH, 1);
             }
 
