@@ -8,6 +8,9 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.Date;
+import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 /**
  * Created by amira.sherif on 3/16/2020.
@@ -65,7 +68,7 @@ public class RiskReportHelper {
     @ColumnName(key = "الأولوية")
     public String getPriority() {
         switch (this.priority){
-            case 0:
+            case 1:
                 return "منخفضة";
             case 5:
                 return "متوسطة";
@@ -115,10 +118,10 @@ public class RiskReportHelper {
             return "";
         }
         else {
-            MainActivity a = (MainActivity) removeNullValue(this.project);
-            if (a instanceof MainActivity) {
-                return a.getActivityName();
-            }
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityName();
+//            }
             return "";
         }
     }
@@ -133,10 +136,10 @@ public class RiskReportHelper {
             return "";
         }
         else {
-            MainActivity a = (MainActivity) removeNullValue(this.project);
-            if (a instanceof MainActivity) {
-                return a.getActivityDescription();
-            }
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityDescription();
+//            }
             return "";
         }
     }
