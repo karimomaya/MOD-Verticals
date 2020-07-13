@@ -75,8 +75,8 @@ public class PDFController {
     @Autowired
     Config config;
 
-    @Autowired
-    DocManagementService docManService;
+//    @Autowired
+//    DocManagementService docManService;
 
 
     @GetMapping("export/{text}")
@@ -432,7 +432,7 @@ public class PDFController {
                 temp.deleteOnExit();
 
                 Files.write(Path.of(temp.toURI()), bytes);
-                docManService.uploadDocument(temp, Long.parseLong(nodeId));
+//                docManService.uploadDocument(temp, Long.parseLong(nodeId));
 
             } catch (IOException e) {
                 e.printStackTrace();

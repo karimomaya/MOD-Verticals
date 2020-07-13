@@ -17,9 +17,10 @@ public class DiscussionPointDIA {
     long id;
     String field;
     String suggestedBy;
+    String notes;
     String discussionPoint_to_countryDisplayFile_Id;
 
-    @Transient
-    List<Test> tests;
+//    @Transient
+//    List<Test> tests;
 
 }

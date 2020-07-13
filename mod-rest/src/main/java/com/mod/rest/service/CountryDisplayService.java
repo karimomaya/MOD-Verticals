@@ -63,15 +63,21 @@ public class CountryDisplayService {
         List<DiscussionPointDIA> discussionPointDIAList = dpRepo.getDiscussionPointDIAByCountryDisplayFileId(id);
 
 
-        for (DiscussionPointDIA discussionPointDIA : discussionPointDIAList) {
-            ArrayList<Test> tests = new ArrayList<>();
-            Test test = new Test("Name", 11, new Date());
-            tests.add(test);
-            Test test2 = new Test("Name 2", 22, new Date());
-            tests.add(test2);
-
-            discussionPointDIA.setTests(tests);
-        }
+//        for (DiscussionPointDIA discussionPointDIA : discussionPointDIAList) {
+//            ArrayList<Test> tests = new ArrayList<>();
+//            Test test = new Test("Name", 11, new Date());
+//            tests.add(test);
+//            Test test2 = new Test("Name 2", 22, new Date());
+//            tests.add(test2);
+//            Test test3 = new Test("Name 2", 22, new Date());
+//            tests.add(test3);
+//            Test test4 = new Test("Name 2", 22, new Date());
+//            tests.add(test4);
+//            Test test5 = new Test("Name 2", 22, new Date());
+//            tests.add(test5);
+//
+//            discussionPointDIA.setTests(tests);
+//        }
         lookupService.substituteLookupIds(discussionPointDIAList, "discussionPointField", "field", "ar");
         lookupService.substituteLookupIds(discussionPointDIAList, "countryLookup", "suggestedBy", "ar");
 
