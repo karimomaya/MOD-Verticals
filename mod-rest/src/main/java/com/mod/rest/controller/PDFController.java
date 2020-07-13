@@ -431,7 +431,8 @@ public class PDFController {
                 temp = File.createTempFile(fileName + "-report", ".pdf");
                 temp.deleteOnExit();
 
-                Files.write(Path.of(temp.toURI()), bytes);
+                Files.write(Paths.get(temp.toURI()), bytes);
+//                Files.write(Path.of(temp.toURI()), bytes);
 //                docManService.uploadDocument(temp, Long.parseLong(nodeId));
 
             } catch (IOException e) {

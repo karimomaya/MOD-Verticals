@@ -439,10 +439,14 @@ public class ReportService {
         user.getId();
 
         long[] users = reportObject.getUsers();
-        int poistion = 0;
+//        int poistion = 0;
         int total = users.length;
-        int[] riskDataOpened = new int[total];
-        int[] riskDataClosed = new int[total];
+        int[] riskDataOpened;
+//        = new int[total];
+        int[] riskDataClosed;
+//        = new int[total];
+        List<Integer> riskDataOpenedAL = new ArrayList<>();
+        List<Integer> riskDataCloseAL = new ArrayList<>();
 
         GraphDataHelper graphDataHelperOpened = new GraphDataHelper();
         GraphDataHelper graphDataHelperClosed = new GraphDataHelper();
@@ -463,12 +467,14 @@ public class ReportService {
             if (inProgress == 0 && closed == 0){
                 total--;
                 for (GraphDataHelper g : graphDataHelpers) g.setData((int[]) resizeArray(g.getData(), total));
-                poistion++;
+//                poistion++;
                 continue;
             }
 
-            riskDataOpened[i-poistion] = inProgress;
-            riskDataClosed[i-poistion] = closed;
+//            riskDataOpened[i-poistion] = inProgress;
+//            riskDataClosed[i-poistion] = closed;
+            riskDataOpenedAL.add(inProgress);
+            riskDataCloseAL.add(closed);
 
             String name = userRepository.findById(users[i]).get().getDisplayName();
             arrayList.add(name);
@@ -476,6 +482,15 @@ public class ReportService {
             usedNameOpened =  " مفتوحه";
             usedNameClosed =  " مغلقة";
         }
+
+        riskDataOpened = new int[riskDataOpenedAL.size()];
+        riskDataClosed = new int[riskDataCloseAL.size()];
+
+        for(int i = 0; i < riskDataOpenedAL.size() ; i++){
+            riskDataOpened[i] = riskDataOpenedAL.get(i);
+            riskDataClosed[i] = riskDataCloseAL.get(i);
+        }
+
         graphDataHelperOpened.setName(usedNameOpened);
         graphDataHelperClosed.setName(usedNameClosed);
         graphDataHelperClosed.setData(riskDataClosed);
@@ -637,18 +652,20 @@ public class ReportService {
 
                 for(int i=0; i< users.length; i++) {
                     issueList1 = issueRepository.getDelayedIssues(1, Integer.MAX_VALUE, users[i] + "");
-                        for (Issue issue : issueList1) {
-                            LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
-                            int indexOfIssue = (int) ChronoUnit.MONTHS.between(
-                                    startDate.withDayOfMonth(1),
-                                    date.withDayOfMonth(date.lengthOfMonth()));
-                            issueDate[indexOfIssue] += 1;
-                        }
-                    GraphDataHelper graphDataHelper = new GraphDataHelper();
-                    graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-                    graphDataHelper.setData(issueDate);
-                    graphDataHelpers.add(graphDataHelper);
-                    issueDate = new int[months];
+                       if(issueList1.size() != 0){
+                           for (Issue issue : issueList1) {
+                               LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
+                               int indexOfIssue = (int) ChronoUnit.MONTHS.between(
+                                       startDate.withDayOfMonth(1),
+                                       date.withDayOfMonth(date.lengthOfMonth()));
+                               issueDate[indexOfIssue] += 1;
+                           }
+                           GraphDataHelper graphDataHelper = new GraphDataHelper();
+                           graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                           graphDataHelper.setData(issueDate);
+                           graphDataHelpers.add(graphDataHelper);
+                           issueDate = new int[months];
+                       }
                 }
             }
         } else if (type.equals("activityProjectIssueRelated")) {

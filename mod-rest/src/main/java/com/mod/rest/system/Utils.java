@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -342,11 +343,14 @@ public class Utils {
         ArrayList<String> Dates = new ArrayList<>();
 //        try {
             beginCalendar.setTime(startDate);
+            beginCalendar.set(Calendar.DAY_OF_MONTH,1);
             finishCalendar.setTime(endDate);
-            if(((Timestamp) startDate).toLocalDateTime().getMonth().getValue() != ((Timestamp) endDate).toLocalDateTime().getMonth().getValue()) {
-               // if(((Timestamp) startDate).toLocalDateTime().getMonth().getValue() != 12 )
-                finishCalendar.add(Calendar.MONTH, 1);
-            }
+            int lastDayOfMonth = finishCalendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+            finishCalendar.set(Calendar.DAY_OF_MONTH, lastDayOfMonth);
+//            if(((Timestamp) startDate).toLocalDateTime().getMonth().getValue() != ((Timestamp) endDate).toLocalDateTime().getMonth().getValue()) {
+//                if(((Timestamp) startDate).toLocalDateTime().getMonth().getValue() != 12 )
+//                    finishCalendar.add(Calendar.MONTH, 1);
+//            }
 
 //        } catch (ParseException e) {
 //            e.printStackTrace();
