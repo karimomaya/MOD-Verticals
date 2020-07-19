@@ -33,6 +33,8 @@ public class ReportService {
     @Autowired
     TaskRepository taskRepository;
     @Autowired
+    TaskWithPerformerRepository taskWithPerformerRepository;
+    @Autowired
     UserHelperService userHelperService;
     @Autowired
     UserRepository userRepository;
@@ -102,12 +104,12 @@ public class ReportService {
 
     public <T> T execute(ReportObject reportObject){
 
-        //Case طلبات شراء
+    //Case طلبات شراء
         if (reportObject.getReportType() == 50 ) {
             List<PurchaseOrderReport> purchaseOrderReports = purchaseOrderRepository.getPurchaseOrderReport(reportObject.getStartDateString(),reportObject.getEndDateString(), reportObject.getEntityName(), 0, Integer.MAX_VALUE, reportObject.getInput());
             return (T) excelWriterService.generate(purchaseOrderReports);
         }
-        // Case Contact Tracker
+    // Case Contact Tracker
         if (reportObject.getReportType() == 20 ) {
             List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
             return (T) excelWriterService.generate(entityReports);
@@ -122,7 +124,7 @@ public class ReportService {
             return (T) excelWriterService.generate(ministryUsersReports);
         }
 
-
+    // Risk Management
         //•	تقرير التحديات المتأخرة
         if (reportObject.getReportType() == 10){
             String ids = "";
@@ -342,18 +344,21 @@ public class ReportService {
                 return (T) excelWriterService.generate(issues);
             }
         }
-        if (reportObject.getReportType() == 6){
-            if (reportObject.getDetectedReportType() == 0){ // graph
-                return (T)  reportHelper(reportObject, "riskReport");
-            }else  if (reportObject.getDetectedReportType() == 1){ // table
-                return (T) taskService.addUserToTask(taskRepository.getIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement", reportObject.getPageNumber(), reportObject.getPageSize()));
-            } else if(reportObject.getDetectedReportType() == 2) { // count
-                return (T) taskRepository.cGetIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement");
-            } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<TaskReportHelper> tasks =  taskReportHelperRepository.getIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement", 1, Integer.MAX_VALUE);
-                return (T) excelWriterService.generate(tasks);
-            }
-        }else if (reportObject.getReportType() == 1) {
+//        if (reportObject.getReportType() == 6){
+//            if (reportObject.getDetectedReportType() == 0){ // graph
+//                return (T)  reportHelper(reportObject, "riskReport");
+//            }else  if (reportObject.getDetectedReportType() == 1){ // table
+//                return (T) taskService.addUserToTask(taskRepository.getIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement", reportObject.getPageNumber(), reportObject.getPageSize()));
+//            } else if(reportObject.getDetectedReportType() == 2) { // count
+//                return (T) taskRepository.cGetIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement");
+//            } else if(reportObject.getDetectedReportType() == 3) { // file
+//                List<TaskReportHelper> tasks =  taskReportHelperRepository.getIntegrationTaskReport(reportObject.getUserIds(), reportObject.getRiskIds(), "RiskManagement", 1, Integer.MAX_VALUE);
+//                return (T) excelWriterService.generate(tasks);
+//            }
+//        }
+    //  Task Management
+        // Delayed Tasks report
+        else if (reportObject.getReportType() == 1) {
             if (reportObject.getDetectedReportType() == 0){ // graph
 //                return (T)  reportHelper(reportObject, "delayedTaskReport");
                 return (T)  taskReportUserHelper(reportObject, "DelayedTaskReport");
@@ -365,7 +370,9 @@ public class ReportService {
                 List<TaskReportHelper> tasks = taskReportHelperRepository.getDelayedTasks(reportObject.getUserIds(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
-        }else if (reportObject.getReportType() == 2) { // if user productivity report
+        }
+        // User productivity report
+        else if (reportObject.getReportType() == 2) {
             if (reportObject.getDetectedReportType() == 0) { // graph
                 return (T) taskReportUserHelper(reportObject, "UserProductivityReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
@@ -376,7 +383,9 @@ public class ReportService {
                 List<TaskReportHelper> tasks = taskReportHelperRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
-        }else if (reportObject.getReportType() == 3) { // if completed tasks report
+        }
+        // Completed tasks report
+        else if (reportObject.getReportType() == 3) {
             if (reportObject.getDetectedReportType() == 0) { // graph
                 return (T) taskReportUserHelper(reportObject, "CompletedTaskReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
@@ -390,7 +399,8 @@ public class ReportService {
                 List<TaskReportHelper> tasks = taskReportHelperRepository.getCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate(), 1, Integer.MAX_VALUE);
                 return (T) excelWriterService.generate(tasks);
             }
-        }else if(reportObject.getReportType() == 4 || reportObject.getReportType() == 7){
+        }
+        else if(reportObject.getReportType() == 4 || reportObject.getReportType() == 7){
             if (reportObject.getDetectedReportType() == 0) { // graph
                 if(reportObject.getReportType() == 4){
                     return (T) taskReportHelper(reportObject, getProjectReportType(reportObject.getStatus()));
@@ -413,7 +423,9 @@ public class ReportService {
                 List<TaskReportHelper> tasks =  taskService.getTaskReportHelperProjectBasedOnStatus(reportObject.getStatus(), reportObject.getUserIds(), reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getProjectIds(), 1, Integer.MAX_VALUE, reportObject.getSAMLart());
                 return (T) excelWriterService.generate(tasks);
             }
-        }else if (reportObject.getReportType() == 8) { // if completed tasks report
+        }
+        // Task Assignments
+        else if (reportObject.getReportType() == 8) {
             if (reportObject.getDetectedReportType() == 0) { // graph
                 return (T) taskReportHelper(reportObject, "TaskAssignmentReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
@@ -834,50 +846,6 @@ public class ReportService {
         return result;
     }
 
-    public List<GraphDataHelper> reportHelper(ReportObject reportObject, String type ){
-        List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
-        long[] users = reportObject.getUsers();
-
-        for(int i=0; i< users.length; i++){
-            List<Task> taskList = null;
-
-            String user = ";"+  users[i] +";";
-            if (type == "riskReport"){
-                taskList = taskRepository.getIntegrationTaskReport(user, reportObject.getRiskIds(), "RiskManagement", 1, Integer.MAX_VALUE );
-            } else if (type == "delayedTaskReport"){
-                taskList = taskRepository.getDelayedTasks(user, 1, Integer.MAX_VALUE);
-            }else if(type == "DelayedTaskReportProject"){
-                UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
-                taskList = taskRepository.getDelayedTaskReportProject(";"+users[i]+";", userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(),reportObject.getProjectIds(), 1, Integer.MAX_VALUE );
-            }else if(type == "FinishedTaskReportProject"){
-                UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
-                taskList = taskRepository.getFinishedTaskReportProject(";"+users[i]+";", userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(),reportObject.getProjectIds(), 1, Integer.MAX_VALUE );
-            } else if(type == "AllTaskReportProject") {
-                UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
-                taskList = taskRepository.getFinishedAndDelayedTaskReportProject(";"+users[i]+";", userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(),reportObject.getProjectIds(), 1, Integer.MAX_VALUE );
-            }else if (type.equals("delayedTaskRiskReport")){
-                taskList = taskRepository.getDelayedTaskRiskReport(1, Integer.MAX_VALUE, reportObject.getRiskIds(), users[i] +"" );
-            }else if (type.equals("inProgressDelayedClosedTaskRisksReport")){
-                taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(1, Integer.MAX_VALUE, reportObject.getRiskIds(), users[i] +"" );
-            }else if (type.equals("delayedTaskIssueReport")) {
-                taskList = taskRepository.getDelayedTaskIssueReport(1, Integer.MAX_VALUE, reportObject.getIssueIds(), users[i] +"" );
-            }else if (type.equals("inProgressDelayedClosedTaskIssuesReport")) {
-                taskList = taskRepository.getDelayedTaskIssueReport(1, Integer.MAX_VALUE, reportObject.getIssueIds(), users[i] +"" );
-            }
-            if (taskList.size() == 0) continue;
-            int[] taskDate = new int[12];
-            for (Task task : taskList) {
-                int num = Utils.getMonthFromDate(task.getDueDate());
-                taskDate[num] += 1;
-            }
-            GraphDataHelper graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-            graphDataHelper.setData(taskDate);
-            graphDataHelpers.add(graphDataHelper);
-        }
-        return graphDataHelpers;
-    }
-
     private String getProjectReportType(int projectStatus){
         if (projectStatus == 1) { // delayed
             return  "DelayedTaskReportProject";
@@ -893,12 +861,15 @@ public class ReportService {
     public List<GraphDataHelper> taskReportUserHelper(ReportObject reportObject,String type){
         List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
         long[] users = reportObject.getUsers();
+        List<Long> usersAL = new ArrayList<>();
+//        int arraySize = users.length;
 
-        int arraySize = users.length;
-
-        int[] completedTasks = new int[arraySize];
-        int[] inProgressTasks = new int[arraySize];
-        int[] delayedTasks = new int[arraySize];
+        int[] completedTasks;
+        List<Integer> completedTasksAL = new ArrayList<>();
+        int[] inProgressTasks;
+        List<Integer> inProgressTasksAL = new ArrayList<>();
+        int[] delayedTasks;
+        List<Integer> delayedTasksAL = new ArrayList<>();
 
         for(int i=0; i< users.length; i++){
             List<Task> taskList = null;
@@ -909,63 +880,114 @@ public class ReportService {
 
                 if (taskList.size() == 0) continue;
 
-                delayedTasks[i] = taskList.size();
-//                for (Task task : taskList) {
-//                    if(task.getStatus() == 1){
-//                        delayedTasks[i] += 1;
-//                    }else{
-//                        completedTasks[i] += 1;
-//                    }
-//
-//                }
+                usersAL.add(users[i]);
+                int delayed = taskList.size();
+                delayedTasksAL.add(delayed);
+//                delayedTasks[i] = taskList.size();
             }else if(type == "UserProductivityReport"){
-                taskList = taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
+                List<TaskWithPerformer> taskWithPerformerList = taskWithPerformerRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(),user, 1, Integer.MAX_VALUE);
 
-                if (taskList.size() == 0) continue;
+                if (taskWithPerformerList.size() == 0) continue;
 
-                for (Task task : taskList) {
-                    if(task.getStatus() == 3 || task.getStatus() == 12 || task.getProgress() == 100){
-                        completedTasks[i] += 1;
-                    }else if (task.getDueDate().before(new Date())) {
-                        delayedTasks[i] += 1;
+                usersAL.add(users[i]);
+
+                Date tomorrowDate = new Date();
+                Calendar c = Calendar.getInstance();
+                c.setTime(tomorrowDate);
+                c.add(Calendar.DATE, 1);
+                tomorrowDate = c.getTime();
+
+                int completed = 0;
+                int delayed = 0;
+                int inProgress = 0;
+                for (TaskWithPerformer task : taskWithPerformerList) {
+                    if(task.getStatus() == 3 || task.getStatus() == 12 ||(task.getStatus() == 2 && task.getPerformerStatus() == 2)){
+                        completed += 1;
+//                        completedTasks[i] += 1;
+                    }else if (task.getDueDate().before(tomorrowDate) && (task.getStatus() == 1 || (task.getStatus() == 2 && task.getPerformerStatus() <= 1))) {
+                        delayed += 1;
+//                        delayedTasks[i] += 1;
                     } else {
-                        inProgressTasks[i] += 1;
+                        inProgress += 1;
+//                        inProgressTasks[i] += 1;
                     }
                 }
+                completedTasksAL.add(completed);
+                delayedTasksAL.add(delayed);
+                inProgressTasksAL.add(inProgress);
             }else if(type == "CompletedTaskReport"){
                 UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
                 taskList = taskRepository.getCompletedTaskReport(user, userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(), 1, Integer.MAX_VALUE);
 
                 if (taskList.size() == 0) continue;
 
-                for (Task task : taskList) {
-                        completedTasks[i] += 1;
-                }
+                usersAL.add(users[i]);
+                int completed = taskList.size();
+                completedTasksAL.add(completed);
+//                for (Task task : taskList) {
+//                    completedTasks[i] += 1;
+//                }
             }else if(type == "delayedTaskRiskReport"){
 
                 taskList= taskRepository.getDelayedTaskRiskReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getRiskIds(),  users[i] +"");
 
-                //taskList = taskRepository.getDelayedTasks(user, 1, Integer.MAX_VALUE);
+                if (taskList.size() == 0) continue;
+
+                usersAL.add(users[i]);
+                int completed = 0;
+                int delayed = 0;
+                for (Task task : taskList) {
+                    if(task.getStatus() == 1){
+                        delayed += 1;
+//                        delayedTasks[i] += 1;
+                    }else{
+                        completed += 1;
+//                        completedTasks[i] += 1;
+                    }
+                }
+                completedTasksAL.add(completed);
+                delayedTasksAL.add(delayed);
+            }else if(type == "delayedTaskIssueReport"){
+                taskList = taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds(), users[i] +"");
 
                 if (taskList.size() == 0) continue;
 
+                usersAL.add(users[i]);
+                int completed = 0;
+                int delayed = 0;
                 for (Task task : taskList) {
                     if(task.getStatus() == 1){
-                        delayedTasks[i] += 1;
+                        delayed += 1;
+//                        delayedTasks[i] += 1;
                     }else{
-                        completedTasks[i] += 1;
+                        completed += 1;
+//                        completedTasks[i] += 1;
                     }
                 }
-            }else if(type == "delayedTaskIssueReport"){
-                taskList = taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds(), users[i] +"");
-                for (Task task : taskList) {
-                    if(task.getStatus() == 1){
-                        delayedTasks[i] += 1;
-                    }else{
-                        completedTasks[i] += 1;
-                    }
-                }
+                completedTasksAL.add(completed);
+                delayedTasksAL.add(delayed);
             }
+        }
+
+        users = new long[usersAL.size()];
+        for(int i = 0 ; i < usersAL.size(); i++){
+            users[i] = usersAL.get(i);
+        }
+        reportObject.setUsers(users);
+
+        completedTasks = new int[completedTasksAL.size()];
+        for(int i = 0 ; i < completedTasksAL.size(); i++){
+            completedTasks[i] = completedTasksAL.get(i);
+        }
+
+        delayedTasks = new int[delayedTasksAL.size()];
+        for(int i = 0 ; i < delayedTasksAL.size(); i++){
+            delayedTasks[i] = delayedTasksAL.get(i);
+        }
+
+        inProgressTasks = new int[inProgressTasksAL.size()];
+        for(int i = 0 ; i < inProgressTasksAL.size(); i++){
+            inProgressTasks[i] = inProgressTasksAL.get(i);
         }
 
         GraphDataHelper graphDataHelper = null;
@@ -1142,11 +1164,13 @@ public class ReportService {
         } else if (type == "TaskAssignmentReport"){
             taskList = taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getType(), 1, Integer.MAX_VALUE );
             if(reportObject.getType() == -1){
-                int[] countArray = new int[5];
+                int[] countArray = new int[6];
                 for (Task task : taskList){
                     int assignmentType = task.getTypeOfAssignment();
                     if(assignmentType > 0 && assignmentType < 6){
-                        countArray[assignmentType-1] += 1;
+                        countArray[assignmentType] += 1;
+                    }else {
+                        countArray[0] += 1;
                     }
                 }
 
@@ -1155,6 +1179,7 @@ public class ReportService {
                 graphDataHelper.setData(countArray);
                 graphDataHelpers.add(graphDataHelper);
 
+                xaxis.add("بدون تكليف");
                 xaxis.add("طلب تقرير/دراسة");
                 xaxis.add("طلب معلومات");
                 xaxis.add("طلب ملخص");
@@ -1484,6 +1509,50 @@ public class ReportService {
         result.put(graphDataHelpers, xaxis);
         return result;
     }
+
+//    public List<GraphDataHelper> reportHelper(ReportObject reportObject, String type ){
+//        List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
+//        long[] users = reportObject.getUsers();
+//
+//        for(int i=0; i< users.length; i++){
+//            List<Task> taskList = null;
+//
+//            String user = ";"+  users[i] +";";
+//            if (type == "riskReport"){
+//                taskList = taskRepository.getIntegrationTaskReport(user, reportObject.getRiskIds(), "RiskManagement", 1, Integer.MAX_VALUE );
+//            } else if (type == "delayedTaskReport"){
+//                taskList = taskRepository.getDelayedTasks(user, 1, Integer.MAX_VALUE);
+//            }else if(type == "DelayedTaskReportProject"){
+//                UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
+//                taskList = taskRepository.getDelayedTaskReportProject(";"+users[i]+";", userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(),reportObject.getProjectIds(), 1, Integer.MAX_VALUE );
+//            }else if(type == "FinishedTaskReportProject"){
+//                UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
+//                taskList = taskRepository.getFinishedTaskReportProject(";"+users[i]+";", userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(),reportObject.getProjectIds(), 1, Integer.MAX_VALUE );
+//            } else if(type == "AllTaskReportProject") {
+//                UserHelper userHelper = sessionService.getSession(reportObject.getSAMLart());
+//                taskList = taskRepository.getFinishedAndDelayedTaskReportProject(";"+users[i]+";", userHelper.getId(), reportObject.getStartDate(), reportObject.getEndDate(),reportObject.getProjectIds(), 1, Integer.MAX_VALUE );
+//            }else if (type.equals("delayedTaskRiskReport")){
+//                taskList = taskRepository.getDelayedTaskRiskReport(1, Integer.MAX_VALUE, reportObject.getRiskIds(), users[i] +"" );
+//            }else if (type.equals("inProgressDelayedClosedTaskRisksReport")){
+//                taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(1, Integer.MAX_VALUE, reportObject.getRiskIds(), users[i] +"" );
+//            }else if (type.equals("delayedTaskIssueReport")) {
+//                taskList = taskRepository.getDelayedTaskIssueReport(1, Integer.MAX_VALUE, reportObject.getIssueIds(), users[i] +"" );
+//            }else if (type.equals("inProgressDelayedClosedTaskIssuesReport")) {
+//                taskList = taskRepository.getDelayedTaskIssueReport(1, Integer.MAX_VALUE, reportObject.getIssueIds(), users[i] +"" );
+//            }
+//            if (taskList.size() == 0) continue;
+//            int[] taskDate = new int[12];
+//            for (Task task : taskList) {
+//                int num = Utils.getMonthFromDate(task.getDueDate());
+//                taskDate[num] += 1;
+//            }
+//            GraphDataHelper graphDataHelper = new GraphDataHelper();
+//            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+//            graphDataHelper.setData(taskDate);
+//            graphDataHelpers.add(graphDataHelper);
+//        }
+//        return graphDataHelpers;
+//    }
 //    public List<GraphDataHelper> reportDateHelper( ReportObject reportObject,  String type ){
 //        List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
 //        long days = Utils.differenceBetweenTwoDates(reportObject.getStartDate(), reportObject.getEndDate());

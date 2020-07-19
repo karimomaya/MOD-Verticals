@@ -1,6 +1,7 @@
 package com.mod.rest.repository;
 
 import com.mod.rest.model.Task;
+import com.mod.rest.model.TaskWithPerformer;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

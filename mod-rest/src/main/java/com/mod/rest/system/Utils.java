@@ -210,6 +210,63 @@ public class Utils {
         return null;
     }
 
+    public  static String getProgressColor(int progress, Date startDate, Date endDate ){
+
+        String result = "neural"; // 0 neural; 1
+
+        Date toddayDate = new Date();
+
+        long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(startDate, endDate);
+        long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(startDate, toddayDate );
+
+
+        if(diffTotal == 0){
+            diffTotal= 1;
+        }
+        long  expectedProgress = (diffnow/ diffTotal)*100;
+
+
+
+        if (progress == 100  ) {
+            result = "neural";
+        }
+        else {
+            result = getProgressHelper(progress, startDate, endDate);
+        }
+
+        return  result;
+
+    }
+
+    public static String getProgressHelper(int progress, Date startDate, Date endDate ) {
+
+        String result = "neural"; // 0 neural; 1
+
+        Date toddayDate = new Date();
+
+        long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(startDate, endDate);
+        long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(startDate, toddayDate);
+
+
+        if (diffTotal == 0) {
+            diffTotal = 1;
+        }
+        long expectedProgress = (diffnow / diffTotal) * 100;
+
+
+        if (startDate.compareTo(toddayDate) > 0 ) {
+            result = "neural";
+        }else  if (progress < expectedProgress + 10 && progress > expectedProgress - 10) {
+            result = "expected";
+        } else if (progress > expectedProgress) {
+            result = "exceed";
+        } else if (progress < expectedProgress) {
+            result = "underestimated";
+        } else result = "expected";
+
+        return result;
+
+    }
     public static Document convertStringToXMLDocument(String xmlString) {
         //Parser that produces DOM object trees from XML content
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();

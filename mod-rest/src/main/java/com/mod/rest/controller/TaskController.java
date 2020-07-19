@@ -13,6 +13,7 @@ import com.mod.rest.service.*;
 import com.mod.rest.system.ResponseBuilder;
 import com.mod.rest.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -53,6 +54,8 @@ public class TaskController  {
     PDFService pdfService;
     @Autowired
     ReportService reportService;
+    @Autowired
+    private Environment env;
 
     @GetMapping("task-timeline/{startDate}/{endDate}/{users}/{project}/{status}")
     public ResponseBuilder<String> report(@RequestHeader("samlart") String SAMLart,
@@ -94,9 +97,7 @@ public class TaskController  {
 
 
         return responseBuilder.data(result.toString()).build();
-
     }
-
 
     @GetMapping("export/pdf/{reportStr}")
     @ResponseBody
@@ -178,63 +179,6 @@ public class TaskController  {
         return result;
     }
 
-    private String detectTaskColor(TaskPerformerHelper task){
-
-        String color  = "#165080";
-        int taskStatus = task.getTaskStatus();
-
-        if (taskStatus == 3){
-            color = "#165080";
-        }else {
-
-            long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(task.getStartDate(), task.getDueDate());
-            long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(task.getStartDate(), new Date());
-
-            long expectedProgress = 90;
-
-            try
-            {
-                if(diffTotal == 0){
-                    diffTotal= 1;
-                }
-                expectedProgress = (diffnow/ diffTotal)*100;
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-
-            if(task.getProgress() > expectedProgress ){
-//                color = "#4aa472";
-                if(task.getProgress() == 100){
-                    if(task.getTargetPerformerStatus() < 2){
-                        color = "#d44e5a";
-                    }else if(task.getTargetPerformerStatus() == 2){
-                        color = "#38A32B";
-                    }
-                }else {
-                    color = "#38A32B";
-                }
-            } else if(task.getProgress() < expectedProgress){
-                if(task.getProgress() == 100){
-                    if(task.getTargetPerformerStatus() < 2){
-                        color = "#d44e5a";
-                    }else if(task.getTargetPerformerStatus() == 2){
-                        color = "#38A32B";
-                    }
-                }else {
-                    color = "#d44e5a";
-                }
-//            else if (task.getProgress() < expectedProgress) {
-//                color = "#d44e5a";
-            }else if (taskStatus == 1){
-                color = "#d3d3d3";
-            }else if (task.getProgress() < expectedProgress + 10  && task.getProgress() > expectedProgress - 10 ){
-                color = "#c9a869";
-            }
-        }
-
-        return color;
-    }
-
     public JSONArray formulateJSONWithAllUsers(String SAMLart, Date startDate, Date endDate, int project, int status){
         Document document =  userHelperService.getSubUsersDocument(SAMLart);
         NodeList userId = document.getElementsByTagName("UserEntityId");
@@ -278,6 +222,76 @@ public class TaskController  {
 
         }
         return result;
+    }
+
+
+
+
+    private String detectTaskColor(TaskPerformerHelper task){
+
+        int taskStatus = task.getTaskStatus();
+
+        String colorConfig = Utils.getProgressColor(task.getProgress(), task.getStartDate(), task.getDueDate());
+
+        if (colorConfig.equals("neural")){
+            if (taskStatus != 3){
+                colorConfig = Utils.getProgressHelper(task.getProgress(), task.getStartDate(), task.getDueDate());
+            }
+        }
+
+        String color = "#"+env.getProperty(colorConfig);
+//
+//        if (taskStatus == 3){
+//            color = "#165080";
+//        }else {
+
+//            long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(task.getStartDate(), task.getDueDate());
+//            long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(task.getStartDate(), new Date());
+//
+//            long expectedProgress = 90;
+//
+//            try
+//            {
+//                if(diffTotal == 0){
+//                    diffTotal= 1;
+//                }
+//                expectedProgress = (diffnow/ diffTotal)*100;
+//            } catch (Exception e){
+//                e.printStackTrace();
+//            }
+
+//            if(task.getProgress() > expectedProgress ){
+////                color = "#4aa472";
+//                if(task.getProgress() == 100){
+//                    if(task.getTargetPerformerStatus() < 2){
+//                        color = "#d44e5a";
+//                    }else if(task.getTargetPerformerStatus() == 2){
+//                        color = "#38A32B";
+//                    }
+//                }else {
+//                    color = "#38A32B";
+//                }
+//            } else
+//            if(task.getProgress() < expectedProgress){
+//                if(task.getProgress() == 100){
+//                    if(task.getTargetPerformerStatus() < 2){
+//                        color = "#d44e5a";
+//                    }else if(task.getTargetPerformerStatus() == 2){
+//                        color = "#38A32B";
+//                    }
+//                }else {
+//                    color = "#d44e5a";
+//                }
+////            else if (task.getProgress() < expectedProgress) {
+////                color = "#d44e5a";
+//            }else if (taskStatus == 1){
+//                color = "#d3d3d3";
+//            }else if (task.getProgress() < expectedProgress + 10  && task.getProgress() > expectedProgress - 10 ){
+//                color = "#c9a869";
+//            }
+//        }
+
+        return color;
     }
 
 }

@@ -1,7 +1,5 @@
 package com.mod.rest.model;
 
-import com.mod.rest.annotation.ColumnName;
-import com.mod.rest.annotation.PDFResources;
 import com.mod.rest.system.Utils;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,26 +8,22 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by karim.omaya on 10/29/2019.
+ * Created by omaradl on 7/15/2020.
  */
 @Getter
 @Setter
 @Entity
-@Table(name = "O2MyCompanyTaskManagementMOD_TM_entity_Task")
-@PDFResources(key="task-report-template")
-public class Task implements Serializable {
-
+@Immutable
+public class TaskWithPerformer {
     @Id
+    @Column(name="Id")
     long Id;
 
     String taskName;
+    Integer progress;
     Long owner;
     Long createdBy;
     Date dueDate;
@@ -42,13 +36,16 @@ public class Task implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     Project project;
     Boolean singleOrMultiple;
-    Integer progress;
     String entityBWSId;
     String source;
     Integer integrationId;
     Integer typeOfAssignment;
-    /*@OneToMany( mappedBy="task", fetch = FetchType.EAGER)
-    List<TaskPerformer> taskPerformers;*/
+
+    Integer performerId;
+    String performerName;
+    Integer performerStatus;
+    Integer performerProgress;
+
     @Transient
     User userCreatedBy;
     @Transient

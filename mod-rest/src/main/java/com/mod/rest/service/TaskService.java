@@ -32,6 +32,14 @@ public class TaskService {
         return tasks;
     }
 
+    public List<TaskWithPerformer> addUserToTaskWithPerformer(List<TaskWithPerformer> tasks){
+        for (TaskWithPerformer task : tasks){
+            Optional<User> userOwner =  userRepository.findById(task.getOwner());
+            if (userOwner.isPresent()) task.setUserOwner(userOwner.get());
+        }
+        return tasks;
+    }
+
     public List<TaskReportHelper> getTaskReportHelperProjectBasedOnStatus(int projectStatus, String userIds, Date startDate, Date endDate, String projectIds, int pageNumber, int pageSize, String SAMLart){
         List<TaskReportHelper> tasks = null;
         if (projectStatus == 1){ // delayed
