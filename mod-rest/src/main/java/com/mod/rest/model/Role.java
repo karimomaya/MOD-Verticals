@@ -15,16 +15,16 @@ import javax.persistence.Id;
 public class Role {
     @Id
     Long Id;
-    @Column(name="RoleName")
-    String RoleName;
-    @Column(name="UnitId")
-    Integer UnitId;
-    @Column(name="IsHeadRole")
-    Boolean IsHeadRole;
-    @Column(name="HasDirectorateAuthority")
-    Boolean HasDirectorateAuthority;
-    @Column(name="IsUnitOwner")
-    String IsUnitOwner;
+//    @Column(name="RoleName")
+//    String RoleName;
+//    @Column(name="UnitId")
+//    Integer UnitId;
+//    @Column(name="IsHeadRole")
+//    Boolean IsHeadRole;
+//    @Column(name="HasDirectorateAuthority")
+//    Boolean HasDirectorateAuthority;
+//    @Column(name="IsUnitOwner")
+//    String IsUnitOwner;
     @Column(name="roleCode")
     String roleCode;
     @Column(name="RoleName_ar")

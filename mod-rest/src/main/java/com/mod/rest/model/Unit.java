@@ -17,26 +17,26 @@ import java.util.Date;
 public class Unit {
     @Id
     Long Id;
-    @Column(name="UnitName")
-    String UnitName;
-    @Column(name="UnitPathById")
-    String UnitPathById;
-    @Column(name="ParentUnitId")
-    Integer ParentUnitId;
+//    @Column(name="UnitName")
+//    String UnitName;
+//    @Column(name="UnitPathById")
+//    String UnitPathById;
+//    @Column(name="ParentUnitId")
+//    Integer ParentUnitId;
 //    @Column(name="UnitType")
 //    String UnitType;
-    @Column(name="UnitManagerRoleId")
-    Integer UnitManagerRoleId;
-    @Column(name="UnitTypeCode")
-    String UnitTypeCode;
+//    @Column(name="UnitManagerRoleId")
+//    Integer UnitManagerRoleId;
+//    @Column(name="UnitTypeCode")
+//    String UnitTypeCode;
     @Column(name="UnitCode")
     String UnitCode;
-    @Column(name="UnitOwnerRoleId")
-    String UnitOwnerRoleId;
+//    @Column(name="UnitOwnerRoleId")
+//    String UnitOwnerRoleId;
 //    @Column(name="UnitTypeCodeId")
 //    String UnitTypeCodeId;
-    @Column(name="UnitSerial")
-    String UnitSerial;
+//    @Column(name="UnitSerial")
+//    String UnitSerial;
     @Column(name="UnitName_ar")
     String UnitName_ar;
     @Column(name="UnitName_en")
