@@ -19,6 +19,7 @@ import com.mod.rest.system.Utils;
 import lombok.Data;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -117,12 +118,16 @@ public class InstitutionalPlanController {
 
     }
 
-    @GetMapping("/SubActivity/TimeLine/{unitTypeCode}/{unitCode}/{institutionalPlan}")
+    @GetMapping("/SubActivity/TimeLine/{unitTypeCode}/{unitCode}/{institutionalPlan}/{startDate}/{endDate}")
     public ResponseBuilder<String> subActivityTimeLine (@PathVariable("unitCode") String unitCode,@PathVariable("unitTypeCode") String unitTypeCode
-                                                            ,@PathVariable("institutionalPlan") String institutionalPlan){
+                                                            ,@PathVariable("institutionalPlan") String institutionalPlan,
+                                                            @PathVariable("startDate") String startDateStr
+                                                            ,@PathVariable("endDate") String endDateStr){
 
-        String startDateStr = "2020-12-30";
-        String endDateStr = "2020-12-30";
+//        String startDateStr = "2020-12-30";
+//        String endDateStr = "2020-12-30";
+        if(startDateStr =="null")startDateStr="";
+        if(endDateStr =="null")endDateStr="";
 
         ResponseBuilder<String> responseBuilder = new ResponseBuilder<>();
 
@@ -215,6 +220,7 @@ public class InstitutionalPlanController {
 
         Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
         Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateStr);
+
         List<IPMainActivity> mainActivitiesList = ipMainActivityRepository.getIPMainActitvityByDIVUnitCode(unitCode,institutionalPlan, startDate,endDate);
 
         for (IPMainActivity mainActivity : mainActivitiesList) {
@@ -239,9 +245,14 @@ public class InstitutionalPlanController {
         List<Unit> DIVUnits = unitRepository.getUnitsUnderUnitCodeByUnitTypeCodes(unitCode,"DIV");
 
         for (Unit unit : DIVUnits) {
+
             JSONArray jsonArray = new JSONArray();
             jsonArray = getSubActivitiesByDIVUnitCode(unit.getUnitCode(),institutionalPlan,startDateStr,endDateStr);
-            result.put(jsonArray);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                result.put(jsonObject);
+            }
+
         }
         return result;
     }
@@ -250,11 +261,12 @@ public class InstitutionalPlanController {
             String redColor = "#dc3545";
             String greenColor = "#28a745";
             String goldColor = "#b68a35";
+            String notBeginColor = "#6c757d";
             String color  = "#165080";
 
-            long diffFromEndDate = Utils.differenceBetweenTwoDatesWithoutABS( new Date(),EndDate);
+            long diffFromEndDateAndStartDate = Utils.differenceBetweenTwoDatesWithoutABS( new Date(),EndDate);
 
-            if(diffFromEndDate <= 0){
+            if(diffFromEndDateAndStartDate <= 0){
                 if(progress < 100){
                     color = redColor;
                 }else {
@@ -262,8 +274,17 @@ public class InstitutionalPlanController {
                 }
                 return color;
             }
+             diffFromEndDateAndStartDate = Utils.differenceBetweenTwoDatesWithoutABS( startDate,new Date());
 
-            long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(startDate, EndDate);
+        if(diffFromEndDateAndStartDate <= 0){
+            if(progress > 0){
+                color = goldColor;
+            }else {
+                color = notBeginColor;
+            }
+            return color;
+        }
+        long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(startDate, EndDate);
             long diffnow = Utils.differenceBetweenTwoDatesWithoutABS(startDate, new Date());
 
             long expectedProgress = 90;
@@ -271,7 +292,7 @@ public class InstitutionalPlanController {
             try
             {
                 if(diffnow < 0){
-                    color = "#6c757d";
+                    color = notBeginColor;
                     return color;
                 }
                 expectedProgress = (diffnow/ diffTotal)*100;

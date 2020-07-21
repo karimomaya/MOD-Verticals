@@ -17,4 +17,7 @@ public interface UnitRepository extends GenericRepository<Unit, Long> {
 
     @Query(value = "SELECT * FROM awdb.dbo.O2comassetegOrganizationChartMOD_SYS_OC_entity_unit", nativeQuery = true)
     List<Unit> getAllUnits();
+    @Query(value = "{call MOD_SYS_GENERAL_SP_GetUnitsUnderUnitCodeByUnitTypeCodes(:unitCode,:unitTypeCodes,1,5000)}", nativeQuery = true)
+    List<Unit> getUnitsUnderUnitCodeByUnitTypeCodes(@Param("unitCode") String unitCode, @Param("unitTypeCodes") String unitTypeCodes);
+
 }
