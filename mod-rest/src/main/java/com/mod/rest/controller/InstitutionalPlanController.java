@@ -2,24 +2,19 @@ package com.mod.rest.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import com.mod.rest.model.IPStrategicGoal;
-import com.mod.rest.model.IPSubActivity;
-import com.mod.rest.model.IPMainActivity;
-import com.mod.rest.model.Unit;
-import com.mod.rest.repository.IPMainActivityRepository;
-import com.mod.rest.repository.UnitRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mod.rest.model.*;
+import com.mod.rest.repository.*;
 import com.mod.rest.service.ExcelWriterService;
-import com.mod.rest.repository.IPStrategicGoalRepository;
-import com.mod.rest.repository.IPSubActivityRepository;
-
+import com.mod.rest.service.LookupService;
 import com.mod.rest.service.PDFService;
-
 import com.mod.rest.system.ResponseBuilder;
+import com.mod.rest.system.ResponseCode;
 import com.mod.rest.system.Utils;
 import lombok.Data;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.omg.CORBA.Object;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +22,14 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
 
-import javax.validation.constraints.Null;
 import java.io.File;
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by abdallah.shaaban on 7/16/2020.
@@ -45,7 +40,12 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/institutionalPlan")
 public class InstitutionalPlanController {
-
+    @Autowired
+    LookupService lookupService;
+    @Autowired
+    IPOperationalIndicatorRepository ipOperationalIndicatorRepository;
+    @Autowired
+    LookupRepository lookupRepository;
     @Autowired
     IPSubActivityRepository ipSubActivityRepository;
     @Autowired
@@ -140,7 +140,7 @@ public class InstitutionalPlanController {
                 result.put(object);
             }else if (unitTypeCode.equals("DIV")){
                 result = getSubActivitiesByDIVUnitCode(unitCode,institutionalPlan,startDateStr,endDateStr);
-            }else if (unitTypeCode.equals("DIR")){
+            }else {
                 result = getSubActivitiesByDIRUnitCode(unitCode,institutionalPlan,startDateStr,endDateStr);
 
             }
@@ -173,6 +173,8 @@ public class InstitutionalPlanController {
             jsonArray.put(subActivity.getEndDate().getTime());
             jsonArray.put(subActivity.getStartDate().getTime());
             json.put("y", jsonArray);
+//            DecimalFormat df = new DecimalFormat("###.##");
+//            subActivity.setProgress( Float.parseFloat((df.format(subActivity.getProgress()))));
             String color = detectTaskColor(subActivity.getProgress(),subActivity.getStartDate(),subActivity.getEndDate());
             json.put("color", color);
             json.put("tooltip", subActivity.getProgress());
@@ -205,8 +207,11 @@ public class InstitutionalPlanController {
             jsonArray.put(mainActivity.getEndDate().getTime());
             jsonArray.put(mainActivity.getStartDate().getTime());
             json.put("y", jsonArray);
-            Integer progress= Integer.parseInt(mainActivity.getProgress());
-            String color = detectTaskColor(progress,mainActivity.getStartDate(),mainActivity.getEndDate());
+//            DecimalFormat df = new DecimalFormat("###.##");
+//            mainActivity.setProgress( df.format(mainActivity.getProgress()));
+            Float progress= Float.parseFloat(mainActivity.getProgress());
+
+             String color = detectTaskColor(progress,mainActivity.getStartDate(),mainActivity.getEndDate());
             json.put("color", color);
             json.put("tooltip", mainActivity.getProgress());
             data.put(json);
@@ -257,7 +262,7 @@ public class InstitutionalPlanController {
         return result;
     }
 
-    private String detectTaskColor(Integer progress,Date startDate,Date EndDate){
+    private String detectTaskColor(Float progress,Date startDate,Date EndDate){
             String redColor = "#dc3545";
             String greenColor = "#28a745";
             String goldColor = "#b68a35";
@@ -308,6 +313,177 @@ public class InstitutionalPlanController {
             }
         return color;
     }
+
+
+        @GetMapping ("/SubActivity/ReportChart/{language}/{unitTypeCode}/{unitCode}/{institutionalPlan}/{startDate}/{endDate}/{typeOfAssignment}")
+    public ResponseBuilder<String> subActivityReportChart(@PathVariable("language") String language,@PathVariable("unitCode") String unitCode,@PathVariable("unitTypeCode") String unitTypeCode
+            ,@PathVariable("institutionalPlan") String institutionalPlan,@PathVariable("startDate") String startDateStr
+            ,@PathVariable("endDate") String endDateStr,@PathVariable("typeOfAssignment") String typeOfAssignment) throws ParseException {
+
+        ResponseBuilder<String> responseBuilder = new ResponseBuilder<>();
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode result= mapper.createObjectNode();
+
+
+        List<GraphDataHelper> graphDataHelpers = null;
+        String[] xaxis = null;
+
+        HashMap<List, List> hashMap = subActivitiesReportChartHelper(language,unitCode , unitTypeCode,institutionalPlan,startDateStr,endDateStr,typeOfAssignment);
+
+        for (Map.Entry<List, List> entry : hashMap.entrySet()) {
+            graphDataHelpers = entry.getKey();
+            java.lang.Object[] objArr =  entry.getValue().toArray();
+            xaxis = Arrays.copyOf(objArr, objArr.length,String[].class);
+        }
+        result.put("graph", Utils.writeObjectIntoString(graphDataHelpers));
+        result.put("xaxis", Utils.writeObjectIntoString(xaxis));
+
+        responseBuilder.status(ResponseCode.SUCCESS);
+        return responseBuilder.data(result.toString()).build();
+    }
+
+    private HashMap<List, List> subActivitiesReportChartHelper(String language,String unitCode,String unitTypeCode,String institutionalPlan,String startDateStr,String endDateStr , String typeOfAssignment) throws ParseException {
+        List<GraphDataHelper> graphDataHelpers = new ArrayList<>();
+        List<IPSubActivity> subActivityList = new ArrayList<>();
+        GraphDataHelper graphDataHelper = null;
+        ArrayList<String> xaxis = new ArrayList<>();
+
+
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateStr);
+
+
+
+        if(unitTypeCode.equals("SEC") || unitCode.equals("EGD")){
+            subActivityList = ipSubActivityRepository.getSubActivitiesBySECUnitCodes(unitCode, institutionalPlan, startDate, endDate,typeOfAssignment );
+        }else{
+            List<Unit> SECUnits = unitRepository.getUnitsUnderUnitCodeByUnitTypeCodes(unitCode,"SEC");
+            String units ="";
+            for (Unit unit : SECUnits){
+                units = units + unit.getUnitCode()+",";
+            }
+            subActivityList = ipSubActivityRepository.getSubActivitiesBySECUnitCodes(units, institutionalPlan, startDate, endDate,typeOfAssignment );
+
+        }
+
+
+        List<Lookup> lookUps = lookupRepository.getLookupByCategory("typeOfAssignment");
+
+        int[] countArray = new int[5];
+        for (IPSubActivity subActivity : subActivityList){
+            int assignmentType = Integer.parseInt(subActivity.getClassification());
+            if(assignmentType > 0 && assignmentType < 6){
+                countArray[assignmentType-1] += 1;
+            }
+        }
+
+        graphDataHelper = new GraphDataHelper();
+        graphDataHelper.setName("نشاط فرعي");
+//        graphDataHelper.setData(countArray);
+        graphDataHelpers.add(graphDataHelper);
+
+        List<Integer> countArrayList =new ArrayList<>();
+        for (Lookup lookUp : lookUps){
+            if(lookUp.getValueByLanguage(language) != null ){
+            int key = Integer.parseInt(lookUp.getKey());
+                if(countArray[key-1]>0) {
+                    xaxis.add(lookUp.getValueByLanguage(language));
+                    countArrayList.add(countArray[key - 1]);
+                }
+            }
+        }
+        int[] countArrayOutput = new int[countArrayList.size()];
+        countArrayOutput = countArrayList.stream().mapToInt(Integer::intValue).toArray();
+        graphDataHelper.setData(countArrayOutput);
+
+        HashMap<List, List> result = new HashMap<>();
+        result.put(graphDataHelpers, xaxis);
+
+
+        return result;
+
+    }
+
+
+
+    @GetMapping("/subActivitiesOverClassification/export/Excel/{language}/{institutionalPlan}/{unitTypeCode}/{unitCode}/{startDate}/{endDate}/{typeOfAssignment}")
+    public ResponseEntity<byte[]> exporSubActivitiesOverClassificationToExcel(@PathVariable("language") String language,@PathVariable("unitCode") String unitCode,@PathVariable("unitTypeCode") String unitTypeCode
+            ,@PathVariable("institutionalPlan") String institutionalPlan,@PathVariable("startDate") String startDateStr,@PathVariable("endDate") String endDateStr,@PathVariable("typeOfAssignment")String typeOfAssignment) throws ParseException {
+
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(startDateStr);
+        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateStr);
+
+
+        List<IPSubActivity> subActivityList = new ArrayList<>();
+        if(unitTypeCode.equals("SEC") || unitCode.equals("EGD")){
+            subActivityList = ipSubActivityRepository.getSubActivitiesBySECUnitCodes(unitCode, institutionalPlan, startDate, endDate,typeOfAssignment );
+        }else{
+            List<Unit> SECUnits = unitRepository.getUnitsUnderUnitCodeByUnitTypeCodes(unitCode,"SEC");
+            String units ="";
+            for (Unit unit : SECUnits){
+                units = units + unit.getUnitCode()+",";
+            }
+            subActivityList = ipSubActivityRepository.getSubActivitiesBySECUnitCodes(units, institutionalPlan, startDate, endDate,typeOfAssignment );
+        }
+        lookupService.substituteLookupIds(subActivityList,"typeOfAssignment","classification",language);
+        HttpHeaders respHeaders = new HttpHeaders();
+        File file = null;
+        byte[] bytes = null;
+
+        try {
+            file = excelWriterService.generate(subActivityList);
+            if (file == null) {
+                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"null\"").body(null);
+            }
+            respHeaders.setContentLength(file.length());
+            bytes = Files.readAllBytes(file.toPath());
+            respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+            return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"null\"").body(null); // used to download file
+    }
+
+    @GetMapping("/operationIndicator/export/Excel/{language}/{institutionalPlan}/{unitCode}/{quarter}")
+    public ResponseEntity<byte[]> exportOperationalIndicatorToExcel(@PathVariable("language") String language,@PathVariable("unitCode") String unitCode
+            ,@PathVariable("institutionalPlan") String institutionalPlan,@PathVariable("quarter")String quarter) throws ParseException {
+
+
+
+
+        List<IPOperationalIndicatorReport> operationalIndicator = new ArrayList<>();
+        operationalIndicator = ipOperationalIndicatorRepository.getOperationalIndicatorOfInstitutionalPlanByUnitCode( institutionalPlan,unitCode, quarter );
+
+        lookupService.substituteLookupIds(operationalIndicator,"annualQuarters","quarter",language);
+        HttpHeaders respHeaders = new HttpHeaders();
+        File file = null;
+        byte[] bytes = null;
+
+        try {
+            file = excelWriterService.generate(operationalIndicator);
+            if (file == null) {
+                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"null\"").body(null);
+            }
+            respHeaders.setContentLength(file.length());
+            bytes = Files.readAllBytes(file.toPath());
+            respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+            return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"null\"").body(null); // used to download file
+    }
+
 
 }
 

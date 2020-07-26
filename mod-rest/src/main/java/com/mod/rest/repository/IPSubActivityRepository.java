@@ -16,5 +16,8 @@ public interface IPSubActivityRepository  extends GenericRepository<IPSubActivit
     @Query(value = "{call MOD_IED_SP_getSubActivitiesBySECUnitCodesForTimeLine(:unitCodes,:institutionalPlan,:mainActivityId,:startDate,:endDate)}", nativeQuery = true)
     ArrayList<IPSubActivity> getIPSubActivity(@Param("unitCodes") String unitCodes,@Param("institutionalPlan") String institutionalPlan,@Param("mainActivityId") Long mainActivityId,
                                               @Param("startDate") Date startDate,@Param("endDate") Date endDate);
+    @Query(value = "{call MOD_IED_SP_getSubActivitiesBySECUnitCodesAndTypeOfAssignment(:unitCodes,:institutionalPlan,:startDate,:endDate,:typeOfAssignment,0,5000)}", nativeQuery = true)
+    ArrayList<IPSubActivity> getSubActivitiesBySECUnitCodes(@Param("unitCodes") String unitCodes,@Param("institutionalPlan") String institutionalPlan,
+                                                            @Param("startDate") Date startDate,@Param("endDate") Date endDate,@Param("typeOfAssignment") String typeOfAssignment);
 
 }
