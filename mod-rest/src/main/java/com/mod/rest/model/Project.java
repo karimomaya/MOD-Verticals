@@ -30,8 +30,8 @@ public class Project {
     Integer createdByUnitId;
     Long createdBy;
     Integer status;
-    int institutionalPlan;
-    int assignToUnitId;
+    Integer institutionalPlan;
+    Integer assignToUnitId;
     Integer progress;
     @Transient
     User userOwner;
