@@ -111,6 +111,7 @@ public class PDFService implements PDFServiceI {
             int length = nodes.getLength();
             for (int i = 0; i < length; i++) {
                 Node parent = nodes.item(0).getParentNode();
+                boolean isEnglishFont = false;
 
                 Element div = document.createElement("p");
                 div.setAttribute("dir", "rtl");
@@ -123,14 +124,31 @@ public class PDFService implements PDFServiceI {
                     if (Utils.isArabicText(innerText)) {
                         div.setAttribute("dir", "rtl");
                     } else {
+                        isEnglishFont = true;
                         div.setAttribute("class", "english-font");
                     }
                 }
 
-                div.setTextContent(innerText);
+                String[]  innerTexts = innerText.split("\\n");
+
+                if (innerTexts.length > 1){
+                    for (int j=0 ; j< innerTexts.length; j++){
+                        Element p = document.createElement("p");
+                        p.setAttribute("dir", "rtl");
+                        if (isEnglishFont) p.setAttribute("class","english-font");
+
+                        p.setTextContent(innerTexts[j]);
+                        parent.appendChild(p);
+                    }
+                }else {
+                    div.setTextContent(innerText);
+                    parent.appendChild(div);
+                }
+
+
 //                div.setNodeValue(innerText);
 
-                parent.appendChild(div);
+
                 parent.removeChild(nodes.item(0));
             }
         }
@@ -174,7 +192,6 @@ public class PDFService implements PDFServiceI {
         } else {
             innerText = o.toString();
         }
-        innerText = innerText.replaceAll("\\n", "<br>" );
         return innerText;
     }
 
