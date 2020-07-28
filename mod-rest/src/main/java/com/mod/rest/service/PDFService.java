@@ -119,8 +119,16 @@ public class PDFService implements PDFServiceI {
 
                 String innerText = extractText(o);
 
+                if (!o.equals("")) {
+                    if (Utils.isArabicText(innerText)) {
+                        div.setAttribute("dir", "rtl");
+                    } else {
+                        div.setAttribute("class", "english-font");
+                    }
+                }
 
                 div.setTextContent(innerText);
+//                div.setNodeValue(innerText);
 
                 parent.appendChild(div);
                 parent.removeChild(nodes.item(0));
@@ -166,7 +174,7 @@ public class PDFService implements PDFServiceI {
         } else {
             innerText = o.toString();
         }
-
+        innerText = innerText.replaceAll("\\n", "<br>" );
         return innerText;
     }
 
