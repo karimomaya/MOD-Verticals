@@ -9,6 +9,7 @@ import com.mod.rest.system.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,9 @@ public class PolicyController {
     PolicyMilestoneRepository policyMilestoneRepository;
     @Autowired
     PolicyActivityRepository policyActivityRepository;
+
+    @Autowired
+    private Environment env;
 
     @GetMapping("workplan-timeline/{workplanId}")
     public ResponseBuilder<String> workplanTimeline(@RequestHeader("samlart") String SAMLart,
@@ -81,6 +85,11 @@ public class PolicyController {
 
     private String detectProgressColor(Date startDate, Date endDate, Integer progress){
 
+        String result = Utils.getProgressColor(progress, startDate, endDate);
+
+        String color = "#"+env.getProperty(result);
+
+        /*
         String color  = "#165080";
 
         long diffTotal = Utils.differenceBetweenTwoDatesWithoutABS(startDate, endDate);
@@ -95,6 +104,8 @@ public class PolicyController {
 
         }
 
+
+
         if (progress == 100) {
             color  = "#38A32B";
         }else if(progress > expectedProgress ){
@@ -104,6 +115,8 @@ public class PolicyController {
         }else if (progress < expectedProgress + 10  && progress > expectedProgress - 10 ){
             color = "#c9a869";
         }
+
+         */
 
         return color;
     }

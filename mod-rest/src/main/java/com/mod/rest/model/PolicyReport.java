@@ -1,6 +1,7 @@
 package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
+import com.mod.rest.annotation.PDFResources;
 import com.mod.rest.system.Utils;
 
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import java.util.Date;
 /**
  * Created by karim on 6/23/20.
  */
+@PDFResources(key="policy-report")
 @Entity
 public class PolicyReport {
     @Id
@@ -22,7 +24,7 @@ public class PolicyReport {
     Integer policyPath;
     String policyDocumentName;
     String serial_num;
-    String goal;
+    String mainTarget;
     Date main_activity;
 
     @ColumnName(key = "التسلسل")
@@ -38,7 +40,7 @@ public class PolicyReport {
     public String getExecutionDate() { return Utils.dateFormat( main_activity, "YYYY-MM-dd")  ; }
 
     @ColumnName(key = "الهدف من السياسة")
-    public String getGoal() { return Utils.removeNullValue(goal); }
+    public String getGoal() { return Utils.removeNullValue(mainTarget); }
 
     @ColumnName(key = "حالة الخطر الرئيسي")
     public String getmainIssueStatus() {
