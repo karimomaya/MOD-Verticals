@@ -28,7 +28,7 @@ public class TranslationByMonthReport {
     String numberOfRequests;
 
 
-    @ColumnName(key = "اسم الجهة")
+    @ColumnName(key = "جهة الطلب")
     public String getUnitName(){
         return Utils.removeNullValue(unitName);
     }
@@ -38,7 +38,7 @@ public class TranslationByMonthReport {
         return Utils.removeNullValue(translationWordsCount);
     }
 
-    @ColumnName(key = "عدد الاحرف")
+    @ColumnName(key = "عدد الكلامات")
     public String getTranslationPagesCount(){
         return Utils.removeNullValue(translationPagesCount);
     }
