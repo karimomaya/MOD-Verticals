@@ -23,6 +23,7 @@ public class MeetingAttendee {
     // Internal Attendee
     String userDisplayName;
     String RoleName;
+    String RoleName_ar;
     String title;
     // External Attendee
     String nameArabic;
@@ -41,7 +42,7 @@ public class MeetingAttendee {
         if(this.isExternal){
             return this.positionArabic;
         }else{
-            return this.RoleName;
+            return this.RoleName_ar;
         }
     }
 
