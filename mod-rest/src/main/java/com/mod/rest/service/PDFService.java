@@ -207,7 +207,9 @@ public class PDFService implements PDFServiceI {
 
                 if (!o.equals("")) {
                     String imgSource = extractText(o);
-                    parent.setAttribute("src", imgSource);
+                    parent.setAttribute("src", "UAElogo.png");
+                }else {
+                    parent.setAttribute("src", "UAElogo.png");
                 }
 //                parent.appendChild(img);
                 parent.removeChild(nodes.item(0));

@@ -71,7 +71,9 @@ public class PDFServiceEx implements PDFServiceI {
                         pdfService.handlePDFTable(tempDoc, o, attrNodeList);
                     } else if (nodeName.equals("tr")) {
                         pdfService.handlePDFTableRow(tempDoc, o, attrNodeList);
-                    } else {
+                    } else if (nodeName.equals("img")){
+                        pdfService.handlePDFImage(tempDoc,o,attrNodeList);
+                    }else {
                         pdfService.handlePDFTableParag(tempDoc, o, attrNodeList);
                     }
 
