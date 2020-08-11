@@ -20,15 +20,15 @@ public class Gifts {
     Long Id;
     @Column(name = "purchase_date")
     Date purchaseDate;
-    @Column(name = "giftName")
+    @Column(name = "gift_type")
     String  giftName;
-    @Column (name = "number_available")
+    @Column (name = "quantity")
     String numberAvailable;
     @Column (name = "expiration_date")
-    String expirationDate;
+    Date expirationDate;
 
     @ColumnName(key = "نوع الهدية")
-     public String getGiftName(){return Utils.removeNullValue(giftName);}
+    public String getGiftName(){return Utils.removeNullValue(giftName);}
     @ColumnName(key = "العدد المتوفر")
     public String getNumberAvailable(){return Utils.removeNullValue(numberAvailable);}
     @ColumnName(key = "تاريخ الشراء")
@@ -40,5 +40,11 @@ public class Gifts {
         return dateFormat.format(purchaseDate);
     }
     @ColumnName(key = "تاريخ الإنتهاء")
-    public String getExpirationDate(){return Utils.removeNullValue(expirationDate);}
+    public String getExpirationDate(){
+        if(expirationDate == null){
+            return "";
+        }
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(expirationDate);
+    }
 }

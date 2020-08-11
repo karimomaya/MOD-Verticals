@@ -41,13 +41,14 @@ public class GiftController {
     @ResponseBody
     public ResponseEntity<byte[]> export(@PathVariable("startDate") String startDate,
                                          @PathVariable("endDate") String endDate,
-                                         @PathVariable("reportType") int reportType) {
+                                         @PathVariable("reportType") int reportType
+    ) {
         HttpHeaders respHeaders = new HttpHeaders();
         File file = null;
         byte[] bytes = null;
         try {
             if(reportType == 1){
-                List<Gifts> giftReports = giftsRepository.getGiftsRecordsBetweenPurshaseDate(startDate,endDate);
+                List<Gifts> giftReports = giftsRepository.getGiftsRecordsBetweenPurshaseDate(startDate,endDate,"");
                 file = excelWriterService.generate(giftReports);
             }
             if(reportType == 2){

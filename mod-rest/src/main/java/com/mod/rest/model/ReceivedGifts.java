@@ -20,11 +20,11 @@ public class ReceivedGifts {
     Long Id;
     @Column(name = "The_date_the_gift_was_received")
     Date theDateTheGiftWasReceived;
-    @Column(name = "giftName")
+    @Column(name = "gift_Type")
     String  giftName;
     @Column (name = "who_give_the_gift")
     String whoGiveTheGift;
-    @Column (name = "country_arabic_name")
+    @Column (name = "ar_value")
     String country;
     @Column (name = "Receiver_name")
     String receiverName;

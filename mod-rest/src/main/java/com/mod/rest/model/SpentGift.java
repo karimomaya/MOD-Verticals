@@ -27,7 +27,7 @@ public class SpentGift {
     @Column(name = "The_gift_given")
     String  giftName;
 
-    @Column (name = "country_arabic_name")
+    @Column (name = "ar_value")
     String country;
 
     @Column (name = "receiver_position")
