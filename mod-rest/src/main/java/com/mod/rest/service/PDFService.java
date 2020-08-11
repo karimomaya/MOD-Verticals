@@ -100,10 +100,11 @@ public class PDFService implements PDFServiceI {
         String nodeName = nodes.item(0).getParentNode().getNodeName();
         if (nodeName.equals("tbody")) {
             handlePDFTable(document, objects, nodes);
-
         } else if (nodeName.equals("tr")) {
             handlePDFTableRow(document, objects, nodes);
-        } else {
+        } else if (nodeName.equals("img")){
+            handlePDFImage(document,objects,nodes);
+        }else {
             handlePDFTableParag(document, objects, nodes);
         }
 
@@ -186,6 +187,29 @@ public class PDFService implements PDFServiceI {
                 }
                 td.setTextContent(innerText);
                 parent.appendChild(td);
+                parent.removeChild(nodes.item(0));
+            }
+        }
+    }
+
+    protected void handlePDFImage(org.w3c.dom.Document document, List<?> objects, NodeList nodes) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        for (Object object : objects) {
+            Class cls = object.getClass();
+
+            int length = nodes.getLength();
+            for (int i = 0; i < length; i++) {
+                Element parent = (Element) nodes.item(0).getParentNode();
+//                Element img = document.createElement("img");
+
+                Method method = cls.getMethod(nodes.item(0).getTextContent());
+                Object o = method.invoke(object);
+                if (o == null) o = "";
+
+                if (!o.equals("")) {
+                    String imgSource = extractText(o);
+                    parent.setAttribute("src", imgSource);
+                }
+//                parent.appendChild(img);
                 parent.removeChild(nodes.item(0));
             }
         }
