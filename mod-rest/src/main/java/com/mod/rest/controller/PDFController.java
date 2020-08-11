@@ -308,7 +308,7 @@ public class PDFController {
             System.out.println("get template name: " + templateName);
 
             try {
-                File file = pdfService.generate(arrayList, "pdf-template/" + templateName + ".html", "design-seal");
+                File file = pdfService.generate(arrayList,  templateName + ".html", "design-seal");
                 file = pdfService.generate(arrayList, file.toURI().getPath(), "design-seal-note");
 
                 byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());

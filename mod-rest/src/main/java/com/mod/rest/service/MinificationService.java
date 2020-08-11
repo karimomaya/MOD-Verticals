@@ -17,13 +17,11 @@ import java.util.regex.Pattern;
 public class MinificationService {
     ArrayList<String> downloadedFiles;
     Queue<String> waitingQueue;
-    LoggerService loggerService;
 
 
     static final String outputFile = "newController.js";
 
-    public MinificationService(String projectName, String entityName, String mainController, LoggerService loggerService){
-        this.loggerService = loggerService;
+    public MinificationService(String projectName, String entityName, String mainController){
         downloadedFiles = new ArrayList<String>();
         waitingQueue = new LinkedList<String>();
 
@@ -58,11 +56,6 @@ public class MinificationService {
 
     }
 
-    public MinificationService(String projectName, String entityName, String mainController){
-
-        String controllerName = "/home/karim/Desktop/Projects/UAE - MOD/Code/demo/"+projectName+"/pages/"+entityName+"/controller/"+mainController+".js";
-        waitingQueue.add(controllerName);
-    }
 
     public boolean execute(){
 
@@ -76,7 +69,6 @@ public class MinificationService {
 
             if (!downloadedFiles.contains(fileLocation)){
                 String fileContent = Utils.minifier(fileLocation);
-                writeToLog('i',  "minimized file: "+ fileLocation );
                 downloadedFiles.add(fileLocation);
 
 
@@ -86,7 +78,6 @@ public class MinificationService {
                     String scriptsStr = getScripts(fileContent, controllerName);
 
                     if (scriptsStr.equals(".js") ){
-                        writeToLog('i', "No Scripts found for:  " + controllerName);
                     }else {
                         String[] scripts = scriptsStr.split(",");
                         String scriptReplacer ="[";
@@ -95,7 +86,6 @@ public class MinificationService {
                             scriptReplacer += "\"" + scripts[i] +"\"";
                             String fileLoc = scripts[i].replace("/cordys/html5/demo/", "/home/karim/Desktop/Projects/UAE - MOD/Code/demo/");
                             waitingQueue.add(fileLoc);
-                            writeToLog('i', "found Scripts: " + fileLoc);
 
                         }
                         scriptReplacer += "]";
@@ -138,12 +128,10 @@ public class MinificationService {
                 System.out.println("found Controller Name: "+ controllerName);
             }
             else {
-                writeToLog('i', "redundancy file: " + fileLocation );
             }
 ///home/karim/Desktop/Projects/UAE - MOD/demo/TaskManagement/pages/task/controller/task-index-controller.js.js
 
         } catch (IOException e) {
-            writeToLog('e',e.toString());
         }
 
         return true;
@@ -202,7 +190,6 @@ public class MinificationService {
                 fr.close();
                 return true;
             } catch (IOException e) {
-                writeToLog('e',e.toString());
                 e.printStackTrace();
             }
 
@@ -213,7 +200,6 @@ public class MinificationService {
 
     private void init(){
 
-        writeToLog('i', "Start Minification Service");
         File file = new File(outputFile);
 
         if(file.delete())
@@ -226,16 +212,10 @@ public class MinificationService {
             try {
                 yourFile.createNewFile(); // if file already exists will do nothi
             } catch (IOException e) {
-                writeToLog('e',e.toString());
                 e.printStackTrace();
             }
         }
 
     }
 
-    private void writeToLog(char type,String text){
-        if (loggerService == null) return;
-
-        loggerService.write(type, text);
-    }
 }

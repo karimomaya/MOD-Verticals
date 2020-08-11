@@ -55,9 +55,6 @@ public class PDFService implements PDFServiceI {
 
     @Autowired
     Environment config;
-    @Autowired
-    LoggerService loggerService;
-
 
     public File removeNodeByTagName(String filename, String tagname) throws TransformerException, IOException {
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
@@ -65,7 +62,6 @@ public class PDFService implements PDFServiceI {
             Node element = document.getElementsByTagName(tagname).item(0);
             element.getParentNode().removeChild(element);
         } catch (Exception ex) {
-            loggerService.write('e', "Cannot find tag name to delete: " + tagname);
         }
         return Utils.writeXMLDocumentToTempFile(document);
 
@@ -81,9 +77,19 @@ public class PDFService implements PDFServiceI {
         }
     }
 
+    public String getFileName(Object object){
+            Class cls = object.getClass();
+            String filename= "";
+            try {
+                filename = config.getProperty( cls.getSimpleName());
+            }catch (Exception ex){
+                filename = cls.getSimpleName();
+            }
+            return filename;
+    }
+
     public File generate(List<?> objects, String filename, String tagName) throws Exception {
         System.out.println("generate tag name: " + tagName + " using filename: " + filename);
-        loggerService.write('i', "PDF Service generate tag name: " + tagName + " using filename: " + filename);
 
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
         NodeList nodes = document.getElementsByTagName(tagName + "-replacer");
@@ -115,12 +121,13 @@ public class PDFService implements PDFServiceI {
 
                 Element div = document.createElement("p");
                 div.setAttribute("dir", "rtl");
-                Method method = cls.getMethod(nodes.item(0).getTextContent());
+                Method method = cls.getMethod(nodes.item(0).getTextContent().trim());
                 Object o = method.invoke(object);
 
                 String innerText = extractText(o);
 
-                if (!o.equals("")) {
+                if (o == null) innerText = "";
+                else if (!o.equals("")) {
                     if (Utils.isArabicText(innerText)) {
                         div.setAttribute("dir", "rtl");
                     } else {
@@ -247,7 +254,9 @@ public class PDFService implements PDFServiceI {
         if (annotation instanceof PDFResources) {
             templateName = ((PDFResources) annotation).key();
         }
-        return templateName;
+
+        String templatePath = config.getProperty("pdf-path");
+        return templatePath + templateName;
     }
 
     public byte[] generatePDF(String filename) {

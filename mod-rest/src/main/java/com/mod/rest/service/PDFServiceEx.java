@@ -90,6 +90,8 @@ public class PDFServiceEx implements PDFServiceI {
             org.jsoup.nodes.Element element = jsoupDoc.getElementsByTag(tagName + "-holder").get(0);
 
             element.append(Utils.getInnerHTML(tempDoc.getFirstChild()));
+//            String html = jsoupDoc.html().replaceAll("</META>", "");
+//            html = html.replaceAll("<META content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\">", "");
             document = Utils.convertStringToXMLDocument(jsoupDoc.html());
             System.out.println("updated document object");
 

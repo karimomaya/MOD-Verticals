@@ -1,6 +1,5 @@
 package com.mod.rest.controller;
 
-import com.mod.rest.service.LoggerService;
 import com.mod.rest.service.MinificationService;
 import com.mod.rest.system.ResponseBuilder;
 import com.mod.rest.system.Utils;
@@ -33,8 +32,6 @@ import java.util.stream.Stream;
 @RequestMapping("/api/compress")
 public class CompressJSController {
 
-    @Autowired
-    LoggerService loggerService;
 
 
     @GetMapping("/file/{projectName}/{entityName}/{controllerName}")
@@ -46,7 +43,7 @@ public class CompressJSController {
         ResponseBuilder<String> responseBuilder = new ResponseBuilder<String>();
 
         StringBuilder fileContent = new StringBuilder();
-        MinificationService minificationService = new MinificationService(projectName, entityName, controllerName, loggerService);
+        MinificationService minificationService = new MinificationService(projectName, entityName, controllerName);
         minificationService.execute();
 
         return responseBuilder.data(fileContent.toString()).build();

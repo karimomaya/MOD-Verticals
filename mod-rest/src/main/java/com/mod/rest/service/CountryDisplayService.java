@@ -35,11 +35,9 @@ public class CountryDisplayService {
     CountryLeaderRepository leaderRepo;
 
     public ResponseEntity<byte[]> generatePDF(Long id) {
-        //20 section
         List<String> sections = new LinkedList<String>(Arrays.asList("DP", "MM", "CV"));
 
         Optional<CountryDisplay> displayOptional = countryDisplayRepository.findById(id);
-
 
         if (!displayOptional.isPresent()) return null;
 
@@ -50,7 +48,6 @@ public class CountryDisplayService {
         sections.removeAll(sectionList);
 
         File file = new File("pdf-template/countryDisplay-template.html");
-//muted el mic ma3molo mute
         for (String sec : sections) {
             try {
                 file = pdfService.removeNodeByTagName(file.toURI().getPath(), sec);
@@ -60,32 +57,16 @@ public class CountryDisplayService {
                 e.printStackTrace();
             }
         }
+        List<CountryLeader> countryLeaders = leaderRepo.getCountryLeaderByDisplayFileId(0, Integer.MAX_VALUE, id);
         List<DiscussionPointDIA> discussionPointDIAList = dpRepo.getDiscussionPointDIAByCountryDisplayFileId(id);
 
-
-//        for (DiscussionPointDIA discussionPointDIA : discussionPointDIAList) {
-//            ArrayList<Test> tests = new ArrayList<>();
-//            Test test = new Test("Name", 11, new Date());
-//            tests.add(test);
-//            Test test2 = new Test("Name 2", 22, new Date());
-//            tests.add(test2);
-//            Test test3 = new Test("Name 2", 22, new Date());
-//            tests.add(test3);
-//            Test test4 = new Test("Name 2", 22, new Date());
-//            tests.add(test4);
-//            Test test5 = new Test("Name 2", 22, new Date());
-//            tests.add(test5);
-//
-//            discussionPointDIA.setTests(tests);
-//        }
         lookupService.substituteLookupIds(discussionPointDIAList, "discussionPointField", "field", "ar");
         lookupService.substituteLookupIds(discussionPointDIAList, "countryLookup", "suggestedBy", "ar");
 
-//        List<CountryLeader> CVleadersList = leaderRepo.getCountryLeaderByDisplayFileId(0,1000,id);
-
+//http://localhost:8081/api/country-display/pdf/32769
         try {
+            file = pdfService.generate(countryLeaders, file.toURI().getPath(), "CV");
             file = pdfService.generate(discussionPointDIAList, file.toURI().getPath(), "DP");
-//            file = pdfService.generate(CVleadersList, file.toURI().getPath(), "leaderCV-data");
         } catch (Exception e) {
             e.printStackTrace();
         }
