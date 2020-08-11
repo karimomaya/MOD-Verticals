@@ -121,7 +121,7 @@ public class TaskController  {
             String templateName = pdfService.getTemplateName(taskList.get(0));
             System.out.println("get template name: " + templateName);
 
-            File file = pdfService.generate(taskList, "pdf-template/" + templateName + ".html", "task-data");
+            File file = pdfService.generate(taskList,  templateName + ".html", "task-data");
 
             byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
             respHeaders.setContentLength(bytes.length);

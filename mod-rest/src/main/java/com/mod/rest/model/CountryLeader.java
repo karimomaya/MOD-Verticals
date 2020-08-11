@@ -3,6 +3,7 @@ package com.mod.rest.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,9 +15,12 @@ public class CountryLeader {
     @Column(name = "Id")
     Long id;
     String picture;
-    String leaderName;
-    Long leaderId;
+    String name;
     String generalInformation;
-    String leaderPosition;
+    String currentPosition;
+    @OneToMany
+    @JoinColumn(name = "position_to_leader_Id")
+    List<CountryLeaderPosition> countryLeaderPositions;
+
 
 }

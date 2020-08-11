@@ -48,7 +48,7 @@ public class PolicyReportController {
         if(policies.size() > 0) templateName = pdfService.getTemplateName(policies.get(0));
         System.out.println("get template name: " + templateName);
         try {
-            File file = pdfService.generate(policies, "pdf-template/" + templateName + ".html", "policy-report");
+            File file = pdfService.generate(policies, templateName + ".html", "policy-report");
 
             byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
             respHeaders.setContentLength(bytes.length);

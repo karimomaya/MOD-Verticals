@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CountryLeaderRepository extends GenericRepository<CountryLeader, Long> {
 
-    @Query(value = "{call MOD_DIA_SP_getSelectedLeaders(:PageNumber,:PageSize, :countryDisplayFileId )}", nativeQuery = true)
+    @Query(value = "{call MOD_DIA_SP_getSelectedLeadersPrint(:PageNumber,:PageSize, :countryDisplayFileId )}", nativeQuery = true)
     List<CountryLeader> getCountryLeaderByDisplayFileId(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("countryDisplayFileId") Long countryDisplayFileId);
 
 }

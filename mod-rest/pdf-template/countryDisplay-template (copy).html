@@ -1,0 +1,263 @@
+<html class="rtl"
+      lang="">
+​
+<head>
+    <style>
+        table {
+            width: 100%;
+            color: #c6c6c6;
+            font-size: 16px;
+            /* border: 1px solid #c6c6c6;
+    margin-top: 20px; */
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        ​
+        table.specific-class td:first-child {
+            background-color: #c6c6c6;
+            color: black;
+        }
+        ​
+        .english-font {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        ​
+        table td {
+            border: 1px solid #c6c6c6;
+            background-color: white;
+            color: black;
+            padding: 5px
+        }
+        ​
+        ​
+        ​
+        .center {
+            text-align: center;
+        }
+        ​
+        th {
+            color: black;
+            font-weight: bold;
+            font-size: 14px;
+            background-color: #c6c6c6;
+            text-align: left;
+            padding: 5px;
+        }
+        ​
+        .table-gold th {
+            background-color: #b68a35;
+            color: white;
+        }
+        ​
+        .email-wrapper {
+            height: 768px;
+            display: block;
+            padding: 0;
+            margin: 0 auto;
+        }
+        ​
+        .email-header {
+            width: 100%;
+        }
+        ​
+        .email-template-body {
+            background-color: #fff;
+            display: block;
+            margin-top: 30px;
+        }
+        ​
+        .template-body-header {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        ​
+        .template-subject-main {
+            display: inline-block;
+            width: 100%;
+            vertical-align: top;
+            ​
+        }
+        ​
+        .template-subject-title {
+            color: #b68a35;
+            font-weight: bold;
+            font-size: 18px;
+            ​
+        }
+        ​
+        .template-subject-text {
+            color: #c6c6c6;
+            font-size: 21px;
+            text-align: center;
+            text-decoration: underline;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        ​
+        .template-data {
+            display: block;
+        }
+        ​
+        .template-data-item {
+            width: 33%;
+            display: inline-grid;
+        }
+        ​
+        .template-data-label {
+            color: #bfbfbf
+        }
+        ​
+        .template-data-info {
+            color: #606060;
+            padding: 10px 0;
+        }
+        ​
+        .padding {
+            padding-right: 40px;
+        }
+        ​
+        img {
+            width: 200px;
+        }
+        ​
+        .page-break {
+            ​
+            page-break-before: always;
+        }
+    </style>
+    ​
+</head>
+​
+<body style="font-family: Noto Naskh Arabic">
+<div class="email-wrapper">
+    <div class="email-header">
+        <img src="UAElogo.png" />
+    </div>
+    <div class="email-template-body">
+        <div class="template-subject">
+            ​
+            ​
+            ​
+            ​
+        </div>
+        <div class="template-data"
+             dir="rtl">
+            <DP>
+                <DP-remover>
+                    <attribute>discussion-point-replacer</attribute>
+                    <!-- <attribute>getTests</attribute> -->
+                    ​
+                    ​
+                    <!-- <getTests-attribute>tests-replacer</getTests-attribute> -->
+                    ​
+                    ​
+                    <div class="template-subject-main">
+                        ​
+                        <!-- <table style="font-family: Noto Naskh Arabic">
+                            <thead>
+                                <tr>
+                                    <th dir="rtl"
+                                        class="service">المجال</th>
+                                    <th dir="rtl"
+                                        class="service">مقترحة بواسطة</th>
+​
+                                </tr>
+                            </thead>
+                            <tbody id="meeting-data">
+                                <discussion-point-replacer>getField</discussion-point-replacer>
+                                <discussion-point-replacer>getSuggestedBy</discussion-point-replacer>
+                            </tbody>
+                        </table> -->
+                        ​
+                        ​
+                        <table class="main-table table-gray">
+                            ​
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                ​
+                            </tr>
+                            </thead>
+                            ​
+                            <tbody>
+                            <tr class="single-view">
+                                <td colspan="2"
+                                    class="dark-bk"
+                                    translate-text="meetingTitle">المجال </td>
+                                ​
+                                ​
+                                <td colspan="4"
+                                    class="text-break">
+                                    <discussion-point-replacer>getField</discussion-point-replacer>
+                                </td>
+                                ​
+                            </tr>
+                            ​
+                            <tr class="single-view">
+                                <td colspan="2"
+                                    class="dark-bk"
+                                    translate-text="place">مقترحة بواسطة </td>
+                                ​
+                                <td colspan="4"
+                                    class="text-break">
+                                    <discussion-point-replacer>getSuggestedBy</discussion-point-replacer>
+                                </td>
+                                ​
+                            </tr>
+                            ​
+                            <tr class="single-view">
+                                <td colspan="2"
+                                    class="dark-bk"
+                                    translate-text="place">ملاحظات </td>
+                                ​
+                                <td colspan="4"
+                                    class="text-break">
+                                    <discussion-point-replacer>getNotes</discussion-point-replacer>
+                                </td>
+                                ​
+                            </tr>
+                            ​
+                            </tbody>
+                        </table>
+                        ​
+                        ​
+                    </div>
+                    ​
+                    <!-- <table style="font-family: Noto Naskh Arabic">
+                        <thead>
+                            <tr>
+                                <th dir="rtl"
+                                    class="service">testName</th>
+                                <th dir="rtl"
+                                    class="service">testStartDate</th>
+​
+                            </tr>
+                        </thead>
+                        <tbody id="meeting-data">
+​
+                            <tests-replacer>getName</tests-replacer>
+                            <tests-replacer>getStartDate</tests-replacer>
+                        </tbody>
+                    </table> -->
+                </DP-remover>
+                ​
+                ​
+                ​
+            </DP>
+            <DP-holder>
+                ​
+            </DP-holder>
+            ​
+        </div>
+    </div>
+    ​
+    ​
+</div>
+</body>
+​
+</html>

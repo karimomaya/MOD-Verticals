@@ -117,7 +117,13 @@ public class ExcelWriterService {
 
     public String getSheetName(Object object){
         Class cls = object.getClass();
-        return cls.getName();
+        String filename= "";
+        try {
+            filename = config.getProperty( cls.getSimpleName());
+        }catch (Exception ex){
+            filename = cls.getSimpleName();
+        }
+        return filename;
     }
 
     public void createHeader(Object object, Row row){

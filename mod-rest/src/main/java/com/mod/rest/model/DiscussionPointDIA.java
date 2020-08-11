@@ -18,6 +18,7 @@ public class DiscussionPointDIA {
     String field;
     String suggestedBy;
     String notes;
+    String discussionSubject;
     String discussionPoint_to_countryDisplayFile_Id;
 
 //    @Transient

@@ -64,7 +64,7 @@ public class ImageService {
             Path currentRelativePath = Paths.get("");
             String s = currentRelativePath.toAbsolutePath().toString();
 
-            String directory =  s+"\\"+ dir + "\\" + type + "\\" + id;
+            String directory =   dir + "\\" + type + "\\" + id;
 
             Path path = Paths.get(directory);
 
