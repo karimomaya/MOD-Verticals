@@ -154,7 +154,7 @@ public class CountryController {
             Path currentRelativePath = Paths.get("");
             String s = currentRelativePath.toAbsolutePath().toString();
             String dir = configUtil.getProperty("uploadDir");
-            originalPath = s + "\\" + dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + "PrimaryData" + "\\" + type + "\\default.png";
+            originalPath = dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + "PrimaryData" + "\\" + type + "\\default.png";
 
             switch (type) {
 
@@ -240,7 +240,7 @@ public class CountryController {
             Path currentRelativePath = Paths.get("");
             String s = currentRelativePath.toAbsolutePath().toString();
             String dir = configUtil.getProperty("uploadDir");
-            originalPath = s + "\\" + dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + "Leader" + "\\" + type + "\\default.png";
+            originalPath = dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + "Leader" + "\\" + type + "\\default.png";
 
             if (type == 1) {
                 if (countryLeader.getPicture() != null) {
@@ -286,7 +286,7 @@ public class CountryController {
         String s = currentRelativePath.toAbsolutePath().toString();
         String dir = configUtil.getProperty("uploadDir");
 
-        String directory = s + "\\" + dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + category + "\\" + id;
+        String directory = dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + category + "\\" + id;
 
         File imageDir = new File(directory);
         if (imageDir.exists())
