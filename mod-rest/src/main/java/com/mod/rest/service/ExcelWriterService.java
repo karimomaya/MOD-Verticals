@@ -123,6 +123,7 @@ public class ExcelWriterService {
         }catch (Exception ex){
             filename = cls.getSimpleName();
         }
+        if (filename == null) filename = cls.getSimpleName();
         return filename;
     }
 

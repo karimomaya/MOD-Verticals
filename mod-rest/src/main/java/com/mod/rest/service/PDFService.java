@@ -85,6 +85,7 @@ public class PDFService implements PDFServiceI {
             }catch (Exception ex){
                 filename = cls.getSimpleName();
             }
+            if (filename == null)filename = cls.getSimpleName();
             return filename;
     }
 
