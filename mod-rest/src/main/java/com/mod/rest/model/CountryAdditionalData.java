@@ -17,5 +17,5 @@ public class CountryAdditionalData {
     String title;
     String details;
     String type;
-    String parentEntityId;
+    Long parentEntityId;
 }

@@ -8,7 +8,6 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "O2MyCompanyDirectorateofInternationalAffairsDIAMOD_DIA_entity_leader")
-
 public class CountryLeader {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,9 +17,12 @@ public class CountryLeader {
     String name;
     String generalInformation;
     String currentPosition;
+//    المناصب
     @OneToMany
     @JoinColumn(name = "position_to_leader_Id")
     List<CountryLeaderPosition> countryLeaderPositions;
 
-
+    @OneToMany
+    @JoinColumn(name = "parentEntityId")
+    List<CountryAdditionalData> countryAdditionalDatas;
 }
