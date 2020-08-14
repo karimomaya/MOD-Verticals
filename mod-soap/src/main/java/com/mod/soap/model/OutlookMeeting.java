@@ -24,14 +24,15 @@ public class OutlookMeeting {
     Appointment appointment = null;
 
 
-    public OutlookMeeting(String uniqueId){
+    public OutlookMeeting(String uniqueId, String username, String password, String exchangeServiceURL){
 
         try {
             service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
-            ExchangeCredentials credentials = new WebCredentials("karim.omaya@asset.com.eg", "K@omaya08");
+            ExchangeCredentials credentials = new WebCredentials(username, password);
             service.setCredentials(credentials);
             //            service.autodiscoverUrl("karim.omaya@asset.com.eg");
-            service.setUrl(new URI("https://mail.asset.com.eg/ews/exchange.asmx"));
+//            service.setUrl(new URI(""));
+            service.setUrl(new URI(exchangeServiceURL));
             if(uniqueId == null){
                 appointment = new Appointment(service);
             }else{

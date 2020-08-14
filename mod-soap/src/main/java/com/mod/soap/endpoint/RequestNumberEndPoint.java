@@ -78,8 +78,9 @@ public class RequestNumberEndPoint {
 
 
         InputStream is = null;
+        String mailTemplatePath = env.getProperty("mail-template-path");
         try {
-            is = new FileInputStream(request.getTemplate()+".json");
+            is = new FileInputStream(mailTemplatePath+request.getTemplate()+".json");
             BufferedReader buf = new BufferedReader(new InputStreamReader(is));
 
             String line = buf.readLine();
@@ -138,7 +139,11 @@ public class RequestNumberEndPoint {
                 fileAsString = fileAsString.replace("("+token+")", value);
             }
 
-            OutlookMeeting outlookMeeting = new OutlookMeeting(null);
+            String username= env.getProperty("outlook-user-name");
+            String password= env.getProperty("outlook-user-password");
+            String exchangeServerUrl=env.getProperty("outlook-exchange-server-url");
+
+            OutlookMeeting outlookMeeting = new OutlookMeeting(null, username, password, exchangeServerUrl);
             outlookMeeting.sendEmail(fileAsString, request.getEmails().split(","), request.getSubject());
 
             System.out.println("Contents : " + fileAsString);
@@ -261,10 +266,14 @@ public class RequestNumberEndPoint {
     public void sendMeeting(Meeting meeting, List<MeetingAttendee> meetingAttendees, Boolean isUpdate){
         OutlookMeeting outlookMeeting = null;
 
+        String username= env.getProperty("outlook-user-name");
+        String password= env.getProperty("outlook-user-password");
+        String exchangeServerUrl=env.getProperty("outlook-exchange-server-url");
         if(isUpdate){
-            outlookMeeting = new OutlookMeeting(meeting.getOutlookId());
+
+            outlookMeeting = new OutlookMeeting(meeting.getOutlookId(), username, password, exchangeServerUrl);
         }else {
-            outlookMeeting = new OutlookMeeting(null);
+            outlookMeeting = new OutlookMeeting(null, username, password, exchangeServerUrl);
         }
 
         outlookMeeting = outlookMeeting.setSubject(meeting.getSubject())
