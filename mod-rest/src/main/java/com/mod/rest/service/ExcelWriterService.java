@@ -19,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 
@@ -42,40 +43,18 @@ public class ExcelWriterService {
         if (objectList.size() == 0) return tempFile;
 
         tempFile = executeGenerate(objectList, getSheetName(objectList.get(0)));
-//        style = null;
-//        XSSFWorkbook workbook = new XSSFWorkbook();
-//        String sheetName = getSheetName(objectList.get(0));
-//        XSSFSheet sheet = workbook.createSheet(sheetName);
-//        if (style == null){
-//            style = workbook.createCellStyle();
-//            XSSFFont font = workbook.createFont();
-//            font.setBold(true);
-//            style.setFont(font);
-//        }
-//
-//
-//        Row row = sheet.createRow(0);
-//        createHeader(objectList.get(0), row);
-//        try {
-//            createBody(objectList, sheet);
-//            tempFile = File.createTempFile(sheetName, ".xlsx");
-//            FileOutputStream outputStream = new FileOutputStream(tempFile);
-//            workbook.write(outputStream);
-//            workbook.close();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
         return tempFile;
     }
 
     public File generate(List<?> objectList, String fileName){
-        return executeGenerate(objectList, fileName);
+        File tempFile = null;
+
+        if (objectList.size() == 0) return tempFile;
+
+        tempFile = executeGenerate(objectList, fileName);
+
+        return tempFile;
     }
 
     public File executeGenerate(List<?> objectList, String fileName){
@@ -99,10 +78,15 @@ public class ExcelWriterService {
         createHeader(objectList.get(0), row);
         try {
             createBody(objectList, sheet);
-            tempFile = File.createTempFile(sheetName, ".xlsx");
+//            tempFile = File.createTempFile(sheetName, ".xlsx");
+            tempFile = new File(System.getProperty("java.io.tmpdir"), sheetName+".xlsx");
             FileOutputStream outputStream = new FileOutputStream(tempFile);
             workbook.write(outputStream);
             workbook.close();
+
+//            String pathOfFile = tempFile.getAbsolutePath();
+//            pathOfFile = pathOfFile.substring(0, pathOfFile.lastIndexOf("\\")+1);
+
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

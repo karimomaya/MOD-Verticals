@@ -50,10 +50,10 @@ public class ContactTrackerController {
             reportObject = reportObject.build();
             if (reportObject.getReportType() == 1 ) {
                 List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
-                file = excelWriterService.generate(entityReports);
+                file = excelWriterService.generate(entityReports, "Contact Tracker Entities");
             } else if (reportObject.getReportType() == 2 ) {
                 List<EntityReport> entityReports = entityRepository.getPrivateEntities(1, Integer.MAX_VALUE, "", "" ,reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getIsRegistered(),reportObject.getLicenseNumber(),reportObject.getSupplierStatus(),reportObject.getTags());
-                file = excelWriterService.generate(entityReports);
+                file = excelWriterService.generate(entityReports, "Contact Tracker Entities");
             }else if (reportObject.getReportType() == 3 ) {
                 List<IndividualReport> individualReports = individualRepository.getIndividuals(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition(),reportObject.getTags());
                 file = excelWriterService.generate(individualReports);
