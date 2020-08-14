@@ -78,8 +78,8 @@ public class ExcelWriterService {
         createHeader(objectList.get(0), row);
         try {
             createBody(objectList, sheet);
-//            tempFile = File.createTempFile(sheetName, ".xlsx");
-            tempFile = new File(System.getProperty("java.io.tmpdir"), sheetName+".xlsx");
+            tempFile = File.createTempFile(sheetName, ".xlsx");
+//            tempFile = new File(System.getProperty("java.io.tmpdir"), sheetName+".xlsx");
             FileOutputStream outputStream = new FileOutputStream(tempFile);
             workbook.write(outputStream);
             workbook.close();
