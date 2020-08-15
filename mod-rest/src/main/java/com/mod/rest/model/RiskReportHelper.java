@@ -60,6 +60,16 @@ public class RiskReportHelper {
         return (String) removeNullValue(this.riskName);
     }
 
+    @ColumnName(key = "التاريخ")
+    public Date getRiskDate() {
+        return this.riskDate;
+    }
+
+    @ColumnName(key = "تاريخ المتوقع للحل")
+    public Date getRiskSolutionExperctedDate() {
+        return this.riskSolutionDate;
+    }
+
     @ColumnName(key = "وصف التحدي")
     public String getRiskDescription(){
         return (String) removeNullValue(this.riskDescription);
@@ -91,11 +101,6 @@ public class RiskReportHelper {
         }
     }
 
-    @ColumnName(key = "الملاحظات")
-    public String getNotes() {
-        return (String) removeNullValue(this.notes);
-    }
-
     @ColumnName(key = "التحدي مرتبط ب")
     public String getRelatedType() {
         switch (this.relatedType){
@@ -103,12 +108,23 @@ public class RiskReportHelper {
                 return "مشروع";
             case 2:
                 return "نشاط";
+            case 3:
+                return "هدف";
+            case 4:
+                return "مبادرة";
+            case 5:
+                return "برنامج";
+            case 6:
+                return "أنشطة تنفيذ السياسة";
+            case 7:
+                return "مؤشر الاداء";
+
             default:
                 return "";
         }
     }
 
-    @ColumnName(key="اسم المشروع/النشاط")
+    @ColumnName(key="الاسم ")
     public String getProjectName(){
         if (this.relatedType == 1) {
             Project p = (Project) removeNullValue(this.project);
@@ -116,49 +132,75 @@ public class RiskReportHelper {
                 return p.getName();
             }
             return "";
-        }
-        else {
+        } else if (this.relatedType == 2) {
 //            MainActivity a = (MainActivity) removeNullValue(this.project);
 //            if (a instanceof MainActivity) {
 //                return a.getActivityName();
 //            }
             return "";
-        }
-    }
-
-    @ColumnName(key="وصف المشروع/النشاط")
-    public String getProjectDescription(){
-        if (this.relatedType == 1) {
-            Project p = (Project) removeNullValue(this.project);
-            if (p instanceof Project) {
-                return p.getDescription();
-            }
-            return "";
-        }
-        else {
-//            MainActivity a = (MainActivity) removeNullValue(this.project);
-//            if (a instanceof MainActivity) {
-//                return a.getActivityDescription();
+        } else if (this.relatedType == 3) {
+//            IPStrategicGoal a = (IPStrategicGoal) removeNullValue(this.project);
+//            if (a instanceof IPStrategicGoal) {
+//                return a.getStrategicGoal();
 //            }
             return "";
+        }else if (this.relatedType == 4) {
+            //            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityName();
+//            }
+
+            return "";
+        } else if (this.relatedType == 5) {
+            Program a = (Program) removeNullValue(this.project);
+            if (a instanceof Program) {
+                return a.getName();
+            }
+            return "";
+        } else if (this.relatedType == 6) {
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityName();
+//            }
+            return "";
+        } else if (this.relatedType == 7) {
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityName();
+//            }
+            return "";
+        } else {
+
+            return "";
         }
     }
 
-    @ColumnName(key = "التاريخ")
-    public Date getRiskDate() {
-        return this.riskDate;
-    }
-
-    @ColumnName(key = "تاريخ المتوقع للحل")
-    public Date getRiskSolutionExperctedDate() {
-        return this.riskSolutionDate;
-    }
-
+//    @ColumnName(key="الوصف ")
+//    public String getProjectDescription(){
+//        if (this.relatedType == 1) {
+//            Project p = (Project) removeNullValue(this.project);
+//            if (p instanceof Project) {
+//                return p.getDescription();
+//            }
+//            return "";
+//        }
+//        else {
+////            MainActivity a = (MainActivity) removeNullValue(this.project);
+////            if (a instanceof MainActivity) {
+////                return a.getActivityDescription();
+////            }
+//            return "";
+//        }
+//    }
     @ColumnName(key = "المنشئ")
     public String getCreatedByName(){
         User user = (User) removeNullValue(this.createdBy);
         if (user instanceof User) return user.getDisplayName();
         return "";
+    }
+    @ColumnName(key = "الملاحظات")
+    public String getNotes() {
+        return (String) removeNullValue(this.notes);
     }
 //    @ColumnName(key="المسؤولين عن التحدي")
     public String getResponsibles(){
