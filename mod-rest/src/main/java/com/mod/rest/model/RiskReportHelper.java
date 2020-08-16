@@ -152,10 +152,10 @@ public class RiskReportHelper {
 
             return "";
         } else if (this.relatedType == 5) {
-            Program a = (Program) removeNullValue(this.project);
-            if (a instanceof Program) {
-                return a.getName();
-            }
+//            Program a = (Program) removeNullValue(this.project);
+//            if (a instanceof Program) {
+//                return a.getName();
+//            }
             return "";
         } else if (this.relatedType == 6) {
 //            MainActivity a = (MainActivity) removeNullValue(this.project);

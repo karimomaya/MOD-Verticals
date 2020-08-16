@@ -82,7 +82,7 @@ public class IssueReportHelper {
     @ColumnName(key = "الأولوية")
     public String getPriority() {
         switch (this.priority){
-            case 0:
+            case 1:
                 return "منخفضة";
             case 5:
                 return "متوسطة";
