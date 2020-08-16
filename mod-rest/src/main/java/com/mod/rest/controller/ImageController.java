@@ -47,9 +47,10 @@ public class ImageController {
             originalPath = image.getPath();
         } else {
             Path currentRelativePath = Paths.get("");
-            String s = currentRelativePath.toAbsolutePath().toString();
+//            String s = currentRelativePath.toAbsolutePath().toString();
             String dir = configUtil.getProperty("uploadDir");
-            originalPath = s + "\\" + dir + "\\" + type + "\\default.png";
+            originalPath = dir + "\\" + type + "\\default.png";
+//            originalPath = s + "\\" + dir + "\\" + type + "\\default.png";
         }
 //            originalPath = new PercentEscaper(":_.\\+ ", false).escape(originalPath);
         Path path = Paths.get(originalPath);
