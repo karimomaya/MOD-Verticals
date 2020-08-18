@@ -178,5 +178,12 @@ public class OutlookMeeting {
         return "";
     }
 
+    public void cancelMeeting() {
+        try {
+            this.appointment.cancelMeeting();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 

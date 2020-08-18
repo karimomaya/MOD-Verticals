@@ -248,13 +248,15 @@ public class RequestNumberEndPoint {
 
         Meeting meeting = meetingOptional.get();
 
-        sendMeeting(meeting, meetingAttendees, request.isUpdate());
+        sendMeeting(meeting, meetingAttendees, request.isUpdate(), request.isCancel());
+
+        if (request.isCancel())  return response.setStatus("done");
 
         if (meeting.getIsPeriodic() && !request.isUpdate()){
             ArrayList<Meeting> meetings = meetingRepository.getPeriodicMeeting(meetingId, meeting.getSubject());
             for (Meeting meeting1: meetings){
                 if (meeting1.getId() != meetingId && !meeting1.getConflict()){
-                    sendMeeting(meeting1, meetingAttendees, false);
+                    sendMeeting(meeting1, meetingAttendees, false, false);
                 }
             }
 
@@ -263,7 +265,7 @@ public class RequestNumberEndPoint {
         return response.setStatus("done");
     }
 
-    public void sendMeeting(Meeting meeting, List<MeetingAttendee> meetingAttendees, Boolean isUpdate){
+    public void sendMeeting(Meeting meeting, List<MeetingAttendee> meetingAttendees, Boolean isUpdate, Boolean isCancel){
         OutlookMeeting outlookMeeting = null;
 
         String username= env.getProperty("outlook-user-name");
@@ -276,18 +278,24 @@ public class RequestNumberEndPoint {
             outlookMeeting = new OutlookMeeting(null, username, password, exchangeServerUrl);
         }
 
+        if (isCancel){
+
+            outlookMeeting.cancelMeeting();
+            return;
+        }
+
         outlookMeeting = outlookMeeting.setSubject(meeting.getSubject())
                 .setBody(meeting.getDescription())
                 .setStartDate(meeting.getStartDate())
                 .setEndDate(meeting.getEndDate());
 
         for (MeetingAttendee meetingAttendee : meetingAttendees){
-            if (meetingAttendee.getIsExternal()){
+            if (meetingAttendee.getIsExternal() ){
                 Optional<ExternalUser> externalUserOptional = externalUserRepository.getExternalUserDetail(meetingAttendee.getAttendeeID());
                 if(externalUserOptional.isPresent()){
                     outlookMeeting.setAttendeeEmail(externalUserOptional.get().getEmail());
                 }
-            }else {
+            }else if (meetingAttendee.getStatus() != 2 && meetingAttendee.getStatus() != 3){
                 Optional<User> userOptional = userRepository.getUserDetail(meetingAttendee.getAttendeeID());
                 if (userOptional.isPresent()){
                     outlookMeeting.setAttendeeEmail(userOptional.get().getEmail());

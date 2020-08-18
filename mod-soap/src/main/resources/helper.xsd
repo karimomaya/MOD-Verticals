@@ -26,6 +26,7 @@
             <xs:sequence>
                 <xs:element name="meetingId" type="xs:long"/>
                 <xs:element name="isUpdate" type="xs:boolean"/>
+                <xs:element name="isCancel" type="xs:boolean"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
