@@ -140,11 +140,12 @@ public class RequestNumberEndPoint {
             }
 
             String username= env.getProperty("outlook-user-name");
+            String logoPath= env.getProperty("outlook-logo-path");
             String password= env.getProperty("outlook-user-password");
             String exchangeServerUrl=env.getProperty("outlook-exchange-server-url");
 
             OutlookMeeting outlookMeeting = new OutlookMeeting(null, username, password, exchangeServerUrl);
-            outlookMeeting.sendEmail(fileAsString, request.getEmails().split(","), request.getSubject());
+            outlookMeeting.setLogoPath(logoPath).sendEmail(fileAsString, request.getEmails().split(","), request.getSubject());
 
             System.out.println("Contents : " + fileAsString);
         } catch (FileNotFoundException e) {
