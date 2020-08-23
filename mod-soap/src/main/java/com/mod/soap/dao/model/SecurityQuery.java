@@ -27,7 +27,9 @@ public class SecurityQuery {
     Queue<String> operator = new LinkedList<>();
     private String newKey;
 
-    ArrayList<String> functionsKeywords = new ArrayList<>(Arrays.asList("$biggerThanOrEqual", "$biggerThan", "$smallerThanOrEqual", "$smallerThan"));
+    ArrayList<String> functionsKeywords = new ArrayList<>(Arrays.asList("$biggerThanOrEqual", "$biggerThan", "$smallerThanOrEqual", "$smallerThan",
+            "$biggerThanDate", "$smallerThanOrEqualToDate", "$smallerThanDate" , "$biggerThanOrEqualToDate"));
+
 
 
     private String template;
