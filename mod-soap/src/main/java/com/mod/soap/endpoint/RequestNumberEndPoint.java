@@ -134,6 +134,11 @@ public class RequestNumberEndPoint {
                 String value = "";
                 for(int k=0;k<nl.getLength();k++){
                     value =  getTagByName((Node)nl.item(k), token, "");
+                    Pattern dateRegex = Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})T(?:\\d{2}):\\d{2}:\\d{2}.*");
+                    Matcher dateMatcher = dateRegex.matcher(value);
+                    if(dateMatcher.find()){
+                        value = value.split("T")[0];
+                    }
                     if (!value.equals("")) break;
                 }
                 fileAsString = fileAsString.replace("("+token+")", value);
