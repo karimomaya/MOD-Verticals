@@ -46,14 +46,20 @@ public class IssueReportHelper {
 
 //    @Transient
 //    ArrayList<IssueResponsibleHelper> responsibles;
-
-    @ManyToOne
-    @JoinColumn(name = "projectName")
-    @NotFound(action = NotFoundAction.IGNORE)
-    Project project;
-
-    @Transient
-    String projectDescription;
+    String project;
+    String programName;
+    String activityName;
+    String policyactivity;
+    String goal;
+    String initiative;
+    String kpi;
+//    @ManyToOne
+//    @JoinColumn(name = "projectName")
+//    @NotFound(action = NotFoundAction.IGNORE)
+//    Project project;
+//
+//    @Transient
+//    String projectDescription;
 
     @ColumnName(key = "رقم الخطر")
     public String getIssueId(){
@@ -168,48 +174,48 @@ public class IssueReportHelper {
     @ColumnName(key="الاسم ")
     public String getProjectName(){
         if (this.relatedType == 1) {
-            Project p = (Project) removeNullValue(this.project);
-            if (p != null) {
-                return p.getName();
-            }
-            return "";
+//            Project p = (Project) removeNullValue(this.project);
+//            if (p instanceof Project) {
+//                return p.getName();
+//            }
+            return project;
         } else if (this.relatedType == 2) {
-//            IPMainActivity a = (IPMainActivity) removeNullValue(this.project);
-//            if (a != null) {
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
 //                return a.getActivityName();
 //            }
-            return "";
+            return activityName;
         } else if (this.relatedType == 3) {
 //            IPStrategicGoal a = (IPStrategicGoal) removeNullValue(this.project);
-//            if (a != null) {
+//            if (a instanceof IPStrategicGoal) {
 //                return a.getStrategicGoal();
 //            }
-            return "";
+            return goal;
         }else if (this.relatedType == 4) {
             //            MainActivity a = (MainActivity) removeNullValue(this.project);
 //            if (a instanceof MainActivity) {
 //                return a.getActivityName();
 //            }
 
-            return "";
+            return initiative;
         } else if (this.relatedType == 5) {
 //            Program a = (Program) removeNullValue(this.project);
-//            if (a != null) {
+//            if (a instanceof Program) {
 //                return a.getName();
 //            }
-            return "";
+            return programName;
         } else if (this.relatedType == 6) {
 //            MainActivity a = (MainActivity) removeNullValue(this.project);
 //            if (a instanceof MainActivity) {
 //                return a.getActivityName();
 //            }
-            return "";
+            return policyactivity;
         } else if (this.relatedType == 7) {
 //            MainActivity a = (MainActivity) removeNullValue(this.project);
 //            if (a instanceof MainActivity) {
 //                return a.getActivityName();
 //            }
-            return "";
+            return kpi;
         } else {
 
             return "";

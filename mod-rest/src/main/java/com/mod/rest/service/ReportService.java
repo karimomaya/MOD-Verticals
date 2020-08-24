@@ -1,5 +1,6 @@
 package com.mod.rest.service;
 
+import com.google.common.primitives.Ints;
 import com.mod.rest.model.*;
 import com.mod.rest.repository.*;
 import com.mod.rest.system.Utils;
@@ -1232,9 +1233,13 @@ public class ReportService {
             long[] risks = reportObject.getRisks();
             int arraySize = risks.length;
             int[] taskCount = new int[0];
-            int[] completedTasks = new int[0];
-            int[] delayedTasks = new int[0];
-            int[] inProgressTasks = new int[0];
+            ArrayList completedTasks = new ArrayList();
+            ArrayList delayedTasks = new ArrayList();
+            ArrayList inProgressTasks = new ArrayList();
+
+//            int[] completedTasks = new int[0];
+//            int[] delayedTasks = new int[0];
+//            int[] inProgressTasks = new int[0];
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
                 if (i != 0) ids += ",";
@@ -1243,68 +1248,108 @@ public class ReportService {
             if(arraySize == 0) {
                 arraySize = reportObject.getRiskIds().split(",").length;
                 taskCount = new int[arraySize];
-                completedTasks = new int[arraySize];
-                delayedTasks = new int[arraySize];
-                inProgressTasks = new int[arraySize];
+//                completedTasks = new int[arraySize];
+//                delayedTasks = new int[arraySize];
+//                inProgressTasks = new int[arraySize];
 
                 for (int i = 0; i < arraySize; i++) {
 //                    for(int j=0; j< users.length; j++) {
+
+                    boolean hasCompleted = false;
+                    boolean hasProgress = false;
+                    boolean hasDelayed = false;
+
                     taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getRiskIds().split(",")[i], ids);
-//                    if (taskList.size() == 0) continue;
+                    if (taskList.size() == 0) continue;
+                    else {
                         for (Task task : taskList) {
                             if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks[i] += 1;
+                                completedTasks.add(1);
+                                hasCompleted = true;
                             } else if (task.getDueDate().before(new Date())) {
-                           // } else if (task.getDueDate().before(new Date()) && task.getStatus() != 11) {
-                                delayedTasks[i] += 1;
+                                // } else if (task.getDueDate().before(new Date()) && task.getStatus() != 11) {
+                                delayedTasks.add(1);
+                                hasDelayed = true;
                             } else {
-                                inProgressTasks[i] += 1;
+                                inProgressTasks.add(1);
+                                hasProgress = true;
                             }
                         }
 
+                        String projectName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
+                        xaxis.add(projectName);
+                    }
+//                        for (Task task : taskList) {
+//                            if (task.getStatus() == 3 || task.getStatus() == 12) {
+//                                completedTasks.add(1);
+//                                hasCompleted = true;
+//                            } else if (task.getDueDate().before(new Date())) {
+//                           // } else if (task.getDueDate().before(new Date()) && task.getStatus() != 11) {
+//                                delayedTasks.add(1);
+//                                hasDelayed = true;
+//                            } else {
+//                                inProgressTasks.add(1);
+//                                hasProgress = true;
+//                            }
+//                        }
+
 //                    }
-                    String projectName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
-                    xaxis.add(projectName);
+
+//                    if(hasCompleted || hasDelayed || hasProgress){
+//                        String projectName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
+//                        xaxis.add(projectName);
+//                    }
                 }
             }else {
                  taskCount = new int[arraySize];
-                 completedTasks = new int[arraySize];
-                 delayedTasks = new int[arraySize];
-                 inProgressTasks = new int[arraySize];
+                 completedTasks = new ArrayList();
+                 delayedTasks = new ArrayList();
+                 inProgressTasks = new ArrayList();
 
                 for (int i = 0; i < arraySize; i++) {
+                    boolean hasCompleted = false;
+                    boolean hasProgress = false;
+                    boolean hasDelayed = false;
 //                    for(int j=0; j< users.length; j++) {
                         String risk = risks[i]+"";
                         taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(reportObject.getPageNumber(), reportObject.getPageSize(), risk, ids);
-//                        if (taskList.size() == 0) continue;
-                        for (Task task : taskList) {
-                            if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks[i] += 1;
-                            } else if (task.getDueDate().before(new Date())) {
-                                delayedTasks[i] += 1;
-                            } else {
-                                inProgressTasks[i] += 1;
+                        if (taskList.size() == 0) continue;
+                        else {
+                            for (Task task : taskList) {
+                                if (task.getStatus() == 3 || task.getStatus() == 12) {
+                                    completedTasks.add(1);
+                                    hasCompleted = true;
+                                } else if (task.getDueDate().before(new Date())) {
+                                    delayedTasks.add(1);
+                                    hasDelayed=true;
+                                } else {
+                                    inProgressTasks.add(1);
+                                    hasProgress=true;
+                                }
                             }
+                            String projectName = riskRepository.findById(risks[i]).get().getRiskName();
+                            xaxis.add(projectName);
                         }
+
 //                    }
-                    String projectName = riskRepository.findById(risks[i]).get().getRiskName();
-                    xaxis.add(projectName);
+//                    if(hasCompleted || hasDelayed || hasProgress){
+//
+//                    }
                 }
             }
-
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام منجزة");
-            graphDataHelper.setData(completedTasks);
+            graphDataHelper.setData(Ints.toArray(completedTasks));
             graphDataHelpers.add(graphDataHelper);
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام تحت التنفيذ");
-            graphDataHelper.setData(inProgressTasks);
+            graphDataHelper.setData(Ints.toArray(inProgressTasks));
             graphDataHelpers.add(graphDataHelper);
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام متأخرة");
-            graphDataHelper.setData(delayedTasks);
+            graphDataHelper.setData(Ints.toArray(delayedTasks));
             graphDataHelpers.add(graphDataHelper);
 
         }else if(type == "AllTaskReportIssue"){
@@ -1313,9 +1358,9 @@ public class ReportService {
             long[] issues = reportObject.getIssues();
             int arraySize = issues.length;
             int[] taskCount = new int[0];
-            int[] completedTasks = new int[0];
-            int[] delayedTasks = new int[0];
-            int[] inProgressTasks = new int[0];
+            ArrayList completedTasks = new ArrayList();
+            ArrayList delayedTasks = new ArrayList();
+            ArrayList inProgressTasks = new ArrayList();
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
                 if (i != 0) ids += ",";
@@ -1324,66 +1369,68 @@ public class ReportService {
             if(arraySize == 0) {
                 arraySize = reportObject.getIssueIds().split(",").length;
                 taskCount = new int[arraySize];
-                completedTasks = new int[arraySize];
-                delayedTasks = new int[arraySize];
-                inProgressTasks = new int[arraySize];
+//                completedTasks = new int[arraySize];
+//                delayedTasks = new int[arraySize];
+//                inProgressTasks = new int[arraySize];
 
                 for (int i = 0; i < arraySize; i++) {
 //                    for(int j=0; j< users.length; j++) {
                         taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds().split(",")[i], ids);
-//                        if (taskList.size() == 0) continue;
+                        if (taskList.size() == 0) continue;
                         for (Task task : taskList) {
                             if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks[i] += 1;
+                                completedTasks.add( 1);
                             } else if (task.getDueDate().before(new Date())) {
-                                delayedTasks[i] += 1;
+                                delayedTasks.add(1);
                             } else {
-                                inProgressTasks[i] += 1;
+                                inProgressTasks.add(1);
                             }
 //                        }
-                    }
-                    String projectName = issueRepository.findById(Long.parseLong(reportObject.getIssueIds().split(",")[i])).get().getIssueName();
-                    xaxis.add(projectName);
+                        }
+                        String projectName = issueRepository.findById(Long.parseLong(reportObject.getIssueIds().split(",")[i])).get().getIssueName();
+                        xaxis.add(projectName);
+
                 }
             }else {
                 taskCount = new int[arraySize];
-                completedTasks = new int[arraySize];
-                delayedTasks = new int[arraySize];
-                inProgressTasks = new int[arraySize];
+                 completedTasks = new ArrayList();
+                 delayedTasks = new ArrayList();
+                 inProgressTasks = new ArrayList();
 
                 for (int i = 0; i < arraySize; i++) {
 //                    for(int j=0; j< users.length; j++) {
                         String issue = issues[i]+"";
                         taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), issue, ids);
-//                        if (taskList.size() == 0) continue;
+                        if (taskList.size() == 0) continue;
                         for (Task task : taskList) {
                             if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks[i] += 1;
+                                completedTasks.add( 1);
                             } else if (task.getDueDate().before(new Date())) {
-                                delayedTasks[i] += 1;
+                                delayedTasks.add(1);
                             } else {
-                                inProgressTasks[i] += 1;
+                                inProgressTasks.add(1);
                             }
                         }
+                        String projectName = issueRepository.findById(issues[i]).get().getIssueName();
+                        xaxis.add(projectName);
 //                    }
-                    String projectName = issueRepository.findById(issues[i]).get().getIssueName();
-                    xaxis.add(projectName);
+
                 }
             }
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام منجزة");
-            graphDataHelper.setData(completedTasks);
+            graphDataHelper.setData(Ints.toArray(completedTasks));
             graphDataHelpers.add(graphDataHelper);
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام تحت التنفيذ");
-            graphDataHelper.setData(inProgressTasks);
+            graphDataHelper.setData(Ints.toArray(inProgressTasks));
             graphDataHelpers.add(graphDataHelper);
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام متأخرة");
-            graphDataHelper.setData(delayedTasks);
+            graphDataHelper.setData(Ints.toArray(delayedTasks));
             graphDataHelpers.add(graphDataHelper);
 
         }else if(type == "delayedTaskRiskReport"){
