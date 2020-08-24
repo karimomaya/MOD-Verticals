@@ -10,6 +10,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -26,7 +27,9 @@ public class SecurityQuery {
     Queue<String> operator = new LinkedList<>();
     private String newKey;
 
-    ArrayList<String> functionsKeywords = new ArrayList<>(Arrays.asList("$biggerThanOrEqual", "$biggerThan", "$smallerThanOrEqual", "$smallerThan"));
+    ArrayList<String> functionsKeywords = new ArrayList<>(Arrays.asList("$biggerThanOrEqual", "$biggerThan", "$smallerThanOrEqual", "$smallerThan",
+            "$biggerThanDate", "$smallerThanOrEqualToDate", "$smallerThanDate" , "$biggerThanOrEqualToDate"));
+
 
 
     private String template;
@@ -345,8 +348,28 @@ public class SecurityQuery {
 
     private boolean executeFunction(String input, String value){
 
-
-        if (input.contains("$biggerThanOrEqual")){
+        if (input.contains("$biggerThanOrEqualToDate")){
+            input = getValueFromFunction(input, "$biggerThanOrEqualToDate");
+            Date fstVal = Date.from( Instant.parse((input)));
+            Date secondVal = Date.from(Instant.parse((value)));
+            return (secondVal.compareTo(fstVal) == 1 ||  secondVal.compareTo(fstVal) == 0);
+        }else if(input.contains("$biggerThanDate")){
+            input = getValueFromFunction(input, "$biggerThanDate");
+            Date fstVal = Date.from( Instant.parse((input)));
+            Date secondVal = Date.from(Instant.parse((value)));
+            return (secondVal.compareTo(fstVal) == 1 );
+        }
+        else if(input.contains("$smallerThanOrEqualToDate")){
+            input = getValueFromFunction(input, "$smallerThanOrEqualToDate");
+            Date fstVal = Date.from( Instant.parse((input)));
+            Date secondVal = Date.from(Instant.parse((value)));
+            return (secondVal.compareTo(fstVal) == -1  ||  secondVal.compareTo(fstVal) == 0);
+        } else if(input.contains("$smallerThanDate")){
+            input = getValueFromFunction(input, "$smallerThanDate");
+            Date fstVal = Date.from( Instant.parse((input)));
+            Date secondVal = Date.from(Instant.parse((value)));
+            return (secondVal.compareTo(fstVal) == -1  );
+        } else if (input.contains("$biggerThanOrEqual")){
             input = getValueFromFunction(input, "$biggerThanOrEqual");
             int fstVal = convertStringToInt(input);
             int secondVal = convertStringToInt(value);

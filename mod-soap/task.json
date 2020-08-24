@@ -1,0 +1,10 @@
+{
+    "webservice": {
+        "method": "MOD_TM_SP_task_GetTaskDataById",
+        "namespace": "http://schemas.cordys.com/MOD_TM_SP_task_GetTaskDataById",
+        "param": {
+            "RETURN_VALUE": "",
+			"taskId" : $0
+        }
+    }
+}
