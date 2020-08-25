@@ -705,19 +705,22 @@ public class ReportService {
 
                 for(int i=0; i< users.length; i++) {
                 issueList1 = issueRepository.getIssueRelatedToProjectReport(1, Integer.MAX_VALUE, reportObject.getProjectIds(), users[i] + "");
-                    for (Issue issue : issueList1) {
-                        LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
-                        int indexOfIssue = (int) ChronoUnit.MONTHS.between(
-                                startDate.withDayOfMonth(1),
-                                date.withDayOfMonth(date.lengthOfMonth()));
-                        issueDate[indexOfIssue] += 1;
+                    if(issueList1.size() != 0){
+                        for (Issue issue : issueList1) {
+                            LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
+                            int indexOfIssue = (int) ChronoUnit.MONTHS.between(
+                                    startDate.withDayOfMonth(1),
+                                    date.withDayOfMonth(date.lengthOfMonth()));
+                            issueDate[indexOfIssue] += 1;
+                        }
+                        GraphDataHelper graphDataHelper = new GraphDataHelper();
+                        graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                        graphDataHelper.setData(issueDate);
+                        graphDataHelpers.add(graphDataHelper);
                     }
-                    GraphDataHelper graphDataHelper = new GraphDataHelper();
-                    graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-                    graphDataHelper.setData(issueDate);
-                    graphDataHelpers.add(graphDataHelper);
                     issueDate = new int[months];
                 }
+
             }
         } else if (type.equals("userProductivityRiskReport")){
             issueList = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids );
