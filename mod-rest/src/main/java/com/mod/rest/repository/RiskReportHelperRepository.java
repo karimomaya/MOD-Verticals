@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,8 +30,8 @@ public interface RiskReportHelperRepository extends GenericRepository<RiskReport
     @Query(value = "{call MOD_RM_SP_GetRisksRelatedToProjectReportCount( :projectId, :createdBy )}", nativeQuery = true)
     Long getRiskRelatedToProjectReportCount(@Param("projectId") String projectId, @Param("createdBy") String createdBy);
 
-    @Query(value = "{call MOD_RM_GetClosedRisksReport(:PageNumber, :PageSize, :createdBy)}", nativeQuery = true)
-    List<RiskReportHelper> getClosedRisksReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy);
+    @Query(value = "{call MOD_RM_GetClosedRisksReport(:PageNumber, :PageSize, :createdBy, :StartDate, :EndDate)}", nativeQuery = true)
+    List<RiskReportHelper> getClosedRisksReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy, @Param("StartDate") Date StartDate, @Param("EndDate") Date EndDate);
 
     @Query(value = "{call MOD_RM_GetClosedRisksReportCount( :createdBy )}", nativeQuery = true)
     Long getClosedRisksReportCount(@Param("createdBy") String createdBy);

@@ -197,7 +197,7 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) riskRepository.getClosedRisksReportCount(ids, reportObject.getStartDate(), reportObject.getEndDate());
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<RiskReportHelper> risks = riskReportHelperRepository.getClosedRisksReport( 1, Integer.MAX_VALUE,ids);
+                List<RiskReportHelper> risks = riskReportHelperRepository.getClosedRisksReport( 1, Integer.MAX_VALUE,ids, reportObject.getStartDate(), reportObject.getEndDate());
                 return (T) excelWriterService.generate(risks);
 
             }
@@ -302,11 +302,11 @@ public class ReportService {
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  issueReportHelper(reportObject, "userProductivityRiskReport");
             }else  if (reportObject.getDetectedReportType() == 1){ // table
-                return (T) issueRepository.getClosedIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
+                return (T) issueRepository.getClosedIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), ids, reportObject.getStartDate(), reportObject.getEndDate());
             } else if(reportObject.getDetectedReportType() == 2) { // count
-                return (T) issueRepository.getClosedIssuesReportCount(ids);
+                return (T) issueRepository.getClosedIssuesReportCount(ids, reportObject.getStartDate(), reportObject.getEndDate());
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<IssueReportHelper> issues =  issueReportHelperRespository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids);
+                List<IssueReportHelper> issues =  issueReportHelperRespository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids, reportObject.getStartDate(), reportObject.getEndDate());
                 return (T) excelWriterService.generate(issues);
             }
         }
@@ -723,7 +723,7 @@ public class ReportService {
 
             }
         } else if (type.equals("userProductivityRiskReport")){
-            issueList = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids );
+            issueList = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids, reportObject.getStartDate(), reportObject.getEndDate() );
             if(issueList.size() != 0){
                 xaxis = Utils.getYearlyMonthBetweenDates(issueList.get(0).getIssueStartDate(),issueList.get(issueList.size()-1).getIssueStartDate());
                 LocalDate startDate = LocalDate.parse(issueList.get(0).getIssueStartDate().toString().split(" ")[0]);
@@ -736,7 +736,7 @@ public class ReportService {
                 int[] issueDate = new int[months];
 
                 for(int i=0; i< users.length; i++) {
-                issueList1 = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, users[i] +"" );
+                issueList1 = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, users[i] +"", reportObject.getStartDate(), reportObject.getEndDate() );
                     if(issueList1.size() != 0){
                         for (Issue issue : issueList1) {
                             LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
