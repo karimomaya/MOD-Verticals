@@ -15,6 +15,7 @@ import com.mod.rest.system.ResponseBuilder;
 import com.mod.rest.system.ResponseCode;
 import com.mod.rest.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,6 +41,8 @@ public class ReportController {
     SessionService sessionService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    Environment env;
 
     @GetMapping("export/{report}/{samlart}")
     @ResponseBody
@@ -69,7 +72,17 @@ public class ReportController {
             isr = Files.readAllBytes(file.toPath());
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+            String fname = "Excel";
+            if(reportObject.getReportType() >= 10 && reportObject.getReportType() < 40){
+                fname = env.getProperty("risk-management-name");
+            }else if(reportObject.getReportType() < 10){
+                fname = env.getProperty("task-management-name");
+            }else if(reportObject.getReportType() == 50){
+                fname = env.getProperty("purchase-order-name");
+            }else {
+                fname = "Excel";
+            }
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fname + ".xlsx");
 
             return new ResponseEntity<byte[]>(isr, respHeaders, HttpStatus.OK);
 

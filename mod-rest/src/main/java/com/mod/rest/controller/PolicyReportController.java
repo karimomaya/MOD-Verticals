@@ -6,6 +6,7 @@ import com.mod.rest.service.ExcelWriterService;
 import com.mod.rest.service.PDFService;
 import com.mod.rest.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +33,8 @@ public class PolicyReportController {
     PolicyReportRepository policyReporttRepository;
     @Autowired
     PDFService pdfService;
+    @Autowired
+    Environment env;
 
     @GetMapping("exportPDF/{startDate}/{endDate}/{userEntityId}/{userUnitId}")
     @ResponseBody
@@ -77,6 +80,7 @@ public class PolicyReportController {
         HttpHeaders respHeaders = new HttpHeaders();
         Date sDate=Utils.convertStringToDate(startDate);
         Date eDate=Utils.convertStringToDate(endDate);
+        String fname = env.getProperty("policy-management-name");
         File file = null;
         byte[] bytes = null;
         try{
@@ -92,7 +96,7 @@ public class PolicyReportController {
             bytes = Files.readAllBytes(file.toPath());
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fname + ".xlsx");
 
             return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 

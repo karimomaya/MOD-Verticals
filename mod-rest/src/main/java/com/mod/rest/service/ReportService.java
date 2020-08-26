@@ -110,20 +110,7 @@ public class ReportService {
             List<PurchaseOrderReport> purchaseOrderReports = purchaseOrderRepository.getPurchaseOrderReport(reportObject.getStartDateString(),reportObject.getEndDateString(), reportObject.getEntityName(), 0, Integer.MAX_VALUE, reportObject.getInput());
             return (T) excelWriterService.generate(purchaseOrderReports);
         }
-    // Case Contact Tracker
-        if (reportObject.getReportType() == 20 ) {
-            List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
-            return (T) excelWriterService.generate(entityReports);
-        } else if (reportObject.getReportType() == 21 ) {
-            List<EntityReport> entityReports = entityRepository.getPrivateEntities(1, Integer.MAX_VALUE, "", "" ,reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getIsRegistered(),reportObject.getLicenseNumber(),reportObject.getSupplierStatus(),reportObject.getTags());
-            return (T) excelWriterService.generate(entityReports);
-        }else if (reportObject.getReportType() == 22 ) {
-            List<IndividualReport> individualReports = individualRepository.getIndividuals(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition(),reportObject.getTags());
-            return (T) excelWriterService.generate(individualReports);
-        }else if (reportObject.getReportType() == 23) {
-            List<User> ministryUsersReports = userRepository.getMinistryUsers(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition());
-            return (T) excelWriterService.generate(ministryUsersReports);
-        }
+
 
     // Risk Management
         //•	تقرير التحديات المتأخرة
