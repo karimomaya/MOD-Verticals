@@ -9,6 +9,7 @@ import com.mod.rest.repository.UserRepository;
 import com.mod.rest.service.ExcelWriterService;
 import com.mod.rest.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,6 +33,8 @@ public class ContactTrackerController {
     @Autowired
     ExcelWriterService excelWriterService;
     @Autowired
+    Environment env;
+    @Autowired
     EntityRepository entityRepository;
     @Autowired
     IndividualRepository individualRepository;
@@ -44,6 +47,8 @@ public class ContactTrackerController {
         ObjectMapper mapper = new ObjectMapper();
         HttpHeaders respHeaders = new HttpHeaders();
         File file = null;
+        String fname = env.getProperty("contact-tracker-name");
+
         byte[] bytes = null;
         try {
             ReportObject reportObject = mapper.readValue(reportStr, ReportObject.class);
@@ -70,7 +75,7 @@ public class ContactTrackerController {
             bytes = Files.readAllBytes(file.toPath());
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fname+".xlsx");
 
             return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 
