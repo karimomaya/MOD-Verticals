@@ -5,6 +5,7 @@ import com.mod.rest.repository.ProofreadingReportRepository;
 import com.mod.rest.repository.UnitRepository;
 import com.mod.rest.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,9 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/proofreadingReport")
 public class ProofreadingReportController {
+    @Autowired
+    Environment env;
+
     @Autowired
     SessionService sessionService;
     @Autowired
@@ -65,11 +69,13 @@ public class ProofreadingReportController {
         }
         respHeaders.setContentLength(file.length());
         try {
+            String fname = env.getProperty("proofreading-report-name");
+
             bytes = Files.readAllBytes(file.toPath());
 
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fname +".xlsx");
 
             return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 
