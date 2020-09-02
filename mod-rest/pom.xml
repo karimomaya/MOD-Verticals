@@ -19,11 +19,12 @@
     <packaging>jar</packaging>
 
     <properties>
+        <!-- Main Class -->
+        <start-class>com.mod.rest.SpringBootRestServiceApplication</start-class>
         <!--<maven.compiler.source>1.8</maven.compiler.source>-->
         <!--<maven.compiler.target>1.8</maven.compiler.target>-->
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <maven.resources.encoding>UTF-8</maven.resources.encoding>
-
     </properties>
 
 
@@ -54,6 +55,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-loader</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -207,54 +214,100 @@
     </dependencies>
 
 
+    <!--<build>-->
+
+        <!--<plugins>-->
+
+            <!--<plugin>-->
+                <!--<artifactId>maven-jar-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<addClasspath>true</addClasspath>-->
+                            <!--<classpathPrefix>libs/</classpathPrefix>-->
+                            <!--<mainClass>com.mod.rest.SpringBootRestServiceApplication</mainClass>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+
+            <!--<plugin>-->
+                <!--<artifactId>maven-resources-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>copy-resources</id>-->
+                        <!--<phase>validate</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>copy-resources</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<outputDirectory>${project.build.directory}</outputDirectory>-->
+                            <!--<resources>-->
+                                <!--<resource>-->
+                                    <!--<directory>.</directory>-->
+                                    <!--<filtering>true</filtering>-->
+                                    <!--<include>*.bat</include>-->
+                                <!--</resource>-->
+                            <!--</resources>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+            <!--<plugin>-->
+                <!--<groupId>org.springframework.boot</groupId>-->
+                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+                <!--<configuration>-->
+                    <!--<executable>true</executable>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+
+        <!--</plugins>-->
+
+    <!--</build>-->
+
+
+
+
+
     <build>
-
         <plugins>
-
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>libs/</classpathPrefix>
-                            <mainClass>com.mod.rest.SpringBootRestServiceApplication</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>.</directory>
-                                    <filtering>true</filtering>
-                                    <include>*.bat</include>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-loader</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <target>
+                                <zip destfile="${project.build.directory}/${project.build.finalName}.jar"
+                                     update="true" compress="store">
+                                    <fileset dir="${project.build.directory}/classes">
+                                        <include name="com/mod/rest/system/Bootstrap.class"/>
+                                    </fileset>
+                                </zip>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
-
     </build>
-
 
 </project>
