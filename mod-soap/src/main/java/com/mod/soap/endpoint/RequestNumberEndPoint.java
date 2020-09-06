@@ -69,6 +69,8 @@ public class RequestNumberEndPoint {
     MeetingRepository meetingRepository;
     @Autowired
     MeetingAttendeeRepository meetingAttendeeRepository;
+    @Autowired
+    NotificationTaskRepository notificationTaskRepository;
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendEmailRequest")
     @ResponsePayload
@@ -205,7 +207,6 @@ public class RequestNumberEndPoint {
         return template;
     }
 
-
     @Autowired
     public RequestNumberEndPoint(RequestNumberRepository RequestNumberRepository) {
         this.RequestNumberRepository = RequestNumberRepository;
@@ -238,8 +239,6 @@ public class RequestNumberEndPoint {
 
         return response;
     }
-
-
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendMeetingRequest")
     @ResponsePayload
@@ -318,7 +317,6 @@ public class RequestNumberEndPoint {
         }
     }
 
-
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "RequestNumberRequest")
     @ResponsePayload
     public RequestNumberResponse generateRequestNumber(@RequestPayload RequestNumberRequest request) {
@@ -342,8 +340,6 @@ public class RequestNumberEndPoint {
         return response;
     }
 
-
-
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "CustomSecurityRequest")
     @ResponsePayload
     public CustomSecurityResponse getCustomSecurity(@RequestPayload CustomSecurityRequest request) {
@@ -354,6 +350,19 @@ public class RequestNumberEndPoint {
 
         User user = sessionService.loginWithUsername(request.getUsername());
 
+        String url = request.getUrl();
+
+        if(url != null) {
+            String taskId = getTaskIdFromURL(url);
+            if (taskId != null) {
+                Boolean canViewTask = userCanViewTask(user, taskId);
+                customSecurityResponse.setCanviewTask(canViewTask);
+                if(!canViewTask){
+                    return customSecurityResponse;
+                }
+            }
+        }
+
         if (user == null){
             SecurityAccess securityAccess = new SecurityAccess();
             securityAccess.setAccess(false);
@@ -361,9 +370,7 @@ public class RequestNumberEndPoint {
             return customSecurityResponse;
         }
 
-
         HashMap<String, String > previousResponse = new HashMap<>();
-
 
         for (SecurityRequest securityRequest : securityRequests){
 
@@ -423,13 +430,76 @@ public class RequestNumberEndPoint {
         return customSecurityResponse;
     }
 
+    private Boolean userCanViewTask(User user,String taskId){
+        NotificationTask notificationTask = notificationTaskRepository.getTaskByInstanceId(taskId);
+
+        List<User> assignedUsers = null;
+        if(notificationTask.getTARGET_TYPE().equals("role")){
+            assignedUsers = userRepository.getUsersByRoleName(notificationTask.getAssignedRoleName());
+        }else if(notificationTask.getTARGET_TYPE().equals("user")){
+            assignedUsers = userRepository.getUserDetailsByUserId(notificationTask.getAssignedRoleName());
+        }
+
+        Boolean canViewTask = checkIfUserInList(user, assignedUsers);
+
+        if(canViewTask) return true;
+
+        Boolean taskTransfered = checkIfTaskTransfered(user, taskId);
+        if(taskTransfered){
+            assignedUsers = userRepository.getUserDetail(notificationTask.getTASKOWNER());
+            canViewTask = checkIfUserInList(user, assignedUsers);
+            if(canViewTask) return true;
+        }
+
+        return false;
+    }
+
+    private String getTaskIdFromURL(String url){
+        Pattern pattern = Pattern.compile("(TaskId=)((\\w+-){2,}(\\w+))(?=.*)");
+        Matcher matcher = pattern.matcher(url);
+
+        if (matcher.find()) {
+            String taskId = matcher.group();
+            String[] vars = taskId.split("=");
+            if (vars.length > 1) {
+                taskId = vars[1];
+                return taskId;
+            }
+        }
+
+        return null;
+    }
+
+    private Boolean checkIfTaskTransfered(User user, String taskId){
+        Http http = new Http(property);
+        UserDetails userDetails = new UserDetails();
+        String response = http.cordysRequest(userDetails.viewMemosByTasks(taskId, user.getTicket()));
+        Document doc = Utils.convertStringToXMLDocument(response);
+        Node node = doc.getElementsByTagName("Memo").item(0);
+        if(node != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private Boolean checkIfUserInList(User user, List<User> users){
+        if(users != null) {
+            for (User userOfList : users) {
+                if (user.getId() == userOfList.getId()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private SecurityAccess addResponseToSecurity(boolean response, String target) {
         SecurityAccess securityAccess = new SecurityAccess();
         securityAccess.setAccess(response);
         securityAccess.setTarget(target);
         return securityAccess;
     }
-
 
     private boolean evaluateWebservice(CustomSecurityRequest request, SecurityRequest securityRequest, SecurityConfig securityConfig, SecurityQuery securityQuery,  HashMap<String, String > previousResponse){
         String response = "";
@@ -450,9 +520,6 @@ public class RequestNumberEndPoint {
 
         return securityQuery.evaluateNewWebserviceResponse(response);
     }
-
-
-
 
     private String prepareSecurityConfig(Security security, SecurityRequest securityRequest, User user){
         String config = security.getConfig();
@@ -482,8 +549,6 @@ public class RequestNumberEndPoint {
         return http.cordysRequest(webservice);
     }
 
-
-
     protected HttpServletRequest getHttpServletRequest() {
         TransportContext ctx = TransportContextHolder.getTransportContext();
         return ( null != ctx ) ? ((HttpServletConnection) ctx.getConnection()).getHttpServletRequest() : null;
@@ -499,6 +564,4 @@ public class RequestNumberEndPoint {
     public String getProperty(String pPropertyKey) {
         return env.getProperty(pPropertyKey);
     }
-
-
 }
