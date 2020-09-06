@@ -26,6 +26,12 @@ import java.util.Date;
 @PDFResources(key="task-report-template")
 public class Task implements Serializable {
 
+//    select task.Id, task.taskName, person.DisplayName as owner, task.source,
+//    task.status as taskStatus, task.dueDate, task.startDate, task.priority,
+//    ISNULL(([dbo].[GetTotalFinishedWorkingUsers](task.Id)/ NULLIF([dbo].[GetTotalWorkingUsers](task.Id),0)),0) as finished,
+//    task.description, taskProject.name as taskProjectName,  task.owner as ownerId, task.createdBy as createdById,
+//    task.progress from awdb.dbo.O2MyCompanyTaskManagementMOD_TM_entity_Task as task
+
     @Id
     long Id;
 
