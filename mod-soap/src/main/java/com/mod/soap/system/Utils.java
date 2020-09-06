@@ -14,6 +14,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 
 /**
  * Created by karim on 2/9/20.
@@ -22,6 +23,14 @@ public class Utils {
 
     private static byte[] key;
     private static SecretKeySpec secretKey;
+
+
+    private static boolean biggerThanOrEqualToDate(Date firstDate, Date secondDate){
+        if (firstDate.compareTo(secondDate) == 1 ||  firstDate.compareTo(secondDate) == 0){
+            return true;
+        }
+        return false;
+    }
 
     private static void setKey(String myKey)
     {

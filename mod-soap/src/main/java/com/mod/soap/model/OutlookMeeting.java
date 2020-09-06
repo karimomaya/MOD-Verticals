@@ -22,6 +22,7 @@ public class OutlookMeeting {
     ExchangeService service = null;
     String status = "";
     Appointment appointment = null;
+    String logoPath= "";
 
 
     public OutlookMeeting(String uniqueId, String username, String password, String exchangeServiceURL){
@@ -44,6 +45,13 @@ public class OutlookMeeting {
             status = "Failed to Initialized: " + e.getMessage();
         }
     }
+
+
+    public OutlookMeeting setLogoPath(String path){
+        this.logoPath = path;
+        return this;
+    }
+
     public void sendEmail(String html, String[] emails, String subject) throws Exception {
 
         EmailMessage msg= new EmailMessage(service);
@@ -59,6 +67,13 @@ public class OutlookMeeting {
             System.out.println(emails[i]);
             msg.getToRecipients().add(emails[i]);
         }
+
+        if (!logoPath.equals("")){
+            msg.getAttachments().addFileAttachment(this.logoPath);
+            msg.getAttachments().getItems().get(0).setIsInline(true);
+            msg.getAttachments().getItems().get(0).setContentId("UAElogo.png");
+        }
+
         msg.send();
 
     }
@@ -178,5 +193,12 @@ public class OutlookMeeting {
         return "";
     }
 
+    public void cancelMeeting() {
+        try {
+            this.appointment.cancelMeeting();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
 
