@@ -44,6 +44,7 @@
         <xs:complexType >
             <xs:sequence>
                 <xs:element name="username" type="xs:string"/>
+                <xs:element name="url" type="xs:string" minOccurs="0"/>
                 <xs:element name="previousTargetTag" type="xs:string" minOccurs="0"/>
                 <xs:element name="securityRequest" type="tns:SecurityRequest" minOccurs="0"
                             maxOccurs="unbounded"/>
