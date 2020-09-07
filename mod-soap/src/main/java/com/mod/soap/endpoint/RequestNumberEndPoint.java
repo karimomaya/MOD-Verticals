@@ -434,9 +434,9 @@ public class RequestNumberEndPoint {
         NotificationTask notificationTask = notificationTaskRepository.getTaskByInstanceId(taskId);
 
         List<User> assignedUsers = null;
-        if(notificationTask.getTARGET_TYPE().equals("role")){
+        if(notificationTask.getTASKOWNER().contains("cn=organizational roles")){
             assignedUsers = userRepository.getUsersByRoleName(notificationTask.getAssignedRoleName());
-        }else if(notificationTask.getTARGET_TYPE().equals("user")){
+        }else {
             assignedUsers = userRepository.getUserDetailsByUserId(notificationTask.getAssignedRoleName());
         }
 
