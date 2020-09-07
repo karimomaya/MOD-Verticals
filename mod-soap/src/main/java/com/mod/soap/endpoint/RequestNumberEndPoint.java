@@ -435,18 +435,19 @@ public class RequestNumberEndPoint {
 
         List<User> assignedUsers = null;
         if(notificationTask.getTASKOWNER().contains("cn=organizational roles")){
-            assignedUsers = userRepository.getUsersByRoleName(notificationTask.getAssignedRoleName());
+            String roleName = notificationTask.getTASKOWNER().substring(notificationTask.getTASKOWNER().indexOf('=')+1,notificationTask.getTASKOWNER().indexOf(','));
+            assignedUsers = userRepository.getUsersByRoleName(roleName);
         }else {
-            assignedUsers = userRepository.getUserDetailsByUserId(notificationTask.getAssignedRoleName());
+             assignedUsers = userRepository.getUserDetail(notificationTask.getTASKOWNER());
         }
 
         Boolean canViewTask = checkIfUserInList(user, assignedUsers);
 
         if(canViewTask) return true;
 
-        Boolean taskTransfered = checkIfTaskTransfered(user, taskId);
-        if(taskTransfered){
-            assignedUsers = userRepository.getUserDetail(notificationTask.getTASKOWNER());
+        String transferUser = getTransferUser(user, taskId);
+        if(transferUser != null){
+            assignedUsers = userRepository.getUserDetail(transferUser);
             canViewTask = checkIfUserInList(user, assignedUsers);
             if(canViewTask) return true;
         }
@@ -470,16 +471,21 @@ public class RequestNumberEndPoint {
         return null;
     }
 
-    private Boolean checkIfTaskTransfered(User user, String taskId){
+    private String getTransferUser(User user, String taskId){
         Http http = new Http(property);
         UserDetails userDetails = new UserDetails();
         String response = http.cordysRequest(userDetails.viewMemosByTasks(taskId, user.getTicket()));
         Document doc = Utils.convertStringToXMLDocument(response);
         Node node = doc.getElementsByTagName("Memo").item(0);
         if(node != null){
-            return true;
+            String transferUser = doc.getElementsByTagName("MemoData").item(0).getTextContent();
+            if(transferUser == null || transferUser.equals("")){
+                return null;
+            }else {
+                return transferUser;
+            }
         }else{
-            return false;
+            return null;
         }
     }
 
