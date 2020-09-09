@@ -1,5 +1,7 @@
 package com.mod.rest.service;
 
+import com.mod.rest.SpringBootRestServiceApplication;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
@@ -22,6 +24,7 @@ public class LoggerService {
     FileWriter fr;
     BufferedWriter br;
 
+    org.slf4j.Logger logger = LoggerFactory.getLogger(SpringBootRestServiceApplication.class);
     public LoggerService(){
 //        logger = Logger.getLogger("MyLog");
 //        try {

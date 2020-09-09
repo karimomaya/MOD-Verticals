@@ -1,6 +1,7 @@
 package com.mod.rest.service;
 
 import com.mod.rest.annotation.ColumnName;
+import com.mod.rest.controller.ContactTrackerController;
 import com.mod.rest.repository.UserRepository;
 import com.mod.rest.system.Utils;
 import org.apache.poi.ss.usermodel.Cell;
@@ -9,6 +10,8 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -35,12 +38,16 @@ public class ExcelWriterService {
     Environment config;
     XSSFCellStyle style;
 
+    Logger logger = LoggerFactory.getLogger(ExcelWriterService.class);
 
     public File generate(List<?> objectList){
 
         File tempFile = null;
 
-        if (objectList.size() == 0) return tempFile;
+        if (objectList.size() == 0){
+            logger.warn("The object you send is empty");
+            return tempFile;
+        }
 
         tempFile = executeGenerate(objectList, getSheetName(objectList.get(0)));
 
@@ -50,7 +57,10 @@ public class ExcelWriterService {
     public File generate(List<?> objectList, String fileName){
         File tempFile = null;
 
-        if (objectList.size() == 0) return tempFile;
+        if (objectList.size() == 0) {
+            logger.warn("The object you send is empty");
+            return tempFile;
+        }
 
         tempFile = executeGenerate(objectList, fileName);
 
@@ -61,7 +71,10 @@ public class ExcelWriterService {
 
         File tempFile = null;
 
-        if (objectList.size() == 0) return tempFile;
+        if (objectList.size() == 0){
+            logger.warn("The object you send is empty");
+            return tempFile;
+        }
 
         style = null;
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -88,12 +101,16 @@ public class ExcelWriterService {
 //            pathOfFile = pathOfFile.substring(0, pathOfFile.lastIndexOf("\\")+1);
 
         } catch (InvocationTargetException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } catch (FileNotFoundException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         }
         return tempFile;
@@ -105,6 +122,7 @@ public class ExcelWriterService {
         try {
             filename = config.getProperty( cls.getSimpleName());
         }catch (Exception ex){
+            logger.warn("Cannot get file name (excel) for class: "+ cls.getSimpleName());
             filename = cls.getSimpleName();
         }
         if (filename == null) filename = cls.getSimpleName();

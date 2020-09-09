@@ -17,6 +17,8 @@ import com.mod.soap.service.SessionService;
 import com.mod.soap.system.Http;
 import com.mod.soap.system.Property;
 import com.mod.soap.system.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -71,6 +73,8 @@ public class RequestNumberEndPoint {
     MeetingAttendeeRepository meetingAttendeeRepository;
     @Autowired
     NotificationTaskRepository notificationTaskRepository;
+
+    Logger logger = LoggerFactory.getLogger(RequestNumberEndPoint.class);
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendEmailRequest")
     @ResponsePayload
@@ -343,7 +347,7 @@ public class RequestNumberEndPoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "CustomSecurityRequest")
     @ResponsePayload
     public CustomSecurityResponse getCustomSecurity(@RequestPayload CustomSecurityRequest request) {
-
+        logger.info("Custom Security function executed");
         CustomSecurityResponse customSecurityResponse = new CustomSecurityResponse();
 
         List<SecurityRequest> securityRequests = request.getSecurityRequest();
@@ -353,6 +357,7 @@ public class RequestNumberEndPoint {
         String url = request.getUrl();
 
         if(url != null) {
+            logger.info("Checking User Can View Task URL");
             String taskId = getTaskIdFromURL(url);
             if (taskId != null) {
                 Boolean canViewTask = userCanViewTask(user, taskId);
@@ -364,6 +369,7 @@ public class RequestNumberEndPoint {
         }
 
         if (user == null){
+            logger.warn("Couldn't login by user: "+ request.getUsername());
             SecurityAccess securityAccess = new SecurityAccess();
             securityAccess.setAccess(false);
             customSecurityResponse.setSecurityAccess(securityAccess);
@@ -378,13 +384,12 @@ public class RequestNumberEndPoint {
 
 
             if (!securityOptional.isPresent()){
-                System.out.println("WARN: attributes send is null");
+                logger.warn("Attributes sent is null");
                 customSecurityResponse.setSecurityAccess(addResponseToSecurity(false, securityRequest.getTarget()));
                 continue;
             }
 
-            System.out.println("INFO: Try to evaluate: "+ securityRequest.getTarget());
-
+            logger.info("Try to evaluate: "+ securityRequest.getTarget());
 
             Security security = securityOptional.get();
 
@@ -395,12 +400,16 @@ public class RequestNumberEndPoint {
                 SecurityConfig securityConfig = null;
 // 1:unit type code, 2: unit code,3: role name, 4: webservice, stored procedure
                 if(security.getType() == 4){
+                    logger.info("Security Type Webservice");
                         securityConfig = objectMapper.readValue(config, SecurityConfig.class);
                 }else if(security.getType() == 1)  {
+                    logger.info("Security Type Unit Type Code");
                     securityConfig = new SecurityConfig(security.getConfig(), null, null);
                 }else if(security.getType() == 2)  {
+                    logger.info("Security Type Unit Code");
                     securityConfig = new SecurityConfig(null, security.getConfig(), null);
                 } else if(security.getType() == 3)  {
+                    logger.info("Security Type Role Name");
                     securityConfig = new SecurityConfig(null, null, security.getConfig());
                 }
 
@@ -422,6 +431,7 @@ public class RequestNumberEndPoint {
                 customSecurityResponse.setSecurityAccess(addResponseToSecurity(canAccess, security.getTarget()));
 
             } catch (JsonProcessingException e) {
+                logger.error(e.getMessage());
                 e.printStackTrace();
             }
 
@@ -497,6 +507,7 @@ public class RequestNumberEndPoint {
                 }
             }
         }
+        logger.warn("User is null");
         return false;
     }
 

@@ -8,6 +8,8 @@ import com.mod.rest.repository.IndividualRepository;
 import com.mod.rest.repository.UserRepository;
 import com.mod.rest.service.ExcelWriterService;
 import com.mod.rest.service.SessionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -41,9 +43,12 @@ public class ContactTrackerController {
     @Autowired
     UserRepository userRepository;
 
+    Logger logger = LoggerFactory.getLogger(ContactTrackerController.class);
+
     @GetMapping("export/{report}")
     @ResponseBody
     public ResponseEntity<byte[]> export(@PathVariable("report") String reportStr){
+        logger.info("Export function executed using reportStr: " + reportStr);
         ObjectMapper mapper = new ObjectMapper();
         HttpHeaders respHeaders = new HttpHeaders();
         File file = null;
@@ -54,20 +59,29 @@ public class ContactTrackerController {
             ReportObject reportObject = mapper.readValue(reportStr, ReportObject.class);
             reportObject = reportObject.build();
             if (reportObject.getReportType() == 1 ) {
+                logger.info("Report Type Entities");
                 List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
+                logger.info("Number of element founds: " + entityReports.size());
                 file = excelWriterService.generate(entityReports, "Contact Tracker Entities");
             } else if (reportObject.getReportType() == 2 ) {
+                logger.info("Report Type Private Entities");
                 List<EntityReport> entityReports = entityRepository.getPrivateEntities(1, Integer.MAX_VALUE, "", "" ,reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getIsRegistered(),reportObject.getLicenseNumber(),reportObject.getSupplierStatus(),reportObject.getTags());
+                logger.info("Number of element founds: " + entityReports.size());
                 file = excelWriterService.generate(entityReports, "Contact Tracker Entities");
             }else if (reportObject.getReportType() == 3 ) {
+                logger.info("Report Type Individuals");
                 List<IndividualReport> individualReports = individualRepository.getIndividuals(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition(),reportObject.getTags());
+                logger.info("Number of element founds: " + individualReports.size());
                 file = excelWriterService.generate(individualReports);
             }else if (reportObject.getReportType() == 4) {
+                logger.info("Report Type Ministry Users");
                 List<User> ministryUsersReports = userRepository.getMinistryUsers(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition());
+                logger.info("Number of element founds: " + ministryUsersReports.size());
                 file = excelWriterService.generate(ministryUsersReports);
             }
 
             if(file == null){
+                logger.warn("It seems file is Null");
                 return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"null\"").body(null);
             }
@@ -80,8 +94,10 @@ public class ContactTrackerController {
             return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 
         }catch (JsonProcessingException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         }
 
