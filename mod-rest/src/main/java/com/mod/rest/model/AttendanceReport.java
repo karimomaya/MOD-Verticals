@@ -71,10 +71,10 @@ public class AttendanceReport {
     @Column(name = "total_staff_out_of_work")
     String totalStaffOutOfWork;
 
-    @ColumnName(key = "رقم الطلب")
-    public Long getId() {
-        return Id;
-    }
+//    @ColumnName(key = "رقم الطلب")
+//    public Long getId() {
+//        return Id;
+//    }
 
     @ColumnName(key = "الجهة")
     public String getDirectorate() {
