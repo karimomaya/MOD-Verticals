@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -59,8 +60,35 @@ public class CarRecordController {
                 try {
                     Date start = format.parse(startDate);
                     Date end = format.parse(endDate);
-                    List<CarGeneralReport> carGeneralReport= carGeneralReportRepository.findByExpiryDateOfTheLicenseBetween(start,end);
-                    file = excelWriterService.generate(carGeneralReport);
+                    List<CarGeneralReport> carGeneralReportList= carGeneralReportRepository.findByExpiryDateOfTheLicenseBetween(start,end);
+//                    int currentCarsSize = carGeneralReportList.size();
+//                    Iterator<CarGeneralReport> it = new Iterator<CarGeneralReport>() {
+//                        private int currentIndex = 0;
+//
+//                        @Override
+//                        public boolean hasNext() {
+//                            return currentIndex < currentCarsSize && carGeneralReportList.get(currentIndex) != null;
+//
+//                        }
+//
+//                        @Override
+//                        public CarGeneralReport next() {
+//                            return carGeneralReportList.get(currentIndex++);
+//                        }
+//                    };
+                    Iterator<CarGeneralReport> it2= carGeneralReportList.iterator();
+                    while (it2.hasNext()){
+                        CarGeneralReport currentObj = it2.next();
+                        if(currentObj.getStatus().equals("مشطوبة")){
+                            it2.remove();
+                        }
+                    }
+//                    for (CarGeneralReport car :carGeneralReportList){
+//                            if(car.getStatus().equals("مشطوبة")){
+//                                carGeneralReportList.remove(car);
+//                            }
+//                    }
+                    file = excelWriterService.generate(carGeneralReportList);
 
                 }catch (Exception e){
                     e.printStackTrace();
