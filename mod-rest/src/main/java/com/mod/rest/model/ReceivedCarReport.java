@@ -74,7 +74,7 @@ public class ReceivedCarReport {
     @ColumnName(key = "تاريخ التسليم")
     public String getEffectiveDeliveryDate(){
         if(effectiveDeliveryDate == null){
-            return "NA";
+            return "_";
         }
         return Utils.removeNullValue(effectiveDeliveryDate);
     }
