@@ -17,8 +17,7 @@ import com.mod.soap.service.SessionService;
 import com.mod.soap.system.Http;
 import com.mod.soap.system.Property;
 import com.mod.soap.system.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -45,6 +44,7 @@ import java.util.regex.Pattern;
  * Created by karim.omaya on 12/7/2019.
  */
 @Endpoint
+@Slf4j
 public class RequestNumberEndPoint {
     private static final String NAMESPACE_URI = "http://www.mod.soap";
 
@@ -74,7 +74,6 @@ public class RequestNumberEndPoint {
     @Autowired
     NotificationTaskRepository notificationTaskRepository;
 
-    Logger logger = LoggerFactory.getLogger(RequestNumberEndPoint.class);
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendEmailRequest")
     @ResponsePayload
@@ -219,11 +218,14 @@ public class RequestNumberEndPoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetHumanTaskRequest")
     @ResponsePayload
     public GetHumanTaskResponse getHumanTask(@RequestPayload GetHumanTaskRequest request) {
+        log.info("Request Human Tasks..");
         GetHumanTaskResponse response = new GetHumanTaskResponse();
+        log.info("login..");
         String ticket = sessionService.loginWithAdmin();
 
         Http http = new Http(property);
         UserDetails userDetails = new UserDetails();
+        log.info("Get Human Tasks..");
         String res = http.cordysRequest(userDetails.getHumanTasks(request.getRoleName(), request.getProcessName(), ticket));
         Document doc = Utils.convertStringToXMLDocument(res);
 
@@ -240,20 +242,24 @@ public class RequestNumberEndPoint {
                 response.setTaskResponse(taskResponse);
             }
         }
-
+        log.info("Response Human Task(s) List: " + response.getTaskResponse().size());
         return response;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendMeetingRequest")
     @ResponsePayload
     public SendMeetingResponse sendMeeting(@RequestPayload SendMeetingRequest request) {
-
+        log.info("Request Outlook Meeting (meeting id: "+request.getMeetingId()+")..");
         SendMeetingResponse response = new SendMeetingResponse();
 
         long meetingId = request.getMeetingId();
         List<MeetingAttendee> meetingAttendees = meetingAttendeeRepository.getMeetingAttendeeData(meetingId);
+        log.info("List Of Attendee(s) "+ meetingAttendees.size() );
         Optional<Meeting> meetingOptional = meetingRepository.getMeetingData(meetingId);
-        if (!meetingOptional.isPresent()) return response.setStatus("Meeting-Not-Present");
+        if (!meetingOptional.isPresent()) {
+            log.warn("Meeting id: "+ meetingId + " is not Exist");
+            return response.setStatus("Meeting-Not-Present");
+        }
 
         Meeting meeting = meetingOptional.get();
 
@@ -270,7 +276,7 @@ public class RequestNumberEndPoint {
             }
 
         }
-
+        log.info("Response Outlook Meeting Send Success");
         return response.setStatus("done");
     }
 
@@ -283,15 +289,19 @@ public class RequestNumberEndPoint {
         if(isUpdate){
 
             outlookMeeting = new OutlookMeeting(meeting.getOutlookId(), username, password, exchangeServerUrl);
+            if (isCancel){
+                log.info("Cancel outlook Meeting..");
+                outlookMeeting.cancelMeeting();
+                return;
+            }
+            log.info("Update outlook Meeting..");
+
         }else {
+            log.info("Create outlook Meeting..");
             outlookMeeting = new OutlookMeeting(null, username, password, exchangeServerUrl);
         }
 
-        if (isCancel){
 
-            outlookMeeting.cancelMeeting();
-            return;
-        }
 
         outlookMeeting = outlookMeeting.setSubject(meeting.getSubject())
                 .setBody(meeting.getDescription())
@@ -325,7 +335,7 @@ public class RequestNumberEndPoint {
     @ResponsePayload
     public RequestNumberResponse generateRequestNumber(@RequestPayload RequestNumberRequest request) {
 
-
+        log.info("Request Generate Request Number for user: "+ request.getUserId() + " and for type: " + request.getType());
         RequestNumberResponse response = new RequestNumberResponse();
 
         String userId = request.getUserId();
@@ -341,35 +351,38 @@ public class RequestNumberEndPoint {
         requestNumber.generateRequestNumber();
         response.setRequestNumber(requestNumber);
 
+        log.info("Response Request Number is Generated");
         return response;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "CustomSecurityRequest")
     @ResponsePayload
     public CustomSecurityResponse getCustomSecurity(@RequestPayload CustomSecurityRequest request) {
-        logger.info("Custom Security function executed");
+        log.info("Request Check Security...");
         CustomSecurityResponse customSecurityResponse = new CustomSecurityResponse();
 
         List<SecurityRequest> securityRequests = request.getSecurityRequest();
+        log.info("Number of item(s) need to be checked: "+ securityRequests.size());
 
+        log.info("Try to login..");
         User user = sessionService.loginWithUsername(request.getUsername());
 
         String url = request.getUrl();
 
         if(url != null) {
-            logger.info("Checking User Can View Task URL");
             String taskId = getTaskIdFromURL(url);
             if (taskId != null) {
                 Boolean canViewTask = userCanViewTask(user, taskId);
                 customSecurityResponse.setCanviewTask(canViewTask);
                 if(!canViewTask){
+                    log.warn("Response User Can't View Task URL "+ url);
                     return customSecurityResponse;
                 }
             }
         }
 
         if (user == null){
-            logger.warn("Couldn't login by user: "+ request.getUsername());
+            log.error("Couldn't login by user: "+ request.getUsername());
             SecurityAccess securityAccess = new SecurityAccess();
             securityAccess.setAccess(false);
             customSecurityResponse.setSecurityAccess(securityAccess);
@@ -384,12 +397,11 @@ public class RequestNumberEndPoint {
 
 
             if (!securityOptional.isPresent()){
-                logger.warn("Attributes sent is null");
+                log.error("Cannot find target: " + securityRequest.getTarget());
                 customSecurityResponse.setSecurityAccess(addResponseToSecurity(false, securityRequest.getTarget()));
                 continue;
             }
 
-            logger.info("Try to evaluate: "+ securityRequest.getTarget());
 
             Security security = securityOptional.get();
 
@@ -400,16 +412,13 @@ public class RequestNumberEndPoint {
                 SecurityConfig securityConfig = null;
 // 1:unit type code, 2: unit code,3: role name, 4: webservice, stored procedure
                 if(security.getType() == 4){
-                    logger.info("Security Type Webservice");
-                        securityConfig = objectMapper.readValue(config, SecurityConfig.class);
+
+                    securityConfig = objectMapper.readValue(config, SecurityConfig.class);
                 }else if(security.getType() == 1)  {
-                    logger.info("Security Type Unit Type Code");
                     securityConfig = new SecurityConfig(security.getConfig(), null, null);
                 }else if(security.getType() == 2)  {
-                    logger.info("Security Type Unit Code");
                     securityConfig = new SecurityConfig(null, security.getConfig(), null);
                 } else if(security.getType() == 3)  {
-                    logger.info("Security Type Role Name");
                     securityConfig = new SecurityConfig(null, null, security.getConfig());
                 }
 
@@ -419,24 +428,29 @@ public class RequestNumberEndPoint {
                 boolean canAccess = false;
 
                 if (securityQuery.getSecurityType() == SecurityType.WEBSERVICE){
+                    log.info("Evaluate Security Check Webservice...");
                     canAccess = evaluateWebservice(request, securityRequest, securityConfig,securityQuery,  previousResponse);
                 } else if (securityQuery.getSecurityType() == SecurityType.UNIT_TYPE_Code){
+                    log.info("Security Check Unit Type Code...");
                     canAccess = securityQuery.evaluateUnitTypeCode();
                 } else if (securityQuery.getSecurityType() == SecurityType.UNIT_CODE){
+                    log.info("Security Check Unit Code...");
                     canAccess = securityQuery.evaluateUnitCode();
                 } else if (securityQuery.getSecurityType() == SecurityType.ROLE_CODE){
+                    log.info("Security Check Role Name...");
                     canAccess = securityQuery.evaluateRoleCode();
                 }
 
                 customSecurityResponse.setSecurityAccess(addResponseToSecurity(canAccess, security.getTarget()));
 
             } catch (JsonProcessingException e) {
-                logger.error(e.getMessage());
+                log.warn("Cannot Process JSON: "+ config);
+                log.error("Error: "+ e.getMessage());
                 e.printStackTrace();
             }
 
         }
-
+        log.info("Response Security Evaluate Success...");
         return customSecurityResponse;
     }
 
@@ -507,7 +521,7 @@ public class RequestNumberEndPoint {
                 }
             }
         }
-        logger.warn("User is null");
+        log.warn("User is null");
         return false;
     }
 
