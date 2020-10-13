@@ -1205,7 +1205,7 @@ public class ReportService {
                         typeName = "طلب معلومات";
                         break;
                     case 3:
-                        typeName = "طلب ملخص";
+                        typeName = "اعداد سياسة/توجيه";
                         break;
                     case 4:
                         typeName = "طلب ملاحظات/مرئيات";
