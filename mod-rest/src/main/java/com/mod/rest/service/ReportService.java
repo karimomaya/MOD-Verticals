@@ -1183,7 +1183,7 @@ public class ReportService {
 //                xaxis.add("بدون تكليف");
                 xaxis.add("طلب تقرير/دراسة");
                 xaxis.add("طلب معلومات");
-                xaxis.add("طلب ملخص");
+                xaxis.add("اعداد سياسة/توجيه");
                 xaxis.add("طلب ملاحظات/مرئيات");
                 xaxis.add("أخرى");
             }else{
