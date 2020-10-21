@@ -31,6 +31,7 @@ public class Meeting {
 
     @Id
     long Id;
+    String S_WORKSPACEOBJECTID;
     String Subject;
     String description;
     Integer MeetingType;
@@ -62,7 +63,7 @@ public class Meeting {
     }
 
     public String getMeetingSubject() {
-        return "محضر اجتماع "+ this.Subject;
+        return this.Subject;
     }
 
     public String getDayOfWeek(){

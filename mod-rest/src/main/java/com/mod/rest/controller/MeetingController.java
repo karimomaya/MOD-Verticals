@@ -4,16 +4,16 @@ import com.mod.rest.model.*;
 import com.mod.rest.repository.*;
 import com.mod.rest.service.PDFService;
 import com.mod.rest.system.ResponseBuilder;
+import com.mod.rest.system.Utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,6 +71,8 @@ public class MeetingController {
 
         }
 
+        ArrayList<TaskReportHelper> meetingPreTasks = new ArrayList<>();
+
         if (meetingOptional.isPresent()) {
 
             Meeting meeting = meetingOptional.get();
@@ -80,17 +82,41 @@ public class MeetingController {
             String templateName = pdfService.getTemplateName(meeting);
             System.out.println("get template name: " + templateName);
 
+            if(!meeting.getS_WORKSPACEOBJECTID().isEmpty()){
+                meetingPreTasks = taskReportHelperRepository.getCreatedTaskMeeting(meeting.getS_WORKSPACEOBJECTID(), "pre");
+                for (TaskReportHelper task : meetingPreTasks){
+                    ArrayList<TaskPerformer> performers = taskPerformerRepository.getPerformersByTaskId(1,1000000,task.getId());
+                    task.setPerformers(performers);
+                }
+            }
+
             try {
                 File file = pdfService.generate(arrayList,templateName+".html", "meeting-data");
                 file = pdfService.generate(arrayList, file.toURI().getPath(), "meeting-subject");
                 file = pdfService.generate(meetingAttendee, file.toURI().getPath(), "attendee-data");
+                file = pdfService.generate(meetingPreTasks, file.toURI().getPath(), "meeting-pre-task");
                 file = pdfService.generate(discussionPoints, file.toURI().getPath(), "discussion-point");
                 file = pdfService.generate(meetingTasks, file.toURI().getPath(), "meeting-task");
+
+//                String fileName = URLEncoder.encode(meeting.getSubject()+".pdf","UTF-8");
+//                if(Utils.isArabicText(fileName)){
+//                    fileName = "meeting.pdf";
+//                }
+
+                String fileName = meeting.getSubject()+".pdf";
+
                 byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
                 respHeaders.setContentLength(bytes.length);
                 respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
                 respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=attachment.pdf" );
+
+                ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                        .filename(fileName, StandardCharsets.UTF_8)
+                        .build();
+
+                respHeaders.setContentDisposition(contentDisposition);
+
+//                respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName);
                 return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 
             } catch (Exception e) {

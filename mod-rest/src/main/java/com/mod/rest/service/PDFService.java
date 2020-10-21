@@ -100,7 +100,7 @@ public class PDFService implements PDFServiceI {
         NodeList nodes = document.getElementsByTagName(tagName + "-replacer");
 
         if (objects.size() == 0 || nodes.getLength() == 0) {
-            return removeNodeByTagName(filename, tagName);
+            return removeNodeByTagName(filename, tagName + "-replacer");
         }
         String nodeName = nodes.item(0).getParentNode().getNodeName();
         if (nodeName.equals("tbody")) {
