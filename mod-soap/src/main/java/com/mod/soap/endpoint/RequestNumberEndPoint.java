@@ -146,6 +146,8 @@ public class RequestNumberEndPoint {
                     }
                     if (!value.equals("")) break;
                 }
+                if (value == null) value = "";
+                else if (value.equals("null") || value.equals("undefined")) value = "";
                 fileAsString = fileAsString.replace("("+token+")", value);
             }
 
