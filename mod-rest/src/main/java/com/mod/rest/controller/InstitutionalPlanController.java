@@ -131,7 +131,7 @@ public class InstitutionalPlanController {
 
         ResponseBuilder<String> responseBuilder = new ResponseBuilder<>();
 
-        JSONArray result = null;
+        JSONArray result = new JSONArray();
         try {
             if(unitTypeCode.equals( "SEC")){
                 JSONObject object = new JSONObject();
@@ -156,7 +156,8 @@ public class InstitutionalPlanController {
         Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateStr);
         JSONObject object = new JSONObject();
         JSONArray result = new JSONArray();
-        List<IPSubActivity> subActivitiesList  = ipSubActivityRepository.getIPSubActivity(unitCode,institutionalPlan,mainActivityId, startDate,endDate);
+        List<IPSubActivity> subActivitiesList = new ArrayList<>();
+        subActivitiesList  = ipSubActivityRepository.getIPSubActivity(unitCode,institutionalPlan,mainActivityId, startDate,endDate);
         JSONArray data = new JSONArray();
         boolean subActivitiesFlag = false;
         for (IPSubActivity subActivity : subActivitiesList){
@@ -235,7 +236,6 @@ public class InstitutionalPlanController {
             object = resolveMainActivityToJSON(mainActivity);
             result.put(object);
             Long id = mainActivity.getMainActivityId();
-
             object = getSubActivitiesBySECUnitCode("",institutionalPlan,id,startDateStr,endDateStr);
             if(object.length()>0)
                 result.put(object);
