@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +37,9 @@ public class TechnicalSupportController {
     ExcelWriterService excelWriterService;
     @Autowired
     TechnicalSupportRepository technicalSupportRepository;
+    @Autowired
+    Environment env;
+
 
     @GetMapping("export/{reportType}/{startDate}/{endDate}")
     @ResponseBody
@@ -50,7 +54,7 @@ public class TechnicalSupportController {
             Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDateString);
             if (reportType == 1) {
                 List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(startDate,endDate);
-                file = excelWriterService.generate(technicalSupportReports,"TechnicalSupport");
+                file = excelWriterService.generate(technicalSupportReports,env.getProperty("support-stats-name"));
             } else if (reportType == 2) {
                 List<TechnicalSupportReport> technicalSupportReports = technicalSupportRepository.getTechnicalSupportStatistics(startDate,endDate);
                 file = excelWriterService.generate(technicalSupportReports);
@@ -64,7 +68,7 @@ public class TechnicalSupportController {
             bytes = Files.readAllBytes(file.toPath());
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + env.getProperty("support-stats-name"));
 
             return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 
