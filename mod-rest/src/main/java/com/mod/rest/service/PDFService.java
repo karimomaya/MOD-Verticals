@@ -21,10 +21,9 @@ import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.itextpdf.tool.xml.pipeline.html.LinkProvider;
 import com.mod.rest.annotation.PDFResources;
 import com.mod.rest.system.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -51,14 +50,12 @@ import java.util.List;
 /**
  * Created by omar.sabry on 1/8/2020.
  */
-
+@Slf4j
 @Service
 public class PDFService implements PDFServiceI {
 
     @Autowired
     Environment config;
-
-    Logger logger = LoggerFactory.getLogger(PDFService.class);
 
     public File removeNodeByTagName(String filename, String tagname) throws TransformerException, IOException {
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
@@ -66,8 +63,8 @@ public class PDFService implements PDFServiceI {
             Node element = document.getElementsByTagName(tagname).item(0);
             element.getParentNode().removeChild(element);
         } catch (Exception ex) {
-            logger.warn("Couldn't find Node by tag name: "+ tagname);
-            logger.error(ex.getMessage());
+            log.warn("Couldn't find Node by tag name: "+ tagname);
+            log.error(ex.getMessage());
             ex.printStackTrace();
         }
         return Utils.writeXMLDocumentToTempFile(document);
@@ -103,7 +100,7 @@ public class PDFService implements PDFServiceI {
         NodeList nodes = document.getElementsByTagName(tagName + "-replacer");
 
         if (objects.size() == 0 || nodes.getLength() == 0) {
-            return removeNodeByTagName(filename, tagName);
+            return removeNodeByTagName(filename, tagName + "-replacer");
         }
         String nodeName = nodes.item(0).getParentNode().getNodeName();
         if (nodeName.equals("tbody")) {
@@ -267,8 +264,8 @@ public class PDFService implements PDFServiceI {
                     td.setTextContent(innerText);
                     tr.appendChild(td);
                 } catch (Exception ex) {
-                    logger.warn("Couldn't execute method in object: "+ object.getClass().getSimpleName() );
-                    logger.error(ex.getMessage());
+                    log.warn("Couldn't execute method in object: "+ object.getClass().getSimpleName() );
+                    log.error(ex.getMessage());
                     notAddd = true;
                 }
 
@@ -296,7 +293,7 @@ public class PDFService implements PDFServiceI {
     }
 
     public byte[] generatePDF(String filename) {
-        logger.info("generate PDF using file name: " + filename);
+        log.info("generate PDF using file name: " + filename);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         File tempFile = null;
         try {
@@ -346,10 +343,10 @@ public class PDFService implements PDFServiceI {
 
             document.close();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
         } catch (DocumentException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
         }
         return byteArrayOutputStream.toByteArray();

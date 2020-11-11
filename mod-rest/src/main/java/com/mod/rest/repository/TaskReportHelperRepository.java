@@ -43,9 +43,11 @@ public interface TaskReportHelperRepository extends GenericRepository<TaskReport
     @Query(value = "{call MOD_TM_SP_GetTaskByAssignmentReport(:startDate, :endDate, :assignmentType, :PageNumber,:PageSize)}", nativeQuery = true)
     List<TaskReportHelper> getTaskAssignmentReport(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("assignmentType") int assignmentType, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);
 
-
     @Query(value = "{call MOD_RM_SP_getTasksRelatedToDiscussionPointAndMeeting( :meetingId, :discussionPointId )}", nativeQuery = true)
     ArrayList<TaskReportHelper> getTasksRelatedToDiscussionPointAndMeeting(@Param("meetingId") long meetingId, @Param("discussionPointId") long discussionPointId);
+
+    @Query(value = "{call MOD_TM_SP_task_GetCreatedTaskMeetingReportHelper(:entityItemId, :type)}", nativeQuery = true)
+    ArrayList<TaskReportHelper> getCreatedTaskMeeting(@Param("entityItemId") String entityItemId, @Param("type") String type);
 
     @Query(value = "{call MOD_RM_SP_GetDelayedTaskRiskReport(:PageNumber,:PageSize, :integrationIds , :createdBy)}", nativeQuery = true)
     List<TaskReportHelper> getDelayedTaskRiskReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("integrationIds") String integrationIds , @Param("createdBy") String createdBy);

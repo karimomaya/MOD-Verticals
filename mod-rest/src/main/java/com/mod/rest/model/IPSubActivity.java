@@ -21,6 +21,7 @@ import java.util.Date;
 @Data
 public class IPSubActivity {
     @Id
+    long Id;
     Date startDate;
     Date endDate;
     String subActivityName;
@@ -34,7 +35,7 @@ public class IPSubActivity {
         String entity = Utils.removeNullValue(subActivityName);
         return entity;
     }
-    @ColumnName(key = "الجهة المسؤولةt")
+    @ColumnName(key = "الجهة المسؤولة")
     public String unitNameStr(){
         String entity = Utils.removeNullValue(unitName_ar);
         return entity;
