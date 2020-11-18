@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -132,6 +134,21 @@ public class ExcelWriterService {
         Class cls = object.getClass();
 
         Method[] methods = cls.getMethods();
+        Arrays.sort(methods, new Comparator<Method>() {
+            @Override
+            public int compare(Method method1, Method method2) {
+                ColumnName columnName1 = method1.getAnnotation(ColumnName.class);
+                ColumnName columnName2 = method2.getAnnotation(ColumnName.class);
+                if (columnName1 != null && columnName2 != null) {
+                    return columnName1.order() - columnName2.order();
+                } else
+                if (columnName1 == null && columnName2 != null) {
+                    return 1;
+                }else{
+                    return -1;
+                }
+            }
+        });
         for (Method method : methods){
             ColumnName annotation = method.getAnnotation(ColumnName.class);
 

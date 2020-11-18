@@ -51,22 +51,22 @@ public class TranslationReport {
 
 
 
-    @ColumnName(key = "اسم مقدم")
+    @ColumnName(order = 1, key = "اسم مقدم")
     public String getRequestName(){
         return Utils.removeNullValue(requestName);
     }
 
-    @ColumnName(key = "جهة الطلب")
+    @ColumnName(order = 2, key = "جهة الطلب")
     public String getUnitName(){
         return Utils.removeNullValue(unitName);
     }
 
-    @ColumnName(key = "الموضوع")
+    @ColumnName(order = 3, key = "الموضوع")
     public String getTranslationDescription(){
         return Utils.removeNullValue(translationDescription);
     }
 
-    @ColumnName(key = "درجة السرية")
+    @ColumnName(order = 4, key = "درجة السرية")
     public String getTranslationDegreeOfConfidentiality(){
         return Utils.removeNullValue(translationDegreeOfConfidentiality);
     }
@@ -75,7 +75,7 @@ public class TranslationReport {
         this.translationDegreeOfConfidentiality = translationDegreeOfConfidentiality;
     }
 
-    @ColumnName(key = "درجة الأسبقية")
+    @ColumnName(order = 5, key = "درجة الأسبقية")
     public String getTranslationDegreeOfPrecedence(){
         return Utils.removeNullValue(translationDegreeOfPrecedence);
     }
@@ -84,12 +84,12 @@ public class TranslationReport {
         this.translationDegreeOfPrecedence = translationDegreeOfPrecedence;
     }
 
-    @ColumnName(key = "تاريخ الطلب")
+    @ColumnName(order = 6, key = "تاريخ الطلب")
     public Date getRequestDate(){
         return requestDate;
     }
 
-    @ColumnName(key = "التقييم")
+    @ColumnName(order = 7, key = "التقييم")
     public String getTranslationAverageEvaluation(){
         if (translationAverageEvaluation != null){
             //setTranslationAverageEvaluation("لم يتم التقييم");
@@ -107,7 +107,7 @@ public class TranslationReport {
 
     }
 
-    @ColumnName(key = "اتجاه الترجمة")
+    @ColumnName(order = 8, key = "اتجاه الترجمة")
     public String getTranslationDirection(){
         return Utils.removeNullValue(translationDirection);
     }
@@ -116,37 +116,37 @@ public class TranslationReport {
         this.translationDirection = translationDirection;
     }
 
-    @ColumnName(key = "تاريخ التسليم")
+    @ColumnName(order = 9, key = "تاريخ التسليم")
     public String getTranslationEndDate(){
         return translationEndDate;
     }
 
-    @ColumnName(key = "ملاحظات التقييم")
+    @ColumnName(order = 10, key = "ملاحظات التقييم")
     public String getTranslationEvaluationComment(){
         return Utils.removeNullValue(translationEvaluationComment);
     }
 
-    @ColumnName(key = "المترجم")
+    @ColumnName(order = 11, key = "المترجم")
     public String getTranslationTranslators(){
         return Utils.removeNullValue(translationTranslators);
     }
 
-    @ColumnName(key = "المدقق")
+    @ColumnName(order = 12, key = "المدقق")
     public String getTranslationProofreaders(){
         return Utils.removeNullValue(translationProofreaders);
     }
 
-    @ColumnName(key = "عدد الكلمات")
+    @ColumnName(order = 13, key = "عدد الكلمات")
     public String getTranslationWordsCounts(){
         return Utils.removeNullValue(translationWordsCounts);
     }
 
-    @ColumnName(key = "عدد الصفحات")
+    @ColumnName(order = 14, key = "عدد الصفحات")
     public String getTranslationPagesCounts(){
         return Utils.removeNullValue(translationPagesCounts);
     }
 
-    @ColumnName(key = "حالة الطلب")
+    @ColumnName(order = 15, key = "حالة الطلب")
     public String getRequestStatus(){
         return Utils.removeNullValue(requestStatus);
     }

@@ -37,67 +37,67 @@ public class IndividualReport {
     String identificationNumber;
     String unifiedNumber;
 
-    @ColumnName(key = "الاسم باللغة العربية")
+    @ColumnName(order = 1, key = "الاسم باللغة العربية")
     public String getNameArabic() {
         return Utils.removeNullValue(nameArabic);
     }
 
-    @ColumnName(key = "الاسم باللغة الإنجليزية")
+    @ColumnName(order = 2, key = "الاسم باللغة الإنجليزية")
     public String getNameEnglish() {
         return Utils.removeNullValue(nameEnglish);
     }
 
-    @ColumnName(key = "المنصب باللغة العربية")
+    @ColumnName(order = 3, key = "المنصب باللغة العربية")
     public String getPositionArabic() {
         return Utils.removeNullValue(positionArabic);
     }
 
-    @ColumnName(key = "المنصب باللغة الإنجليزية")
+    @ColumnName(order = 4, key = "المنصب باللغة الإنجليزية")
     public String getPositionEnglish() {
         return Utils.removeNullValue(positionEnglish);
     }
 
-    @ColumnName(key = "اسم الجهة")
+    @ColumnName(order = 5, key = "اسم الجهة")
     public String getEntityName() {
         return Utils.removeNullValue(entityName);
     }
 
-    @ColumnName(key = "الجنسية")
+    @ColumnName(order = 6, key = "الجنسية")
     public String getNationality() {
         return Utils.removeNullValue(nationality);
     }
 
-    @ColumnName(key = "قم الهاتف الداخلي")
+    @ColumnName(order = 7, key = "قم الهاتف الداخلي")
     public String getPhone() {
         return Utils.removeNullValue(phone);
     }
 
-    @ColumnName(key = "رقم الهاتف الجوال")
+    @ColumnName(order = 8, key = "رقم الهاتف الجوال")
     public String getMobile() {
         return Utils.removeNullValue(mobile);
     }
 
-    @ColumnName(key = "البريد الإلكتروني")
+    @ColumnName(order = 9, key = "البريد الإلكتروني")
     public String getEmail() {
         return Utils.removeNullValue(email);
     }
 
-    @ColumnName(key = "رقم الهوية")
+    @ColumnName(order = 10, key = "رقم الهوية")
     public String getIdentificationNumber() {
         return Utils.removeNullValue(identificationNumber);
     }
 
-    @ColumnName(key = "الرقم الموحد")
+    @ColumnName(order = 11, key = "الرقم الموحد")
     public String getUnifiedNumber() {
         return Utils.removeNullValue(unifiedNumber);
     }
 
-    @ColumnName(key = "رقم التصريح الأمنى")
+    @ColumnName(order = 12, key = "رقم التصريح الأمنى")
     public String getSecurityClearanceNumber() {
         return Utils.removeNullValue(securityClearanceNumber);
     }
 
-    @ColumnName(key = "تاريخ بداية التصريح")
+    @ColumnName(order = 13, key = "تاريخ بداية التصريح")
     public String getSecurityStartDate() {
         if(securityStartDate == null){
             return "";
@@ -107,7 +107,7 @@ public class IndividualReport {
         return dateFormat.format(securityStartDate);
     }
 
-    @ColumnName(key = "تاريخ نهاية التصريح")
+    @ColumnName(order = 14, key = "تاريخ نهاية التصريح")
     public String getSecurityEndDate() {
         if(securityEndDate == null){
             return "";
@@ -117,7 +117,7 @@ public class IndividualReport {
         return dateFormat.format(securityEndDate);
     }
 
-    @ColumnName(key = "الملاحظات")
+    @ColumnName(order = 15, key = "الملاحظات")
     public String getNotes() {
         return Utils.removeNullValue(notes);
     }

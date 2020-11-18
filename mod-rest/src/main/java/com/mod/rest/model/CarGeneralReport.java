@@ -30,18 +30,18 @@ public class CarGeneralReport {
     @Column (name = "expiry_date_of_the_license")
     Date expiryDateOfTheLicense;
 
-    @ColumnName(key = "تصنيف السيارة")
+    @ColumnName(order = 1, key = "تصنيف السيارة")
     public String getType(){return Utils.removeNullValue(type);}
 
-    @ColumnName(key = "نوع السيارة")
+    @ColumnName(order = 2, key = "نوع السيارة")
     public String getCategory(){return Utils.removeNullValue(category);}
 
-    @ColumnName(key = "لون السيارة")
+    @ColumnName(order = 3, key = "لون السيارة")
     public String getColor(){return Utils.removeNullValue(color);}
 
-    @ColumnName(key = "الموديل")
+    @ColumnName(order = 4, key = "الموديل")
     public String getModel(){return Utils.removeNullValue(model);}
 
-    @ColumnName(key = "الحالة")
+    @ColumnName(order = 5, key = "الحالة")
     public String getStatus(){return Utils.removeNullValue(status);}
 }

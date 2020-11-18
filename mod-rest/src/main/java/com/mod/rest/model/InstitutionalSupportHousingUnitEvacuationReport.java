@@ -32,25 +32,25 @@ public class InstitutionalSupportHousingUnitEvacuationReport {
     String militaryNumber;
     String res_Rank;
 
-    @ColumnName(key = "رقم البناية")
+    @ColumnName(order = 1, key = "رقم البناية")
     public String getHouingUnitNumber() {
         String entity = Utils.removeNullValue(houingUnitNumber);
         return entity;
     }
 
-    @ColumnName(key = "رقم الطابق")
+    @ColumnName(order = 2, key = "رقم الطابق")
     public String getHousingUnitFloorNumber() {
         String entity = Utils.removeNullValue(housingUnitFloorNumber);
         return entity;
     }
 
-    @ColumnName(key = "رقم الوحدة السكنية")
+    @ColumnName(order = 3, key = "رقم الوحدة السكنية")
     public String getFlatNumber() {
         String entity = Utils.removeNullValue(flatNumber);
         return entity;
     }
 
-    @ColumnName(key = "نوع الوحدة السكنية")
+    @ColumnName(order = 4, key = "نوع الوحدة السكنية")
     public String getFlatType() {
         String entity = Utils.removeNullValue(flatType);
         return entity;
@@ -58,7 +58,7 @@ public class InstitutionalSupportHousingUnitEvacuationReport {
 
 
 
-    @ColumnName(key = "تاريخ إستلام الوحدة")
+    @ColumnName(order = 5, key = "تاريخ إستلام الوحدة")
     public String getDataOfReceiptOfHousingUnit() {
         if (dataOfReceiptOfHousingUnit == null) {
             return "";
@@ -68,7 +68,7 @@ public class InstitutionalSupportHousingUnitEvacuationReport {
         return dateFormat.format(dataOfReceiptOfHousingUnit);
     }
 
-    @ColumnName(key = "تاريخ تسليم الوحدة")
+    @ColumnName(order = 6, key = "تاريخ تسليم الوحدة")
     public String getDateOfDeliveryOfHousingUnit() {
         if (dateOfDeliveryOfHousingUnit == null) {
             return "";
@@ -78,25 +78,25 @@ public class InstitutionalSupportHousingUnitEvacuationReport {
         return dateFormat.format(dateOfDeliveryOfHousingUnit);
     }
 
-    @ColumnName(key = "الرقم العسكري/الوظيفي")
+    @ColumnName(order = 7, key = "الرقم العسكري/الوظيفي")
     public String getMilitaryNumber() {
         String entity = Utils.removeNullValue(militaryNumber);
         return entity;
     }
 
-    @ColumnName(key = "اسم آخر ساكن")
+    @ColumnName(order = 8, key = "اسم آخر ساكن")
     public String getNameOfLastResident() {
         String entity = Utils.removeNullValue(nameOfLastResident);
         return entity;
     }
 
-    @ColumnName(key = "الرتبة")
+    @ColumnName(order = 9, key = "الرتبة")
     public String getRes_Rank() {
         String entity = Utils.removeNullValue(res_Rank);
         return entity;
     }
 
-    @ColumnName(key = "قيمة الخصم من مبلغ التأمين (د.إ)")
+    @ColumnName(order = 10, key = "قيمة الخصم من مبلغ التأمين (د.إ)")
     public String getComments() {
         String entity = Utils.removeNullValue(Discount_of_insuranceValue);
         return entity;

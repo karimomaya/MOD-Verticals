@@ -31,11 +31,11 @@ public class ReceivedGifts {
     @Column (name = "Reason_for_receiving_the_gift")
     String ReasonForReceivingTheGift;
 
-    @ColumnName(key = "نوع الهدية")
+    @ColumnName(order = 1, key = "نوع الهدية")
     public String getGiftName(){return Utils.removeNullValue(giftName);}
-    @ColumnName(key = "الجهة التي قدمت الهدية")
+    @ColumnName(order = 2, key = "الجهة التي قدمت الهدية")
     public String getWhoGiveTheGift(){return Utils.removeNullValue(whoGiveTheGift);}
-    @ColumnName(key = "تاريخ الإستلام")
+    @ColumnName(order = 3, key = "تاريخ الإستلام")
     public String getلإheDateTheGiftWasReceived() {
         if(theDateTheGiftWasReceived == null){
             return "";
@@ -43,10 +43,10 @@ public class ReceivedGifts {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(theDateTheGiftWasReceived);
     }
-    @ColumnName(key = "الدولة")
+    @ColumnName(order = 4, key = "الدولة")
     public String getCountry(){return Utils.removeNullValue(country);}
-    @ColumnName(key = "الجهة التي استلمت الهدية")
+    @ColumnName(order = 5, key = "الجهة التي استلمت الهدية")
     public String getReceiverName(){return Utils.removeNullValue(receiverName);}
-    @ColumnName(key = "سبب استلام الهدية")
+    @ColumnName(order = 6, key = "سبب استلام الهدية")
     public String getReasonForReceivingTheGift(){return Utils.removeNullValue(ReasonForReceivingTheGift);}
 }

@@ -30,32 +30,32 @@ public class IPSubActivity {
     Float progress;
     String classification;
 
-    @ColumnName(key = "اسم النشاط الفرعي")
+    @ColumnName(order = 1, key = "اسم النشاط الفرعي")
     public String getSubActivityName(){
         String entity = Utils.removeNullValue(subActivityName);
         return entity;
     }
-    @ColumnName(key = "الجهة المسؤولة")
+    @ColumnName(order = 2, key = "الجهة المسؤولة")
     public String unitNameStr(){
         String entity = Utils.removeNullValue(unitName_ar);
         return entity;
     }
-    @ColumnName(key = "تاريخ البدء")
+    @ColumnName(order = 3, key = "تاريخ البدء")
     public String getStartDateStr(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(startDate);
     }
-    @ColumnName(key = "تاريخ الانتهاء")
+    @ColumnName(order = 4, key = "تاريخ الانتهاء")
     public String getEndDateStr(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(endDate);
     }
-    @ColumnName(key = "التصنيف")
+    @ColumnName(order = 5, key = "التصنيف")
     public String getClassification(){
         String entity = Utils.removeNullValue(classification);
         return entity;
     }
-    @ColumnName(key = "نسبة الإنجاز")
+    @ColumnName(order = 6, key = "نسبة الإنجاز")
     public String getProgressStr(){
         String entity = progress +" %";
         return entity;

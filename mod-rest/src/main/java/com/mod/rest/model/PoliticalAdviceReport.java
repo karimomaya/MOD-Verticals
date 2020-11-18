@@ -47,22 +47,22 @@ public class PoliticalAdviceReport {
 
 
 
-    @ColumnName(key = "موضوع المشورة")
+    @ColumnName(order = 1, key = "موضوع المشورة")
     public String getTitle(){
         return Utils.removeNullValue(title);
     }
 
-    @ColumnName(key = "جهة إعداد المشورة")
+    @ColumnName(order = 2, key = "جهة إعداد المشورة")
     public String getDIR(){
         return Utils.removeNullValue(DIR);
     }
 
-    @ColumnName(key = "القسم المسؤول")
+    @ColumnName(order = 3, key = "القسم المسؤول")
     public String getSEC(){
         return Utils.removeNullValue(SEC);
     }
 
-    @ColumnName(key = "تقييم المشورة")
+    @ColumnName(order = 4, key = "تقييم المشورة")
     public String getEvaluation(){
         if (evaluation != null){
             //setTranslationAverageEvaluation("لم يتم التقييم");
@@ -74,44 +74,44 @@ public class PoliticalAdviceReport {
 
     }
 
-    @ColumnName(key = "معد المشورة")
+    @ColumnName(order = 5, key = "معد المشورة")
     public String getEmployee(){
         return Utils.removeNullValue(employee);
     }
 
-    @ColumnName(key = "تصنيف المشورة")
+    @ColumnName(order = 6, key = "تصنيف المشورة")
     public String getType(){
         return Utils.removeNullValue(type);
     }
 
 
 
-    @ColumnName(key = "جهة اعتماد المشورة")
+    @ColumnName(order = 7, key = "جهة اعتماد المشورة")
     public String getApprover(){
         return Utils.removeNullValue(approver);
     }
 
-    @ColumnName(key = "نوع المشورة")
+    @ColumnName(order = 8, key = "نوع المشورة")
     public String getPoliticalType(){
         return Utils.removeNullValue(politicalType);
     }
 
-    @ColumnName(key = "ملاحظات")
+    @ColumnName(order = 9, key = "ملاحظات")
     public String getComment(){
         return Utils.removeNullValue(comment);
     }
 
-    @ColumnName(key = "رمز المشورة")
+    @ColumnName(order = 10, key = "رمز المشورة")
     public String getCode(){
         return Utils.removeNullValue(code);
     }
 
-    @ColumnName(key = "تاريخ اعتماد المشورة")
+    @ColumnName(order = 11, key = "تاريخ اعتماد المشورة")
     public LocalDate getApprovedDate(){
         return approvedDate;
     }
 
-    @ColumnName(key = "تاريخ إعداد المشورة")
+    @ColumnName(order = 12, key = "تاريخ إعداد المشورة")
     public LocalDate getCreatedDate(){
         return createdDate;
     }

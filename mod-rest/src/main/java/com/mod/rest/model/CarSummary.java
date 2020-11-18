@@ -21,8 +21,8 @@ public class CarSummary {
     @Column(name = "label")
     String label;
 
-    @ColumnName(key = "الإجمالي")
+    @ColumnName(order = 1, key = "الإجمالي")
     public String getCount (){return Utils.removeNullValue(count);}
-    @ColumnName(key = "الحالة")
+    @ColumnName(order = 2, key = "الحالة")
     public String getLabel () {return  Utils.removeNullValue(label);}
 }

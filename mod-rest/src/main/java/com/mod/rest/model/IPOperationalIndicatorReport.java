@@ -24,17 +24,17 @@ public class IPOperationalIndicatorReport {
     String targetValue;
     String achievedValue;
     String quarter;
-    @ColumnName(key = "اسم المؤشر التشغيلي")
+    @ColumnName(order = 1, key = "اسم المؤشر التشغيلي")
     public String getOperationalIndicatorName(){
         String entity = Utils.removeNullValue(operationalIndicatorName);
         return entity;
     }
-    @ColumnName(key = "الجهة المسؤولة")
+    @ColumnName(order = 2, key = "الجهة المسؤولة")
     public String unitNameStr(){
         String entity = Utils.removeNullValue(operationalIndicatorUnitName_ar);
         return entity;
     }
-    @ColumnName(key = "حالة المؤشر")
+    @ColumnName(order = 3, key = "حالة المؤشر")
     public String getStartDateStr(){
 
 
@@ -50,17 +50,17 @@ public class IPOperationalIndicatorReport {
         }
         return "لم يتم قياس المؤشر";
     }
-    @ColumnName(key = "المستهدف")
+    @ColumnName(order = 4, key = "المستهدف")
     public String getEndDateStr(){
         String entity = Utils.removeNullValue(targetValue);
         return entity;
     }
-    @ColumnName(key = "المحقق")
+    @ColumnName(order = 5, key = "المحقق")
     public String getClassification(){
         String entity = Utils.removeNullValue(achievedValue);
         return entity;
     }
-    @ColumnName(key = "نسبة الإنجاز")
+    @ColumnName(order = 6, key = "نسبة الإنجاز")
     public String getProgressStr(){
         if(achievedValue !=null && targetValue != null){
         int tmp = (int)(Double.valueOf(achievedValue) / Double.valueOf(targetValue)*100);
