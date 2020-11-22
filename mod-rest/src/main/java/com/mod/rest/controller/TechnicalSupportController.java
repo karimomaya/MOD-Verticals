@@ -68,7 +68,7 @@ public class TechnicalSupportController {
             bytes = Files.readAllBytes(file.toPath());
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + env.getProperty("support-stats-name"));
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + env.getProperty("support-stats-name") + ".xlsx");
 
             return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 
