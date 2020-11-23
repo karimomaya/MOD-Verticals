@@ -9,7 +9,7 @@ table {
     /* border: 1px solid #c6c6c6;
     margin-top: 20px; */
     border-collapse: collapse;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 table.specific-class td:first-child {
@@ -70,7 +70,7 @@ th {
  display: inline-block;
  width: 100%;
  vertical-align: top;
-
+margin-bottom: 30px;
 }
 .template-subject-title{
     color: #b68a35;
@@ -127,7 +127,7 @@ img {
              <div class="template-subject-main">
                  
                  <div class="template-subject-text" dir="rtl">
-                    <meeting-subject-replacer>getMeetingSubject</meeting-subject-replacer>
+                    <p>تقرير السياسات</p>
                 </div>
              </div>
 
@@ -135,21 +135,20 @@ img {
          </div>
          <div class="template-data" dir="rtl">
             <div style="background-color: #b68a35; width: 100%; display: block; color: white;">
-                <p style="margin: 10px ; font-weight: bold;" >محضر الاجتماع:</p>
+                <p style="margin: 10px ; font-weight: bold;" >السياسات:</p>
             </div>
             
             <table >
                 <thead>
                     <tr>
-                        <th style="width: 400px;">التسلسل</th>
+                        <th style="width: 100px;">التسلسل</th>
                         <th style="width: 100px;">إسم وثيقة السياسة</th>
                         <th style="width: 100px;">رمز وثيقة السياسة</th>
                         <th style="width: 100px;">تاريخ تنفيذ السياسة</th>
                         <th style="width: 100px;">الهدف من السياسة</th>
                         <th style="width: 100px;">حالة الخطر الرئيسي</th>
                         <th style="width: 100px;">هل السياسه في المسار الصحيح</th>
-                        <th style="width: 100px;">نسبة مؤشرات الأداء الرئيسية المكتملة</th>
-                        
+                        <th style="width: 200px;">نسبة مؤشرات الأداء الرئيسية المكتملة</th>
                     </tr>
                 </thead>
                 <tbody >
@@ -163,7 +162,6 @@ img {
                     <policy-report-replacer>getCompleteKpi</policy-report-replacer>
                 </tbody>
             </table>
-		 
              </div>
          </div>
          
