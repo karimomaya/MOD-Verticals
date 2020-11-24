@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mod.soap.system.Utils;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -17,6 +18,7 @@ import java.util.*;
  * Created by karim on 2/10/20.
  */
 @Data
+@Slf4j
 public class SecurityQuery {
     private SecurityType securityType;
     private Map<String, Object> orOperator;
@@ -209,37 +211,6 @@ public class SecurityQuery {
             return v1 || v2;
         }
     }
-
-//    private boolean evaluateOrOperatorFromXMLUsingHashMap(NodeList nl, ArrayList<AbstractMap.SimpleEntry<String, Object>> evaluator){
-//        boolean evaluate = false;
-//
-//        if(evaluator.size() == 0) return true;
-//
-//          for (AbstractMap.SimpleEntry<String, Object> s : evaluator){
-//            ArrayList<String> output = new ArrayList<>();
-//            for(int k=0;k<nl.getLength();k++){
-//                output = getTagsByName((Node)nl.item(k), (String) s.getKey(), new ArrayList<>());
-////                if (!output.equals("")) break;
-//            }
-//            if (output.size() == 0){
-//                evaluate |= false;
-//            }else {
-//                for(String out : output) {
-//                    String predictedOutput = getRealValue((String) s.getValue());
-//                    if (containsFunctionsKeywords(predictedOutput)) {
-//                        evaluate |= executeFunction(predictedOutput, out);
-//                    } else if (out.equals(predictedOutput)) {
-//                        evaluate |= true;
-//                    } else {
-//                        evaluate |= false;
-//                    }
-//                }
-//            }
-//
-//        }
-//        return evaluate;
-//    }
-
 
     private boolean evaluateOrOperatorFromXMLUsingHashMap(NodeList nl, ArrayList<AbstractMap.SimpleEntry<String, Object>> evaluator){
 

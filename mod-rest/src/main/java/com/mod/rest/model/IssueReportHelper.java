@@ -61,31 +61,31 @@ public class IssueReportHelper {
 //    @Transient
 //    String projectDescription;
 
-    @ColumnName(key = "رقم الخطر")
+    @ColumnName(order = 1, key = "رقم الخطر")
     public String getIssueId(){
         return (String) removeNullValue(this.issueId);
     }
 
-    @ColumnName(key = "اسم الخطر")
+    @ColumnName(order = 2, key = "اسم الخطر")
     public String getIssueName(){
         return (String) removeNullValue(this.issueName);
     }
 
-    @ColumnName(key = "وصف الخطر")
+    @ColumnName(order = 3, key = "وصف الخطر")
     public String getIssueDescription(){
         return (String) removeNullValue(this.issueDescription);
     }
-    @ColumnName(key = "التاريخ")
+    @ColumnName(order = 4, key = "التاريخ")
     public Date getIssueStartDate() {
         return this.issueStartDate;
     }
 
-    @ColumnName(key = "تاريخ المتوقع للحل")
+    @ColumnName(order = 5, key = "تاريخ المتوقع للحل")
     public Date getIssueEndDate() {
         return this.issueEndDate;
     }
 
-    @ColumnName(key = "الأولوية")
+    @ColumnName(order = 6, key = "الأولوية")
     public String getPriority() {
         switch (this.priority){
             case 1:
@@ -99,7 +99,7 @@ public class IssueReportHelper {
         }
     }
 
-    @ColumnName(key = "حالة الخطر")
+    @ColumnName(order = 7, key = "حالة الخطر")
     public String getState() {
         switch (this.issueStatus){
             case 1:
@@ -111,7 +111,7 @@ public class IssueReportHelper {
         }
     }
 
-    @ColumnName(key = "الاحتمالية")
+    @ColumnName(order = 8, key = "الاحتمالية")
     public String getProbability() {
         switch (this.probability){
             case 1:
@@ -125,7 +125,7 @@ public class IssueReportHelper {
         }
     }
 
-    @ColumnName(key = "التأثير")
+    @ColumnName(order = 9, key = "التأثير")
     public String getEffect() {
         switch (this.effect){
             case 1:
@@ -138,17 +138,17 @@ public class IssueReportHelper {
                 return "";
         }
     }
-    @ColumnName(key = "نطاق التأثير")
+    @ColumnName(order = 10, key = "نطاق التأثير")
     public String getEffectArea() {
         return (String) removeNullValue(this.effectArea);
     }
 
-    @ColumnName(key = "القرار")
+    @ColumnName(order = 11, key = "القرار")
     public String getDecision() {
         return (String) removeNullValue(this.decision);
     }
 
-    @ColumnName(key = "الخطر مرتبط ب")
+    @ColumnName(order = 12, key = "الخطر مرتبط ب")
     public String getRelatedType() {
         switch (this.relatedType){
             case 1:
@@ -171,7 +171,7 @@ public class IssueReportHelper {
         }
     }
 
-    @ColumnName(key="الاسم ")
+    @ColumnName(order = 13, key="الاسم ")
     public String getProjectName(){
         if (this.relatedType == 1) {
 //            Project p = (Project) removeNullValue(this.project);
@@ -222,7 +222,7 @@ public class IssueReportHelper {
         }
     }
 
-//    @ColumnName(key="وصف المشروع/النشاط")
+//    @ColumnName(order = 1, key="وصف المشروع/النشاط")
 //    public String getProjectDescription(){
 //        if (this.relatedType == 1) {
 //            Project p = (Project) removeNullValue(this.project);
@@ -242,13 +242,13 @@ public class IssueReportHelper {
 
 
 
-    @ColumnName(key = "المنشئ")
+    @ColumnName(order = 14, key = "المنشئ")
     public String getCreatedByName(){
         User user = (User) removeNullValue(this.createdBy);
         if (user != null) return user.getDisplayName();
         return "";
     }
-    @ColumnName(key = "الملاحظات")
+    @ColumnName(order = 15, key = "الملاحظات")
     public String getNotes() {
         return (String) removeNullValue(this.notes);
     }

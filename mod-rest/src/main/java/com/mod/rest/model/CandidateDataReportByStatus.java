@@ -36,27 +36,27 @@ public class CandidateDataReportByStatus {
     @Column(name="lastSalary")
     String lastSalary;
 
-    @ColumnName(key = "اسم المرشح")
+    @ColumnName(order = 1, key = "اسم المرشح")
     public String getname(){
         return Utils.removeNullValue(name);
     }
 
-    @ColumnName(key = "سنوات الخبرة")
+    @ColumnName(order = 1, key = "سنوات الخبرة")
     public String getyearsOfExp(){
         return Utils.removeNullValue(yearsOfExp);
     }
 
-    @ColumnName(key = "المسمى الوظيفي")
+    @ColumnName(order = 1, key = "المسمى الوظيفي")
     public String getproposedVacancy(){
         return Utils.removeNullValue(proposedVacancy);
     }
 
-    @ColumnName(key = "المؤهل العلمي")
+    @ColumnName(order = 1, key = "المؤهل العلمي")
     public String getacademicQualification(){
         return Utils.removeNullValue(academicQualification);
     }
 
-    @ColumnName(key = "الخبرات العملية")
+    @ColumnName(order = 1, key = "الخبرات العملية")
     public String getpracticalExperience(){
         if (practicalExperience.equals("undefined")){
             return "";
@@ -67,7 +67,7 @@ public class CandidateDataReportByStatus {
 
     }
 
-    @ColumnName(key = "درجة المرشح")
+    @ColumnName(order = 1, key = "درجة المرشح")
     public String gettotalMark(){
         if (totalMark.equals("undefined")){
             return "";
@@ -76,12 +76,12 @@ public class CandidateDataReportByStatus {
             return Utils.removeNullValue(totalMark);
         }
     }
-    @ColumnName(key = "آخر راتب تم استلامه")
+    @ColumnName(order = 1, key = "آخر راتب تم استلامه")
     public String getlastSalary(){
         return Utils.removeNullValue(lastSalary);
     }
 
-    @ColumnName(key = "ملاحظات")
+    @ColumnName(order = 1, key = "ملاحظات")
     public String getnotes(){
         if (notes.equals("undefined")){
             return "";

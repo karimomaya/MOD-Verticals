@@ -33,16 +33,16 @@ public class SpentGift {
     @Column (name = "receiver_position")
     String receiverPosition;
 
-    @ColumnName(key = "الجهة التي استلمت الهدية")
+    @ColumnName(order = 1, key = "الجهة التي استلمت الهدية")
     public String getReceiverName(){return Utils.removeNullValue(receiverName);}
 
-    @ColumnName(key = "نوع الهدية")
+    @ColumnName(order = 2, key = "نوع الهدية")
     public String getGiftName(){return Utils.removeNullValue(giftName);}
 
-    @ColumnName(key = "الدولة")
+    @ColumnName(order = 3, key = "الدولة")
     public String getCountry(){return Utils.removeNullValue(country);}
 
-    @ColumnName(key = "تاريخ تقديم الهدية")
+    @ColumnName(order = 4, key = "تاريخ تقديم الهدية")
     public String getPurshaseDate() {
         if(purchaseDate == null){
             return "";
@@ -51,7 +51,7 @@ public class SpentGift {
         return dateFormat.format(purchaseDate);
     }
 
-    @ColumnName(key = "منصب المستلم")
+    @ColumnName(order = 5, key = "منصب المستلم")
     public String getExpirationDate(){return Utils.removeNullValue(receiverPosition);}
 }
 

@@ -58,32 +58,32 @@ public class RiskReportHelper {
 //    @Transient
 //    String projectDescription;
 
-    @ColumnName(key = "رقم التحدي")
+    @ColumnName(order = 1, key = "رقم التحدي")
     public String getRiskNumber(){
         return (String) removeNullValue(this.riskNumber);
     }
 
-    @ColumnName(key = "اسم التحدي")
+    @ColumnName(order = 2, key = "اسم التحدي")
     public String getRiskName(){
         return (String) removeNullValue(this.riskName);
     }
 
-    @ColumnName(key = "التاريخ")
+    @ColumnName(order = 3, key = "التاريخ")
     public Date getRiskDate() {
         return this.riskDate;
     }
 
-    @ColumnName(key = "تاريخ المتوقع للحل")
+    @ColumnName(order = 4, key = "تاريخ المتوقع للحل")
     public Date getRiskSolutionExperctedDate() {
         return this.riskSolutionDate;
     }
 
-    @ColumnName(key = "وصف التحدي")
+    @ColumnName(order = 5, key = "وصف التحدي")
     public String getRiskDescription(){
         return (String) removeNullValue(this.riskDescription);
     }
 
-    @ColumnName(key = "الأولوية")
+    @ColumnName(order = 6, key = "الأولوية")
     public String getPriority() {
         switch (this.priority){
             case 1:
@@ -97,7 +97,7 @@ public class RiskReportHelper {
         }
     }
 
-    @ColumnName(key = "حالة التحدي")
+    @ColumnName(order = 7, key = "حالة التحدي")
     public String getState() {
         switch (this.riskState){
             case 1:
@@ -109,7 +109,7 @@ public class RiskReportHelper {
         }
     }
 
-    @ColumnName(key = "التحدي مرتبط ب")
+    @ColumnName(order = 8, key = "التحدي مرتبط ب")
     public String getRelatedType() {
         switch (this.relatedType){
             case 1:
@@ -131,7 +131,7 @@ public class RiskReportHelper {
         }
     }
 
-    @ColumnName(key="الاسم ")
+    @ColumnName(order = 9, key="الاسم ")
     public String getProjectName(){
         if (this.relatedType == 1) {
 //            Project p = (Project) removeNullValue(this.project);
@@ -182,7 +182,7 @@ public class RiskReportHelper {
         }
     }
 
-//    @ColumnName(key="الوصف ")
+//    @ColumnName(order = 1, key="الوصف ")
 //    public String getProjectDescription(){
 //        if (this.relatedType == 1) {
 //            Project p = (Project) removeNullValue(this.project);
@@ -199,17 +199,17 @@ public class RiskReportHelper {
 //            return "";
 //        }
 //    }
-    @ColumnName(key = "المنشئ")
+    @ColumnName(order = 10, key = "المنشئ")
     public String getCreatedByName(){
         User user = (User) removeNullValue(this.createdBy);
         if (user instanceof User) return user.getDisplayName();
         return "";
     }
-    @ColumnName(key = "الملاحظات")
+    @ColumnName(order = 11, key = "الملاحظات")
     public String getNotes() {
         return (String) removeNullValue(this.notes);
     }
-//    @ColumnName(key="المسؤولين عن التحدي")
+//    @ColumnName(order = 1, key="المسؤولين عن التحدي")
     public String getResponsibles(){
         String names = "";
         char newline = (char)0x202C;

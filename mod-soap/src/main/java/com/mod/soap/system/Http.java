@@ -1,4 +1,5 @@
 package com.mod.soap.system;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -11,6 +12,7 @@ import java.io.IOException;
 /**
  * Created by karim.omaya on 12/7/2019.
  */
+@Slf4j
 public class Http {
     HttpClient client;
     Header header;
@@ -67,11 +69,16 @@ public class Http {
             response = method.getResponseBodyAsString();
             java.lang.System.out.println(response);
         } catch (HttpException e) {
+            log.error("Try to request "+ url + " using: "+ data);
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         } catch (IOException e) {
+            log.warn("Try to request "+ url + " using: "+ data);
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         }
         if (statusCode != HttpStatus.SC_OK) {
+            log.error("Try to request "+ url + " using: "+ data + " get Status code: "+ statusCode);
             throw new RuntimeException("Method failed: " + method.getStatusLine() + "\n" + response);
         }
         return response;
@@ -89,10 +96,14 @@ public class Http {
             response = method.getResponseBodyAsString();
             java.lang.System.out.println(response);
         } catch (Exception e) {
+            log.warn("Try to request "+ url );
+            log.error(e.getMessage());
             e.printStackTrace();
             throw new RuntimeException(e);
         }
         if (statusCode != HttpStatus.SC_OK) {
+            log.error("Try to request "+ url  + " get Status code: "+ statusCode);
+
             throw new RuntimeException("Method failed: " + method.getStatusLine() + "\n" + response);
         }
         return response;

@@ -4,14 +4,13 @@ import com.mod.rest.annotation.ColumnName;
 import com.mod.rest.controller.ContactTrackerController;
 import com.mod.rest.repository.UserRepository;
 import com.mod.rest.system.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -23,12 +22,15 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by karim.omaya on 12/21/2019.
  */
+@Slf4j
 @Service
 public class ExcelWriterService {
 
@@ -38,14 +40,12 @@ public class ExcelWriterService {
     Environment config;
     XSSFCellStyle style;
 
-    Logger logger = LoggerFactory.getLogger(ExcelWriterService.class);
-
     public File generate(List<?> objectList){
 
         File tempFile = null;
 
         if (objectList.size() == 0){
-            logger.warn("The object you send is empty");
+            log.warn("The object you send is empty");
             return tempFile;
         }
 
@@ -58,7 +58,7 @@ public class ExcelWriterService {
         File tempFile = null;
 
         if (objectList.size() == 0) {
-            logger.warn("The object you send is empty");
+            log.warn("The object you send is empty");
             return tempFile;
         }
 
@@ -72,7 +72,7 @@ public class ExcelWriterService {
         File tempFile = null;
 
         if (objectList.size() == 0){
-            logger.warn("The object you send is empty");
+            log.warn("The object you send is empty");
             return tempFile;
         }
 
@@ -101,16 +101,16 @@ public class ExcelWriterService {
 //            pathOfFile = pathOfFile.substring(0, pathOfFile.lastIndexOf("\\")+1);
 
         } catch (InvocationTargetException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
         } catch (FileNotFoundException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
         }
         return tempFile;
@@ -122,7 +122,7 @@ public class ExcelWriterService {
         try {
             filename = config.getProperty( cls.getSimpleName());
         }catch (Exception ex){
-            logger.warn("Cannot get file name (excel) for class: "+ cls.getSimpleName());
+            log.warn("Cannot get file name (excel) for class: "+ cls.getSimpleName());
             filename = cls.getSimpleName();
         }
         if (filename == null) filename = cls.getSimpleName();
@@ -134,6 +134,7 @@ public class ExcelWriterService {
         Class cls = object.getClass();
 
         Method[] methods = cls.getMethods();
+        methods = sortMethodsArray(methods);
         for (Method method : methods){
             ColumnName annotation = method.getAnnotation(ColumnName.class);
 
@@ -154,10 +155,8 @@ public class ExcelWriterService {
 
             Class cls = object.getClass();
 
-
-
-
             Method[] methods = cls.getMethods();
+            methods = sortMethodsArray(methods);
             int colNum = 0;
             for (Method method : methods){
                 ColumnName annotation = method.getAnnotation(ColumnName.class);
@@ -183,5 +182,23 @@ public class ExcelWriterService {
         }
     }
 
+    private Method[] sortMethodsArray(Method[] methods){
+        Arrays.sort(methods, new Comparator<Method>() {
+            @Override
+            public int compare(Method method1, Method method2) {
+                ColumnName columnName1 = method1.getAnnotation(ColumnName.class);
+                ColumnName columnName2 = method2.getAnnotation(ColumnName.class);
+                if (columnName1 != null && columnName2 != null) {
+                    return columnName1.order() - columnName2.order();
+                } else
+                if (columnName1 == null && columnName2 != null) {
+                    return 1;
+                }else{
+                    return -1;
+                }
+            }
+        });
+        return methods;
+    }
 
 }

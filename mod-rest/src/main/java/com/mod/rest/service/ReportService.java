@@ -1164,14 +1164,15 @@ public class ReportService {
         } else if (type == "TaskAssignmentReport"){
             taskList = taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getType(), 1, Integer.MAX_VALUE );
             if(reportObject.getType() == -1){
-                int[] countArray = new int[6];
+                int[] countArray = new int[5];
                 for (Task task : taskList){
                     int assignmentType = task.getTypeOfAssignment();
                     if(assignmentType > 0 && assignmentType < 6){
-                        countArray[assignmentType] += 1;
-                    }else {
-                        countArray[0] += 1;
+                        countArray[assignmentType-1] += 1;
                     }
+//                    else {
+//                        countArray[0] += 1;
+//                    }
                 }
 
                 graphDataHelper = new GraphDataHelper();
@@ -1179,10 +1180,10 @@ public class ReportService {
                 graphDataHelper.setData(countArray);
                 graphDataHelpers.add(graphDataHelper);
 
-                xaxis.add("بدون تكليف");
+//                xaxis.add("بدون تكليف");
                 xaxis.add("طلب تقرير/دراسة");
                 xaxis.add("طلب معلومات");
-                xaxis.add("طلب ملخص");
+                xaxis.add("اعداد سياسة/توجيه");
                 xaxis.add("طلب ملاحظات/مرئيات");
                 xaxis.add("أخرى");
             }else{
@@ -1204,7 +1205,7 @@ public class ReportService {
                         typeName = "طلب معلومات";
                         break;
                     case 3:
-                        typeName = "طلب ملخص";
+                        typeName = "اعداد سياسة/توجيه";
                         break;
                     case 4:
                         typeName = "طلب ملاحظات/مرئيات";

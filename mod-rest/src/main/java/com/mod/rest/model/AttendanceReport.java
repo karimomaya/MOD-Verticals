@@ -76,7 +76,7 @@ public class AttendanceReport {
 //        return Id;
 //    }
 
-    @ColumnName(key = "الجهة")
+    @ColumnName(order = 1, key = "الجهة")
     public String getDirectorate() {
         return directorate;
     }
@@ -85,132 +85,132 @@ public class AttendanceReport {
         this.directorate = Directorate;
     }
 
-    @ColumnName(key = "المرتب")
+    @ColumnName(order = 2, key = "المرتب")
     public String getTotal() {
         return total;
     }
 
-    @ColumnName(key = "الموجود")
+    @ColumnName(order = 3, key = "الموجود")
     public String getLocated() {
         return located;
     }
 
-    @ColumnName(key = "الموجود الفعلي")
+    @ColumnName(order = 4, key = "الموجود الفعلي")
     public String getActualLocation() {
         return actualLocation;
     }
 
-    @ColumnName(key = "الإلحاق: داخل الوحدة")
+    @ColumnName(order = 5, key = "الإلحاق: داخل الوحدة")
     public String getPlacementInsideTheUnit() {
         return placementInsideTheUnit;
     }
 
-    @ColumnName(key = "الإلحاق: خارج الوحدة")
+    @ColumnName(order = 6, key = "الإلحاق: خارج الوحدة")
     public String getPlacementOutsideTheUnit() {
         return placementOutsideTheUnit;
     }
 
-    @ColumnName(key = "الدورات: الداخلية")
+    @ColumnName(order = 7, key = "الدورات: الداخلية")
     public String getCoursesInterior() {
         return coursesInterior;
     }
 
-    @ColumnName(key = "الدورات: الخارجية")
+    @ColumnName(order = 8, key = "الدورات: الخارجية")
     public String getCoursesExterior() {
         return coursesExterior;
     }
 
-    @ColumnName(key = "الإجازات: سنوية")
+    @ColumnName(order = 9, key = "الإجازات: سنوية")
     public String getVacationAnnual() {
         return vacationAnnual;
     }
 
-    @ColumnName(key = "الإجازات: مرضية")
+    @ColumnName(order = 10, key = "الإجازات: مرضية")
     public String getVacationSick() {
         return vacationSick;
     }
 
-    @ColumnName(key = "الإجازات: اضطرارية")
+    @ColumnName(order = 11, key = "الإجازات: اضطرارية")
     public String getVacationCasual() {
         return vacationCasual;
     }
 
-    @ColumnName(key = "الإجازات: حج")
+    @ColumnName(order = 12, key = "الإجازات: حج")
     public String getVacationPilgrimage() {
         return vacationPilgrimage;
     }
 
-    @ColumnName(key = "الإجازات: وضع/أمومة")
+    @ColumnName(order = 13, key = "الإجازات: وضع/أمومة")
     public String getVacationMaternity() {
         return vacationMaternity;
     }
 
-    @ColumnName(key = "الإجازات: العدة")
+    @ColumnName(order = 14, key = "الإجازات: العدة")
     public String getVacationSeveral() {
         return vacationSeveral;
     }
 
-    @ColumnName(key = "الإجازات: مرافق عائلي")
+    @ColumnName(order = 15, key = "الإجازات: مرافق عائلي")
     public String getVacationFamilyFacilities() {
         return vacationFamilyFacilities;
     }
 
-    @ColumnName(key = "الإجازات: إجازة بدون راتب")
+    @ColumnName(order = 16, key = "الإجازات: إجازة بدون راتب")
     public String getVacationUnpaid() {
         return vacationUnpaid;
     }
 
-    @ColumnName(key = "الإجازات: دراسية")
+    @ColumnName(order = 17, key = "الإجازات: دراسية")
     public String getVacationStudy() {
         return vacationStudy;
     }
 
-    @ColumnName(key = "الإجازات: ميدانية/إدارية")
+    @ColumnName(order = 18, key = "الإجازات: ميدانية/إدارية")
     public String getVacationField() {
         return vacationField;
     }
 
-    @ColumnName(key = "الإجازات: خاصة")
+    @ColumnName(order = 19, key = "الإجازات: خاصة")
     public String getVacationPrivate() {
         return vacationPrivate;
     }
 
-    @ColumnName(key = "الإجازات: دخول المستشفى")
+    @ColumnName(order = 20, key = "الإجازات: دخول المستشفى")
     public String getVacationHospital() {
         return vacationHospital;
     }
 
-    @ColumnName(key = "الإجازات: مرافق علاج")
+    @ColumnName(order = 21, key = "الإجازات: مرافق علاج")
     public String getVacationTreatmentFacilities() {
         return vacationTreatmentFacilities;
     }
 
-    @ColumnName(key = "مراجعة طبية")
+    @ColumnName(order = 22, key = "مراجعة طبية")
     public String getMedicalReview() {
         return medicalReview;
     }
 
-    @ColumnName(key = "الغياب")
+    @ColumnName(order = 23, key = "الغياب")
     public String getAbsence() {
         return absence;
     }
 
-    @ColumnName(key = "المناوبون")
+    @ColumnName(order = 24, key = "المناوبون")
     public String getAlternates() {
         return alternates;
     }
 
-    @ColumnName(key = "المهام: داخلية")
+    @ColumnName(order = 25, key = "المهام: داخلية")
     public String getTasksInternal() {
         return tasksInternal;
     }
 
-    @ColumnName(key = "المهام: خارجية")
+    @ColumnName(order = 26, key = "المهام: خارجية")
     public String getTasksExternal() {
         return tasksExternal;
     }
 
-    @ColumnName(key = "إجمالي الموظفين خارج العمل")
+    @ColumnName(order = 27, key = "إجمالي الموظفين خارج العمل")
     public String getTotalStaffOutOfWork() {
         return totalStaffOutOfWork;
     }

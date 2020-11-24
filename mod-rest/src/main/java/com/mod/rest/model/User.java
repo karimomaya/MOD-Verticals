@@ -38,31 +38,31 @@ public class User implements Serializable {
     String Email;
     String notes;
 
-    @ColumnName(key = "الاسم")
+    @ColumnName(order = 1, key = "الاسم")
     public String getName() {
         return Utils.removeNullValue(DisplayName);
     }
-    @ColumnName(key = "المنصب")
+    @ColumnName(order = 2, key = "المنصب")
     public String getRole() {
         return Utils.removeNullValue(RoleName_ar);
     }
-    @ColumnName(key = "الرتبة")
+    @ColumnName(order = 3, key = "الرتبة")
     public String getTitle() {
         return Utils.removeNullValue(title);
     }
-    @ColumnName(key = "رقم الهاتف")
+    @ColumnName(order = 4, key = "رقم الهاتف")
     public String getPhone() {
         return Utils.removeNullValue(Phone);
     }
-    @ColumnName(key = "رقم الجوال")
+    @ColumnName(order = 5, key = "رقم الجوال")
     public String getMobile() {
         return Utils.removeNullValue(facsimileTelephoneNumber);
     }
-    @ColumnName(key = "الرقم العسكري")
+    @ColumnName(order = 6, key = "الرقم العسكري")
     public String getMilitaryNumber() {
         return Utils.removeNullValue(notes);
     }
-    @ColumnName(key = "البريد الالكتروني")
+    @ColumnName(order = 7, key = "البريد الالكتروني")
     public String getEmail() {
         return Utils.removeNullValue(Email);
     }
