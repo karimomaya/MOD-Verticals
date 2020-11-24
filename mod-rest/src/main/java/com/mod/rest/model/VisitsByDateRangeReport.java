@@ -79,6 +79,11 @@ public class VisitsByDateRangeReport {
     }
 
 
+    public void setCorrelationImportance(String correlationImportance){
+        this.correlationImportance = correlationImportance;
+    }
+
+
 
 
 
