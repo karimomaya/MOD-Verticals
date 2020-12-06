@@ -59,7 +59,7 @@ public class Meeting {
     }
 
     public String getHourOfMeeting(){
-        return Utils.getHoursFromDate(this.startDate);
+        return Utils.getHoursFromDate(this.startDate) + " - " + Utils.getHoursFromDate(this.EndDate);
     }
 
     public String getMeetingSubject() {
