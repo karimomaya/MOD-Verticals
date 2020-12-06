@@ -201,6 +201,54 @@ public class SecurityQuery {
         return queryHandlers;
     }
 
+//    public boolean evaluateNewWebserviceResponse2(String res){
+//
+//        NodeList nl= getsNodeList(res);
+//
+//        Stack<String> booleansStack =new Stack<>();
+//        Stack<String> qHandlers = produceQueryHandlerStack2(nl);
+//        while(qHandlers.size()>0){
+//            String handler = qHandlers.pop();
+//            if(!handler.equals("or") &&!handler.equals("and")){
+//                booleansStack.push(handler);
+//            }else{
+//                String evaluation = booleansStack.pop();
+//                while (booleansStack.size()>0){
+//                    evaluation = (evaluate(booleansStack.pop(),evaluation,handler))? "true" : "false";
+//                }
+//                qHandlers.push(evaluation);
+//                if(qHandlers.size() == 1){
+//                    break;
+//                }
+//            }
+//
+//        }
+//        return qHandlers.pop()=="true";
+//    }
+//
+//    private Stack<String> produceQueryHandlerStack2(NodeList results){
+//        ArrayList<AbstractMap.SimpleEntry<String, Object>> conditions;
+//        Stack<String> queryHandlers = new Stack<>();
+//
+//        while (stackHolder.size() > 0){
+//            QueryHandler queryHandler = stackHolder.pop();
+//            conditions = new ArrayList<>();
+//            if (queryHandler.getKey().equals("or") || queryHandler.getKey().equals("and")){
+//                queryHandlers.push(queryHandler.getKey());
+//            }else {
+//                AbstractMap.SimpleEntry<String, Object> condition = new AbstractMap.SimpleEntry<String, Object>(queryHandler.getKey(), queryHandler.getValue());
+//                conditions.add(condition);
+//                Boolean result = evaluateOrOperatorFromXMLUsingHashMap(results, conditions);
+//                queryHandlers.push(result.toString());
+//            }
+//        }
+//        Stack<String> queryResponse = new Stack<>();
+//        while(queryHandlers.size() > 0){
+//            queryResponse.push(queryHandlers.pop());
+//        }
+//        return queryResponse;
+//    }
+
     private boolean evaluate(String val1, String val2, String operator){
         boolean v1 = (val1.equals("true"))? true : false;
         boolean v2 = (val2.equals("true"))? true : false;
