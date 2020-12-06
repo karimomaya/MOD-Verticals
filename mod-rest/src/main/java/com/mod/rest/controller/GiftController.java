@@ -58,8 +58,19 @@ public class GiftController {
                 file = excelWriterService.generate(receivedGifts);
             }
             if(reportType == 3){
-                List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,receiverCounty,receiverName);
-                file = excelWriterService.generate(spentGift);
+                if (receiverName != null){
+                    List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,receiverCounty,null);
+                    file = excelWriterService.generate(spentGift);
+                }else if (receiverCounty != null){
+                    List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,null,receiverName);
+                    file = excelWriterService.generate(spentGift);
+                }else if(receiverCounty != null && receiverName != null){
+                    List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,null,null);
+                    file = excelWriterService.generate(spentGift);
+                }else{
+                    List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,receiverCounty,receiverName);
+                    file = excelWriterService.generate(spentGift);
+                }
             }
 
 
