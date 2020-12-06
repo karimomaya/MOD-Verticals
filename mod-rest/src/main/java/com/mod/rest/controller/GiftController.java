@@ -37,10 +37,12 @@ public class GiftController {
     @Autowired
     SpentGiftRepository spentGiftRepository;
 
-    @GetMapping("export-gifts/{reportType}/{startDate}/{endDate}")
+    @GetMapping("export-gifts/{reportType}/{startDate}/{endDate}/{receiverCounty}/{receiverName}")
     @ResponseBody
     public ResponseEntity<byte[]> export(@PathVariable("startDate") String startDate,
                                          @PathVariable("endDate") String endDate,
+                                         @PathVariable("receiverCounty") String receiverCounty,
+                                         @PathVariable("receiverName") String receiverName,
                                          @PathVariable("reportType") int reportType
     ) {
         HttpHeaders respHeaders = new HttpHeaders();
@@ -56,7 +58,7 @@ public class GiftController {
                 file = excelWriterService.generate(receivedGifts);
             }
             if(reportType == 3){
-                List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate);
+                List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,receiverCounty,receiverName);
                 file = excelWriterService.generate(spentGift);
             }
 

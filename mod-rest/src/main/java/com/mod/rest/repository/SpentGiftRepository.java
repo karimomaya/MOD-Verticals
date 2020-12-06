@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface SpentGiftRepository extends   GenericRepository<SpentGift, Long>{
-@Query(value = "{call MOD_MSM_SP_spentGiftRecordReport(:startDate, :endDate)}", nativeQuery = true)
-List<SpentGift> getSpentGiftsRecordsBetweenPurshaseDate(@Param("startDate") String startDate, @Param("endDate") String endDate);
+@Query(value = "{call MOD_MSM_SpentGiftsReport (:startDate, :endDate, :receiverCounty, :receiverName)}", nativeQuery = true)
+List<SpentGift> getSpentGiftsRecordsBetweenPurshaseDate(@Param("startDate") String startDate, @Param("endDate") String endDate, @Param("receiverCounty") String receiverCounty, @Param("receiverName") String receiverName);
 
 }
