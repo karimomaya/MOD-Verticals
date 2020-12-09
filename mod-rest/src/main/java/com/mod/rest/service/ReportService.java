@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -25,6 +27,8 @@ import java.util.*;
 @Service
 public class ReportService {
 
+    @Autowired
+    EntityManager entityManager;
     @Autowired
     RiskService riskService;
     @Autowired
@@ -353,7 +357,7 @@ public class ReportService {
 //                return (T)  reportHelper(reportObject, "delayedTaskReport");
                 return (T)  taskReportUserHelper(reportObject, "DelayedTaskReport");
             }else  if (reportObject.getDetectedReportType() == 1){ // table
-                return (T) taskService.addUserToTask(taskRepository.getDelayedTasks(reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
+                return (T) taskService.addUserToTaskWithPerformer(taskWithPerformerRepository.getDelayedTasks(reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cDelayedTask(reportObject.getUserIds());
             } else if(reportObject.getDetectedReportType() == 3) { // file
@@ -366,7 +370,7 @@ public class ReportService {
             if (reportObject.getDetectedReportType() == 0) { // graph
                 return (T) taskReportUserHelper(reportObject, "UserProductivityReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
-                return (T) taskService.addUserToTask(taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
+                return (T) taskService.addUserToTaskWithPerformer(taskWithPerformerRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if (reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds());
             } else if (reportObject.getDetectedReportType() == 3) { // file
@@ -380,7 +384,7 @@ public class ReportService {
                 return (T) taskReportUserHelper(reportObject, "CompletedTaskReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
                 Long userId = sessionService.getSession(reportObject.getSAMLart()).getId();
-                return (T) taskService.addUserToTask(taskRepository.getCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getPageNumber(), reportObject.getPageSize()));
+                return (T) taskService.addUserToTaskWithPerformer(taskWithPerformerRepository.getCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if (reportObject.getDetectedReportType() == 2) { // count
                 Long userId = sessionService.getSession(reportObject.getSAMLart()).getId();
                 return (T) taskRepository.cCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate());
@@ -872,6 +876,7 @@ public class ReportService {
         List<Integer> delayedTasksAL = new ArrayList<>();
 
         for(int i=0; i< users.length; i++){
+            entityManager.clear();
             List<Task> taskList = null;
             String user = ";"+  users[i] +";";
 
