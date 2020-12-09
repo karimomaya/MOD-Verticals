@@ -61,9 +61,10 @@ public class CandidateDataReport {
 
     @ColumnName(order = 1, key = "الخبرات العملية")
     public String getpracticalExperience(){
-        if (practicalExperience.equals("undefined")){
+        if(practicalExperience == null){
             return "";
-
+        }else if (practicalExperience.equals("undefined")){
+            return "";
         }else{
             return Utils.removeNullValue(practicalExperience);
         }
@@ -81,9 +82,10 @@ public class CandidateDataReport {
 
     @ColumnName(order = 1, key = "ملاحظات")
     public String getnotes(){
-        if (notes.equals("undefined")){
+        if(notes == null){
             return "";
-
+        }else if (notes.equals("undefined")){
+            return "";
         }else{
             return Utils.removeNullValue(notes);
         }

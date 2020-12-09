@@ -186,6 +186,15 @@ public class Utils {
         return 0;
     }
 
+    public static boolean isDateBetweenDates(Date date, Date startDate, Date endDate){
+        if((date.after(startDate) || date.equals(startDate))
+        && (date.before(endDate) || date.equals(endDate))) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static String dateFormat(Date date, String format) {
         if (date == null) return "";
         DateFormat dateFormat = new SimpleDateFormat(format);
@@ -376,6 +385,11 @@ public class Utils {
 
     public static String convertDateToString(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(date);
+    }
+
+    public static String convertDateToString(Date date, String format){
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
     }
 
