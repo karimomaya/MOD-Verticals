@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by omar.sabry on 12/9/2020.
@@ -47,6 +45,11 @@ public class VacationsController {
             Date startDate = simpleDateFormat.parse(startDateString);
             Date endDate = simpleDateFormat.parse(endDateString);
 
+            GregorianCalendar cal = new GregorianCalendar();
+            cal.setTime(endDate);
+            cal.add(Calendar.DATE, -1);
+            endDate = cal.getTime();
+
             List<Vacation> resultVacations = new ArrayList<>();
             for (Vacation exception : exceptionList) {
                 Date fromDate = simpleDateFormat.parse(exception.getFromDate());
@@ -58,6 +61,7 @@ public class VacationsController {
             }
             for (Vacation general : generalList) {
                 String year = startDateString.split("-")[0];
+                int yearInt = Integer.parseInt(year);
 
                 String fromDateString = general.getFromDate();
                 String toDateString = general.getToDate();
@@ -65,25 +69,68 @@ public class VacationsController {
                 String fromDateYear = fromDateString.substring(0,fromDateString.indexOf("-"));
                 String toDateYear = toDateString.substring(0,toDateString.indexOf("-"));
 
-                fromDateString = year + fromDateString.substring(fromDateString.indexOf("-"),fromDateString.length());
+                int fromDateYearInt = Integer.parseInt(fromDateYear);
+                int toDateYearInt = Integer.parseInt(toDateYear);
 
-                if(fromDateYear.equals(toDateYear)){
-                    toDateString = year + toDateString.substring(toDateString.indexOf("-"),toDateString.length());
+                if(fromDateYearInt == toDateYearInt){
+                    //add year to fromDate
+                    fromDateString = year + fromDateString.substring(fromDateString.indexOf("-"), fromDateString.length());
+                    //add year to toDate
+                    toDateString = year + toDateString.substring(toDateString.indexOf("-"), toDateString.length());
+
+                    Date fromDate = simpleDateFormat.parse(fromDateString);
+                    Date toDate = simpleDateFormat.parse(toDateString);
+
+                    if (Utils.isDateBetweenDates(fromDate, startDate, endDate)
+                            || Utils.isDateBetweenDates(toDate, startDate, endDate)) {
+                        if (!hasExceptionInList(general, resultVacations)) {
+                            general.setFromDate(fromDate);
+                            general.setToDate(toDate);
+                            resultVacations.add(general);
+                        }
+                    }
                 }else{
-                    int yearInt = Integer.parseInt(year);
-                    yearInt += 1;
-                    toDateString = yearInt + toDateString.substring(toDateString.indexOf("-"),toDateString.length());
-                }
+                    //For Early Year
+                    Vacation generalEarly = new Vacation(general);
 
-                Date fromDate = simpleDateFormat.parse(fromDateString);
-                Date toDate = simpleDateFormat.parse(toDateString);
+                    //calculate the year of fromDate
+                    int fromDateYearIntEarly = yearInt - (toDateYearInt - fromDateYearInt);
+                    //add year to fromDate
+                    String fromDateStringEarly = fromDateYearIntEarly + fromDateString.substring(fromDateString.indexOf("-"), fromDateString.length());
+                    //add year to toDate
+                    String toDateStringEarly = year + toDateString.substring(toDateString.indexOf("-"), toDateString.length());
 
-                if (Utils.isDateBetweenDates(fromDate,startDate,endDate)
-                        || Utils.isDateBetweenDates(toDate,startDate,endDate)) {
-                    if(!hasExceptionInList(general, resultVacations)){
-                        general.setFromDate(fromDate);
-                        general.setToDate(toDate);
-                        resultVacations.add(general);
+                    Date fromDateEarly = simpleDateFormat.parse(fromDateStringEarly);
+                    Date toDateEarly = simpleDateFormat.parse(toDateStringEarly);
+
+                    if (Utils.isDateBetweenDates(fromDateEarly, startDate, endDate)
+                            || Utils.isDateBetweenDates(toDateEarly, startDate, endDate)) {
+                        if (!hasExceptionInList(generalEarly, resultVacations)) {
+                            generalEarly.setFromDate(fromDateEarly);
+                            generalEarly.setToDate(toDateEarly);
+                            resultVacations.add(generalEarly);
+                        }
+                    }
+
+                    //For Late Year
+                    Vacation generalLate = new Vacation(general);
+                    //add year to fromDate
+                    String fromDateStringLate = year + fromDateString.substring(fromDateString.indexOf("-"), fromDateString.length());
+                    //calculate the year of toDate
+                    int toDateYearIntLate = yearInt + (toDateYearInt - fromDateYearInt);
+                    //add year to toDate
+                    String toDateStringLate = toDateYearIntLate + toDateString.substring(toDateString.indexOf("-"), toDateString.length());
+
+                    Date fromDateLate = simpleDateFormat.parse(fromDateStringLate);
+                    Date toDateLate = simpleDateFormat.parse(toDateStringLate);
+
+                    if (Utils.isDateBetweenDates(fromDateLate, startDate, endDate)
+                            || Utils.isDateBetweenDates(toDateLate, startDate, endDate)) {
+                        if (!hasExceptionInList(generalLate, resultVacations)) {
+                            generalLate.setFromDate(fromDateLate);
+                            generalLate.setToDate(toDateLate);
+                            resultVacations.add(generalLate);
+                        }
                     }
                 }
             }

@@ -4,6 +4,8 @@ import com.mod.rest.system.Utils;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -13,6 +15,24 @@ import java.util.Date;
 @Data
 @Table(name = "O2MyCompanyMeetingManagementMOD_MM_entity_Vacation")
 public class Vacation {
+
+    public Vacation(){}
+
+    public Vacation(Vacation vacation){
+        this.id = vacation.getId();
+        this.name_ar = vacation.getName_ar();
+        this.name_eng = vacation.getName_eng();
+        this.rule = vacation.getRule();
+        this.parent_Id = vacation.getParent_Id();
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            this.fromDate = simpleDateFormat.parse(vacation.getFromDate());
+            this.toDate = simpleDateFormat.parse(vacation.getToDate());
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+    }
+
     @Id
     @Column(name = "Id")
     long id;
