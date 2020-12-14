@@ -2,9 +2,11 @@ package com.mod.rest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.mod.rest.model.IndividualReport;
 import com.mod.rest.model.MeetingAttendee;
 import com.mod.rest.model.User;
 import com.mod.rest.model.Vacation;
+import com.mod.rest.repository.IndividualRepository;
 import com.mod.rest.repository.MeetingAttendeeRepository;
 import com.mod.rest.repository.UserRepository;
 import com.mod.rest.repository.VacationRepository;
@@ -33,6 +35,8 @@ public class UserController {
     MeetingAttendeeRepository meetingAttendeeRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    IndividualRepository individualRepository;
 
     @GetMapping("available/")
     @ResponseBody
@@ -40,24 +44,45 @@ public class UserController {
             @RequestParam("userEntityId") String userEntityId,
             @RequestParam("startDate") String startDate,
             @RequestParam("endDate") String endDate,
-            @RequestParam("exceptionMeetings") String exceptionMeetings) {
+            @RequestParam("isExternal") Boolean isExternal,
+            @RequestParam(name = "exceptionMeetings",required = false) String exceptionMeetings) {
 
         ResponseBuilder<ObjectNode> responseBuilder = new ResponseBuilder<>();
         ObjectMapper mapper = new ObjectMapper();
         ObjectNode result = mapper.createObjectNode();
 
-        Optional<User> user = null;
-        if(!userEntityId.contains(",")){
-            user = userRepository.findById(Long.parseLong(userEntityId));
+
+        List<String> users = new ArrayList<>();
+
+        if(!userEntityId.isEmpty()){
+            String[] usersIds = userEntityId.split(",");
+            if(isExternal){
+                for(String userId: usersIds){
+                    Optional<IndividualReport> individual = individualRepository.findById(Long.parseLong(userId));
+                    if(individual.isPresent()){
+                        if(!users.contains(individual.get().getNameArabic())){
+                            users.add(individual.get().getNameArabic());
+                        }
+                    }
+                }
+            }else{
+                for(String userId : usersIds){
+                    Optional<User> user = userRepository.findById(Long.parseLong(userId));
+                    if(user.isPresent()){
+                        if(!users.contains(user.get().getDisplayName())){
+                            users.add(user.get().getDisplayName());
+                        }
+                    }
+                }
+            }
         }
+
         try {
             int startDateDay = Utils.getDayNameFromDate(new SimpleDateFormat("yyyy-MM-dd").parse(startDate.split("T")[0]));
             int endDateDay = Utils.getDayNameFromDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate.split("T")[0]));
             if(startDateDay == 5 || startDateDay == 6 || endDateDay == 5 || endDateDay == 6){
                 result.put("available",false);
-                if(user.isPresent()){
-                    result.put("userDisplayName",user.get().getDisplayName());
-                }
+                result.put("usersDisplayNames",Utils.writeObjectIntoString(users));
                 responseBuilder.status(ResponseCode.SUCCESS);
                 return responseBuilder.data(result).build();
             }
@@ -70,14 +95,12 @@ public class UserController {
 
         if(vacationList.size()> 0){
             result.put("available",false);
-            if(user.isPresent()){
-                result.put("userDisplayName",user.get().getDisplayName());
-            }
+            result.put("usersDisplayNames",Utils.writeObjectIntoString(users));
             responseBuilder.status(ResponseCode.SUCCESS);
             return responseBuilder.data(result).build();
         }
 
-        List<MeetingAttendee> attendeeList = meetingAttendeeRepository.getConflictAttendee(startDate,endDate,userEntityId,false);
+        List<MeetingAttendee> attendeeList = meetingAttendeeRepository.getConflictAttendee(startDate,endDate,userEntityId,isExternal);
 
         ArrayList<String> attendeesDisplayName = new ArrayList<>();
 
@@ -93,13 +116,9 @@ public class UserController {
 
         if(attendeesDisplayName.size() > 0){
             result.put("available",false);
-            result.put("attendees", Utils.writeObjectIntoString(attendeesDisplayName));
+            result.put("usersDisplayNames", Utils.writeObjectIntoString(attendeesDisplayName));
         }else{
             result.put("available",true);
-        }
-
-        if(user.isPresent()){
-            result.put("userDisplayName",user.get().getDisplayName());
         }
 
         responseBuilder.status(ResponseCode.SUCCESS);
@@ -107,7 +126,9 @@ public class UserController {
     }
 
     private boolean isMeetingException(String meetingId, String exceptionMeetings){
-        if(exceptionMeetings == ""){
+        if(exceptionMeetings == null){
+            return false;
+        }else if(exceptionMeetings.isEmpty()){
             return false;
         }else{
             String[] exceptionMeetingsList = exceptionMeetings.split(",");
