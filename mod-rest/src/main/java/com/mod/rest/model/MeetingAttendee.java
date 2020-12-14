@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Created by omar.sabry on 1/8/2020.
@@ -21,14 +22,23 @@ public class MeetingAttendee {
     Boolean attendedMeeting;
     Boolean isExternal;
     // Internal Attendee
+    @Transient
     String userDisplayName;
+    @Transient
     String RoleName;
+    @Transient
     String RoleName_ar;
+    @Transient
     String title;
     // External Attendee
+    @Transient
     String nameArabic;
+    @Transient
     String positionArabic;
+    @Transient
     String entityName;
+
+    String meeting_to_attendees_Id;
 
     public String getAttendeeName(){
         if(this.isExternal){
