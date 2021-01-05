@@ -58,18 +58,20 @@ public class CandidateDataReportByStatus {
 
     @ColumnName(order = 1, key = "الخبرات العملية")
     public String getpracticalExperience(){
-        if (practicalExperience.equals("undefined")){
+        if(practicalExperience == null){
             return "";
-
+        }else if (practicalExperience.equals("undefined")){
+            return "";
         }else{
             return Utils.removeNullValue(practicalExperience);
         }
-
     }
 
     @ColumnName(order = 1, key = "درجة المرشح")
     public String gettotalMark(){
-        if (totalMark.equals("undefined")){
+        if(totalMark == null){
+            return "";
+        }else if (totalMark.equals("undefined")){
             return "";
 
         }else{
@@ -83,7 +85,9 @@ public class CandidateDataReportByStatus {
 
     @ColumnName(order = 1, key = "ملاحظات")
     public String getnotes(){
-        if (notes.equals("undefined")){
+        if(notes == null){
+            return "";
+        }else if (notes.equals("undefined")){
             return "";
 
         }else{

@@ -6,6 +6,7 @@ import com.mod.rest.repository.CandidateDataReportRepository;
 import com.mod.rest.service.ExcelWriterService;
 import com.mod.rest.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +31,9 @@ public class CandidateDataReportController {
     ExcelWriterService excelWriterService;
     @Autowired
     CandidateDataReportRepository candiateDataRepository;
+    @Autowired
+    Environment env;
+
 
     @GetMapping("export/{startDateString}/{endDateString}")
     @ResponseBody
@@ -48,11 +52,13 @@ public class CandidateDataReportController {
                 return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"null\"").body(null);
             }
+
+            String fname = env.getProperty("candidate-range-name");
             respHeaders.setContentLength(file.length());
             bytes = Files.readAllBytes(file.toPath());
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fname +".xlsx");
 
             return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
         } catch (JsonProcessingException e){

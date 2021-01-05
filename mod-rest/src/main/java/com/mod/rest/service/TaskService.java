@@ -7,6 +7,7 @@ import com.mod.rest.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 /**
@@ -15,6 +16,8 @@ import java.util.*;
 @Service
 public class TaskService {
 
+    @Autowired
+    EntityManager entityManager;
     @Autowired
     TaskRepository taskRepository;
     @Autowired
@@ -36,6 +39,8 @@ public class TaskService {
         for (TaskWithPerformer task : tasks){
             Optional<User> userOwner =  userRepository.findById(task.getOwner());
             if (userOwner.isPresent()) task.setUserOwner(userOwner.get());
+            Optional<User> userPerformer =  userRepository.findById(task.getPerformerId());
+            if (userOwner.isPresent()) task.setPerformer(userPerformer.get());
         }
         return tasks;
     }

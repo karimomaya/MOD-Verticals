@@ -186,6 +186,15 @@ public class Utils {
         return 0;
     }
 
+    public static boolean isDateBetweenDates(Date date, Date startDate, Date endDate){
+        if((date.after(startDate) || date.equals(startDate))
+        && (date.before(endDate) || date.equals(endDate))) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static String dateFormat(Date date, String format) {
         if (date == null) return "";
         DateFormat dateFormat = new SimpleDateFormat(format);
@@ -251,12 +260,19 @@ public class Utils {
         if (diffTotal == 0) {
             diffTotal = 1;
         }
-        long expectedProgress = (diffnow / diffTotal) * 100;
+        if (diffnow == 0) {
+            diffnow = 1;
+        }
+        long expectedProgress = (long)(((float)diffnow / (float)diffTotal) * 100);
 
 
-        if (startDate.compareTo(toddayDate) > 0 ) {
+//        if (startDate.compareTo(toddayDate) > 0 ) {
+//            result = "neural";
+//        }
+        if(progress == 100){
             result = "neural";
-        }else  if (progress < expectedProgress + 10 && progress > expectedProgress - 10) {
+        }
+        else  if (progress < expectedProgress + 10 && progress > expectedProgress - 10) {
             result = "expected";
         } else if (progress > expectedProgress) {
             result = "exceed";
@@ -376,6 +392,11 @@ public class Utils {
 
     public static String convertDateToString(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        return sdf.format(date);
+    }
+
+    public static String convertDateToString(Date date, String format){
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
     }
 

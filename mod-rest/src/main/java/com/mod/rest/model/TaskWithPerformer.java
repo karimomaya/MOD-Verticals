@@ -8,6 +8,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -19,7 +20,9 @@ import java.util.Date;
 @Immutable
 public class TaskWithPerformer {
     @Id
-    @Column(name="Id")
+    @Column(name="RowNum")
+    long RowNum;
+
     long Id;
 
     String taskName;
@@ -41,7 +44,7 @@ public class TaskWithPerformer {
     Integer integrationId;
     Integer typeOfAssignment;
 
-    Integer performerId;
+    Long performerId;
     String performerName;
     Integer performerStatus;
     Integer performerProgress;
@@ -50,6 +53,10 @@ public class TaskWithPerformer {
     User userCreatedBy;
     @Transient
     User userOwner;
+    @Transient
+    User performer;
+    @Transient
+    String taskPerformerStatus;
 
     public String getArabicStartDate(){
         return Utils.convertDateToArabic(this.startDate);
@@ -70,6 +77,22 @@ public class TaskWithPerformer {
             return "";
         }else{
             return this.project.getName();
+        }
+    }
+
+    public String getTaskPerformerStatus() {
+        Date tomorrowDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(tomorrowDate);
+        c.add(Calendar.DATE, 1);
+        tomorrowDate = c.getTime();
+
+        if(this.getStatus() == 3 || this.getStatus() == 12 ||(this.getStatus() == 2 && this.getPerformerStatus() == 2)){
+            return "delayed";
+        }else if(this.getDueDate().before(tomorrowDate) && (this.getStatus() == 1 || (this.getStatus() == 2 && this.getPerformerStatus() <= 1))){
+            return "finished";
+        }else{
+            return "inProgress";
         }
     }
 }
