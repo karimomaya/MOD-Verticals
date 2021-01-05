@@ -37,12 +37,13 @@ public class GiftController {
     @Autowired
     SpentGiftRepository spentGiftRepository;
 
-    @GetMapping("export-gifts/{reportType}/{startDate}/{endDate}/{receiverCounty}/{receiverName}")
+    @GetMapping("export-gifts/{reportType}/{startDate}/{endDate}/{receiverCounty}/{receiverName}/{giftType}")
     @ResponseBody
     public ResponseEntity<byte[]> export(@PathVariable("startDate") String startDate,
                                          @PathVariable("endDate") String endDate,
                                          @PathVariable("receiverCounty") String receiverCounty,
                                          @PathVariable("receiverName") String receiverName,
+                                         @PathVariable("giftType") String giftType,
                                          @PathVariable("reportType") int reportType
     ) {
         HttpHeaders respHeaders = new HttpHeaders();
@@ -50,7 +51,7 @@ public class GiftController {
         byte[] bytes = null;
         try {
             if(reportType == 1){
-                List<Gifts> giftReports = giftsRepository.getGiftsRecordsBetweenPurshaseDate(startDate,endDate,"");
+                List<Gifts> giftReports = giftsRepository.getGiftsRecordsBetweenPurshaseDate(startDate,endDate,giftType);
                 file = excelWriterService.generate(giftReports);
             }
             if(reportType == 2){
