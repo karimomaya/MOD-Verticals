@@ -2,51 +2,89 @@
 <head>
     <style>
         table {
+            border-top: 1px solid #636566;
+            border-right: 1px solid #636566;
+
             color: black;
             font-size: 16px;
             border-collapse: collapse;
             margin-bottom: 20px;
             margin-top: 20px;
         }
+
         .english-font {
             font-family: Arial, Helvetica, sans-serif;
         }
+
         table td {
-            border: 1px solid #636566;
+            border-left: 1px solid #636566;
+            border-bottom: 1px solid #636566;
             background-color: white;
             color: black;
-            padding: 5px
+            padding: 5px;
         }
+
+        .header {
+            text-align: center;
+        }
+
         th {
             color: black;
-            font-weight: bold;
             font-size: 14px;
             background-color: #c6c6c6;
             text-align: left;
             padding: 5px;
         }
+
+        .simple-table {
+            border-top: 1px solid #636566;
+            border-right: 1px solid #636566;
+            background-color: white;
+            color: black;
+            padding: 0 0 5px 0 !important;
+        }
+
+        .simple-table th {
+            border-left: 1px solid #636566;
+            border-bottom: 1px solid #636566;
+            color: black;
+            font-size: 14px;
+            background-color: #c6c6c6;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .simple-table td {
+            text-align: center;
+        }
+
         .table-gold th {
             background-color: #b68a35;
             color: white;
         }
+
         .email-wrapper {
             display: block;
             padding: 0;
             margin: 0 auto;
         }
+
         .email-template-body {
             background-color: #fff;
             display: block;
             margin-top: 30px;
         }
+
         .template-subject-main {
             display: inline-block;
             width: 100%;
             vertical-align: top;
         }
+
         .template-data {
             display: block;
         }
+
         .header-image {
             width: 200px;
         }
@@ -55,22 +93,22 @@
 <body style="font-family: Noto Naskh Arabic">
 <div class="email-wrapper">
     <div class="email-header">
-        <img class="header-image" src="UAElogo.png" />
+        <img class="header-image" src="UAElogo.png"/>
     </div>
     <div class="email-template-body">
         <div class="template-data" dir="rtl">
-            <table style="width: 690px;" >
+            <table style="border: 0;width: 690px;">
                 <thead style="background-color: #b68a35;color: white; ">
-                    <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">السيرة الذاتية</th>
-                    </tr>
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">السيرة الذاتية</th>
+                </tr>
                 </thead>
             </table>
-            <table style="width: 690px;" >
+            <table style="border: 0;width: 690px;">
                 <thead style="background-color: #636566;color: white; ">
-                    <tr style="background-color: #636566;color: white; ">
-                        <th style="background-color: #636566;color: white; ">بيانات القائد</th>
-                    </tr>
+                <tr style="background-color: #636566;color: white; ">
+                    <th style="background-color: #636566;color: white; ">بيانات القائد</th>
+                </tr>
                 </thead>
             </table>
             <CV>
@@ -78,82 +116,147 @@
                     <attribute>leader-replacer</attribute>
                     <attribute>image-replacer</attribute>
 
-                    <attribute>getTests</attribute>
-                    <getTests-attribute>tests-replacer</getTests-attribute>
+                    <attribute>getCountryLeaderPositions</attribute>
+                    <attribute>getCountryAdditionalDatas</attribute>
+
+
+                    <getCountryLeaderPositions-attribute>position-replacer</getCountryLeaderPositions-attribute>
+                    <getCountryAdditionalDatas-attribute>leaderAdditionalData-replacer
+                    </getCountryAdditionalDatas-attribute>
                     <div class="discussion-point template-subject-main">
-                        <table style="width: 690px;" >
+                        <table style="width: 690px;">
                             <thead>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr class="single-view">
-                                    <td colspan="2">
-                                        <img><image-replacer>getPicture</image-replacer></img>
-                                    </td>
-                                </tr>
-                                <tr class="single-view">
-                                    <td style="width: 400px; background-color: #c6c6c6;color: black;" >الإسم</td>
-                                    <td style="width: 200px;">
-                                        <leader-replacer>getName</leader-replacer>
-                                    </td>
-                                </tr>
-                                <tr class="single-view">
-                                    <td style="width: 400px; background-color: #c6c6c6;color: black;" >المنصب الحالي</td>
-                                    <td style="width: 200px;">
-                                        <leader-replacer>getCurrentPosition</leader-replacer>
-                                    </td>
-                                </tr>
-                                </tbody>
+                            <tr class="single-view">
+                                <td colspan="2">
+                                    <img>
+                                    <image-replacer>getPicture</image-replacer>
+                                    </img>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td class="header" style="width: 400px; background-color: #c6c6c6;color: black;">الإسم
+                                </td>
+                                <td style="width: 200px;">
+                                    <leader-replacer>getName</leader-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td class="header" style="width: 400px; background-color: #c6c6c6;color: black;">المنصب
+                                    الحالي
+                                </td>
+                                <td style="width: 200px;">
+                                    <leader-replacer>getCurrentPosition</leader-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
                         </table>
+
+                        <table class="simple-table" style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th>إسم المنصب</th>
+                                <th>تاريخ شغل المنصب</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td>
+                                    <position-replacer>getPosition</position-replacer>
+                                </td>
+                                <td>
+                                    <position-replacer>getDateStr</position-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr class="single-view">
+                                <td class="header" style="width: 400px; background-color: #c6c6c6;color: black;">
+                                    العنوان
+                                </td>
+                                <td style="width: 200px;">
+                                    <leaderAdditionalData-replacer>getTitle</leaderAdditionalData-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td class="header" style="width: 400px; background-color: #c6c6c6;color: black;">
+                                    التفاصيل
+                                </td>
+                                <td style="width: 200px;">
+                                    <leaderAdditionalData-replacer>getDetails</leaderAdditionalData-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+
                     </div>
                 </CV-remover>
             </CV>
             <CV-holder>
             </CV-holder>
-            <table style="width: 690px;" >
+            <table style="border: 0;width: 690px;">
                 <thead style="background-color: #b68a35;color: white; ">
-                    <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">نقاط النقاش</th>
-                    </tr>
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">نقاط النقاش</th>
+                </tr>
                 </thead>
             </table>
             <DP>
                 <DP-remover>
                     <attribute>discussion-point-replacer</attribute>
                     <div class="discussion-point template-subject-main">
-                        <table style="width: 690px;" >
+                        <table style="width: 690px;">
                             <thead>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
                             </thead>
                             <tbody>
-                                
+
                             <tr class="single-view">
-                                <td style="width: 400px; background-color: #c6c6c6;color: black;" >موضوع النقاش</td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">موضوع النقاش</td>
                                 <td colspan="3" style="width: 200px;">
                                     <discussion-point-replacer>getDiscussionSubject</discussion-point-replacer>
                                 </td>
                             </tr>
                             <tr class="single-view">
-                                <td  style="width: 400px; background-color: #c6c6c6;color: black;" >المجال </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">المجال</td>
                                 <td style="width: 200px;">
                                     <discussion-point-replacer>getField</discussion-point-replacer>
                                 </td>
-                                <td style="width: 400px; background-color: #c6c6c6;color: black;" >مقترحة بواسطة </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">مقترحة بواسطة</td>
                                 <td style="width: 200px;">
                                     <discussion-point-replacer>getSuggestedBy</discussion-point-replacer>
                                 </td>
                             </tr>
                             <tr class="single-view">
-                                <td style="width: 400px; background-color: #c6c6c6;color: black;" >ملاحظات </td>
-                                <td colspan="3"  style="width: 200px;">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">ملاحظات</td>
+                                <td colspan="3" style="width: 200px;">
                                     <discussion-point-replacer>getNotes</discussion-point-replacer>
                                 </td>
                             </tr>

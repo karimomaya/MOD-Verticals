@@ -1,5 +1,7 @@
 package com.mod.rest.model;
+
 import lombok.Data;
+
 import javax.persistence.*;
 
 /**
@@ -20,4 +22,9 @@ public class CountryLeaderPosition {
     String year;
     String month;
     String day;
+
+
+    public String getDateStr() {
+        return year + '-' + month + '-' + day;
+    }
 }
