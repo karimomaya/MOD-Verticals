@@ -37,45 +37,50 @@ public class VisitsByDateRangeReport {
 
 
 
-    @ColumnName(key = "اسم الجهة")
+    @ColumnName(order = 1, key = "اسم الجهة")
     public String getSectorName(){
         return Utils.removeNullValue(sectorName);
     }
 
-    @ColumnName(key = "إرسال الكتاب الرسمي")
+    @ColumnName(order = 2, key = "إرسال الكتاب الرسمي")
     public String getSendOfficalWrite(){
         return Utils.removeNullValue(sendOfficalWrite);
     }
 
-    @ColumnName(key = "نسبة الإرتباط")
+    @ColumnName(order = 3, key = "نسبة الإرتباط")
     public String getCorrelationRatio(){
         return Utils.removeNullValue(correlationRatio);
     }
 
-    @ColumnName(key = "تاريخ الزيارة")
+    @ColumnName(order = 4, key = "تاريخ الزيارة")
     public Date getDateOfMeeting() {
         return (dateOfMeeting);
     }
 
-    @ColumnName(key = "محضر الاجتماع")
+    @ColumnName(order = 5, key = "محضر الاجتماع")
     public String getMeetingAttendee(){
         return meetingAttendee;
     }
 
 
-    @ColumnName(key = "اللجان الفرعية")
+    @ColumnName(order = 6, key = "اللجان الفرعية")
     public String getSubSection(){
         return subSection;
     }
 
-    @ColumnName(key = "الإدارة")
+    @ColumnName(order = 7, key = "الإدارة")
     public String getUnitName(){
         return Utils.removeNullValue(UnitName);
     }
 
-    @ColumnName(key = "أهمية الارتباط")
+    @ColumnName(order = 8, key = "أهمية الارتباط")
     public String getCorrelationImportance(){
         return Utils.removeNullValue(correlationImportance);
+    }
+
+
+    public void setCorrelationImportance(String correlationImportance){
+        this.correlationImportance = correlationImportance;
     }
 
 

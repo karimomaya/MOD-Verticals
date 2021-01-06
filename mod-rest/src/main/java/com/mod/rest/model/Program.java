@@ -1,5 +1,8 @@
 package com.mod.rest.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -8,6 +11,8 @@ import java.util.Date;
 /**
  * Created by karim.omaya on 10/29/2019.
  */
+@Getter
+@Setter
 @Entity
 @Table(name = "O2MyCompanyTaskManagementMOD_TM_entity_Program")
 public class Program {

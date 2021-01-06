@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -26,11 +27,11 @@ public interface IssueRepository extends GenericRepository<Issue, Long> {
     @Query(value = "{call MOD_RM_SP_GetIssuesRelatedToProjectReportCount( :projectId, :createdBy )}", nativeQuery = true)
     Long getIssueRelatedToProjectReportCount(@Param("projectId") String projectId, @Param("createdBy") String createdBy);
 
-    @Query(value = "{call MOD_RM_GetClosedIssuesReport(:PageNumber, :PageSize, :createdBy)}", nativeQuery = true)
-    List<Issue> getClosedIssuesReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy);
+    @Query(value = "{call MOD_RM_GetClosedIssuesReport(:PageNumber, :PageSize, :createdBy, :StartDate, :EndDate)}", nativeQuery = true)
+    List<Issue> getClosedIssuesReport(@Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize, @Param("createdBy") String createdBy, @Param("StartDate") Date StartDate, @Param("EndDate") Date EndDate);
 
-    @Query(value = "{call MOD_RM_GetClosedIssuesReportCount( :createdBy )}", nativeQuery = true)
-    Long getClosedIssuesReportCount(@Param("createdBy") String createdBy);
+    @Query(value = "{call MOD_RM_GetClosedIssuesReportCount( :createdBy, :StartDate, :EndDate )}", nativeQuery = true)
+    Long getClosedIssuesReportCount(@Param("createdBy") String createdBy, @Param("StartDate") Date StartDate, @Param("EndDate") Date EndDate);
 
     @Query(value = "{call MOD_RM_SP_GetIssuesByPriorityThenPrecedence(:createdBy, :PageNumber,:PageSize )}", nativeQuery = true)
     List<Issue> getIssuesByPriorityThenPrecedence(@Param("createdBy") String createdBy, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize);

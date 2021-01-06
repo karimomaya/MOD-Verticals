@@ -17,6 +17,7 @@ import com.mod.soap.service.SessionService;
 import com.mod.soap.system.Http;
 import com.mod.soap.system.Property;
 import com.mod.soap.system.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
@@ -43,6 +44,7 @@ import java.util.regex.Pattern;
  * Created by karim.omaya on 12/7/2019.
  */
 @Endpoint
+@Slf4j
 public class RequestNumberEndPoint {
     private static final String NAMESPACE_URI = "http://www.mod.soap";
 
@@ -69,6 +71,9 @@ public class RequestNumberEndPoint {
     MeetingRepository meetingRepository;
     @Autowired
     MeetingAttendeeRepository meetingAttendeeRepository;
+    @Autowired
+    NotificationTaskRepository notificationTaskRepository;
+
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendEmailRequest")
     @ResponsePayload
@@ -78,8 +83,9 @@ public class RequestNumberEndPoint {
 
 
         InputStream is = null;
+        String mailTemplatePath = env.getProperty("mail-template-path");
         try {
-            is = new FileInputStream(request.getTemplate()+".json");
+            is = new FileInputStream(mailTemplatePath+request.getTemplate()+".json");
             BufferedReader buf = new BufferedReader(new InputStreamReader(is));
 
             String line = buf.readLine();
@@ -133,13 +139,25 @@ public class RequestNumberEndPoint {
                 String value = "";
                 for(int k=0;k<nl.getLength();k++){
                     value =  getTagByName((Node)nl.item(k), token, "");
+                    Pattern dateRegex = Pattern.compile("(?:\\d{4}-\\d{2}-\\d{2})T(?:\\d{2}):\\d{2}:\\d{2}.*");
+                    Matcher dateMatcher = dateRegex.matcher(value);
+                    if(dateMatcher.find()){
+                        value = value.split("T")[0];
+                    }
                     if (!value.equals("")) break;
                 }
+                if (value == null) value = "";
+                else if (value.equals("null") || value.equals("undefined")) value = "";
                 fileAsString = fileAsString.replace("("+token+")", value);
             }
 
-            OutlookMeeting outlookMeeting = new OutlookMeeting(null);
-            outlookMeeting.sendEmail(fileAsString, request.getEmails().split(","), request.getSubject());
+            String username= env.getProperty("outlook-user-name");
+            String logoPath= env.getProperty("outlook-logo-path");
+            String password= env.getProperty("outlook-user-password");
+            String exchangeServerUrl=env.getProperty("outlook-exchange-server-url");
+
+            OutlookMeeting outlookMeeting = new OutlookMeeting(null, username, password, exchangeServerUrl);
+            outlookMeeting.setLogoPath(logoPath).sendEmail(fileAsString, request.getEmails().split(","), request.getSubject());
 
             System.out.println("Contents : " + fileAsString);
         } catch (FileNotFoundException e) {
@@ -194,7 +212,6 @@ public class RequestNumberEndPoint {
         return template;
     }
 
-
     @Autowired
     public RequestNumberEndPoint(RequestNumberRepository RequestNumberRepository) {
         this.RequestNumberRepository = RequestNumberRepository;
@@ -203,11 +220,14 @@ public class RequestNumberEndPoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "GetHumanTaskRequest")
     @ResponsePayload
     public GetHumanTaskResponse getHumanTask(@RequestPayload GetHumanTaskRequest request) {
+        log.info("Request Human Tasks..");
         GetHumanTaskResponse response = new GetHumanTaskResponse();
+        log.info("login..");
         String ticket = sessionService.loginWithAdmin();
 
         Http http = new Http(property);
         UserDetails userDetails = new UserDetails();
+        log.info("Get Human Tasks..");
         String res = http.cordysRequest(userDetails.getHumanTasks(request.getRoleName(), request.getProcessName(), ticket));
         Document doc = Utils.convertStringToXMLDocument(res);
 
@@ -224,48 +244,66 @@ public class RequestNumberEndPoint {
                 response.setTaskResponse(taskResponse);
             }
         }
-
+        log.info("Response Human Task(s) List: " + response.getTaskResponse().size());
         return response;
     }
-
-
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendMeetingRequest")
     @ResponsePayload
     public SendMeetingResponse sendMeeting(@RequestPayload SendMeetingRequest request) {
-
+        log.info("Request Outlook Meeting (meeting id: "+request.getMeetingId()+")..");
         SendMeetingResponse response = new SendMeetingResponse();
 
         long meetingId = request.getMeetingId();
         List<MeetingAttendee> meetingAttendees = meetingAttendeeRepository.getMeetingAttendeeData(meetingId);
+        log.info("List Of Attendee(s) "+ meetingAttendees.size() );
         Optional<Meeting> meetingOptional = meetingRepository.getMeetingData(meetingId);
-        if (!meetingOptional.isPresent()) return response.setStatus("Meeting-Not-Present");
+        if (!meetingOptional.isPresent()) {
+            log.warn("Meeting id: "+ meetingId + " is not Exist");
+            return response.setStatus("Meeting-Not-Present");
+        }
 
         Meeting meeting = meetingOptional.get();
 
-        sendMeeting(meeting, meetingAttendees, request.isUpdate());
+        sendMeeting(meeting, meetingAttendees, request.isUpdate(), request.isCancel());
+
+        if (request.isCancel())  return response.setStatus("done");
 
         if (meeting.getIsPeriodic() && !request.isUpdate()){
             ArrayList<Meeting> meetings = meetingRepository.getPeriodicMeeting(meetingId, meeting.getSubject());
             for (Meeting meeting1: meetings){
                 if (meeting1.getId() != meetingId && !meeting1.getConflict()){
-                    sendMeeting(meeting1, meetingAttendees, false);
+                    sendMeeting(meeting1, meetingAttendees, false, false);
                 }
             }
 
         }
-
+        log.info("Response Outlook Meeting Send Success");
         return response.setStatus("done");
     }
 
-    public void sendMeeting(Meeting meeting, List<MeetingAttendee> meetingAttendees, Boolean isUpdate){
+    public void sendMeeting(Meeting meeting, List<MeetingAttendee> meetingAttendees, Boolean isUpdate, Boolean isCancel){
         OutlookMeeting outlookMeeting = null;
 
+        String username= env.getProperty("outlook-user-name");
+        String password= env.getProperty("outlook-user-password");
+        String exchangeServerUrl=env.getProperty("outlook-exchange-server-url");
         if(isUpdate){
-            outlookMeeting = new OutlookMeeting(meeting.getOutlookId());
+
+            outlookMeeting = new OutlookMeeting(meeting.getOutlookId(), username, password, exchangeServerUrl);
+            if (isCancel){
+                log.info("Cancel outlook Meeting..");
+                outlookMeeting.cancelMeeting();
+                return;
+            }
+            log.info("Update outlook Meeting..");
+
         }else {
-            outlookMeeting = new OutlookMeeting(null);
+            log.info("Create outlook Meeting..");
+            outlookMeeting = new OutlookMeeting(null, username, password, exchangeServerUrl);
         }
+
+
 
         outlookMeeting = outlookMeeting.setSubject(meeting.getSubject())
                 .setBody(meeting.getDescription())
@@ -273,12 +311,12 @@ public class RequestNumberEndPoint {
                 .setEndDate(meeting.getEndDate());
 
         for (MeetingAttendee meetingAttendee : meetingAttendees){
-            if (meetingAttendee.getIsExternal()){
+            if (meetingAttendee.getIsExternal() ){
                 Optional<ExternalUser> externalUserOptional = externalUserRepository.getExternalUserDetail(meetingAttendee.getAttendeeID());
                 if(externalUserOptional.isPresent()){
                     outlookMeeting.setAttendeeEmail(externalUserOptional.get().getEmail());
                 }
-            }else {
+            }else if (meetingAttendee.getStatus() != 2 && meetingAttendee.getStatus() != 3){
                 Optional<User> userOptional = userRepository.getUserDetail(meetingAttendee.getAttendeeID());
                 if (userOptional.isPresent()){
                     outlookMeeting.setAttendeeEmail(userOptional.get().getEmail());
@@ -295,12 +333,11 @@ public class RequestNumberEndPoint {
         }
     }
 
-
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "RequestNumberRequest")
     @ResponsePayload
     public RequestNumberResponse generateRequestNumber(@RequestPayload RequestNumberRequest request) {
 
-
+        log.info("Request Generate Request Number for user: "+ request.getUserId() + " and for type: " + request.getType());
         RequestNumberResponse response = new RequestNumberResponse();
 
         String userId = request.getUserId();
@@ -316,31 +353,45 @@ public class RequestNumberEndPoint {
         requestNumber.generateRequestNumber();
         response.setRequestNumber(requestNumber);
 
+        log.info("Response Request Number is Generated");
         return response;
     }
-
-
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "CustomSecurityRequest")
     @ResponsePayload
     public CustomSecurityResponse getCustomSecurity(@RequestPayload CustomSecurityRequest request) {
-
+        log.info("Request Check Security...");
         CustomSecurityResponse customSecurityResponse = new CustomSecurityResponse();
 
         List<SecurityRequest> securityRequests = request.getSecurityRequest();
+        log.info("Number of item(s) need to be checked: "+ securityRequests.size());
 
+        log.info("Try to login..");
         User user = sessionService.loginWithUsername(request.getUsername());
 
+        String url = request.getUrl();
+
+        if(url != null) {
+            String taskId = getTaskIdFromURL(url);
+            if (taskId != null) {
+                Boolean canViewTask = userCanViewTask(user, taskId);
+                customSecurityResponse.setCanviewTask(canViewTask);
+                if(!canViewTask){
+                    log.warn("Response User Can't View Task URL "+ url);
+                    return customSecurityResponse;
+                }
+            }
+        }
+
         if (user == null){
+            log.error("Couldn't login by user: "+ request.getUsername());
             SecurityAccess securityAccess = new SecurityAccess();
             securityAccess.setAccess(false);
             customSecurityResponse.setSecurityAccess(securityAccess);
             return customSecurityResponse;
         }
 
-
         HashMap<String, String > previousResponse = new HashMap<>();
-
 
         for (SecurityRequest securityRequest : securityRequests){
 
@@ -348,12 +399,10 @@ public class RequestNumberEndPoint {
 
 
             if (!securityOptional.isPresent()){
-                System.out.println("WARN: attributes send is null");
+                log.error("Cannot find target: " + securityRequest.getTarget());
                 customSecurityResponse.setSecurityAccess(addResponseToSecurity(false, securityRequest.getTarget()));
                 continue;
             }
-
-            System.out.println("INFO: Try to evaluate: "+ securityRequest.getTarget());
 
 
             Security security = securityOptional.get();
@@ -365,7 +414,8 @@ public class RequestNumberEndPoint {
                 SecurityConfig securityConfig = null;
 // 1:unit type code, 2: unit code,3: role name, 4: webservice, stored procedure
                 if(security.getType() == 4){
-                        securityConfig = objectMapper.readValue(config, SecurityConfig.class);
+
+                    securityConfig = objectMapper.readValue(config, SecurityConfig.class);
                 }else if(security.getType() == 1)  {
                     securityConfig = new SecurityConfig(security.getConfig(), null, null);
                 }else if(security.getType() == 2)  {
@@ -380,24 +430,101 @@ public class RequestNumberEndPoint {
                 boolean canAccess = false;
 
                 if (securityQuery.getSecurityType() == SecurityType.WEBSERVICE){
+                    log.info("Evaluate Security Check Webservice...");
                     canAccess = evaluateWebservice(request, securityRequest, securityConfig,securityQuery,  previousResponse);
                 } else if (securityQuery.getSecurityType() == SecurityType.UNIT_TYPE_Code){
+                    log.info("Security Check Unit Type Code...");
                     canAccess = securityQuery.evaluateUnitTypeCode();
                 } else if (securityQuery.getSecurityType() == SecurityType.UNIT_CODE){
+                    log.info("Security Check Unit Code...");
                     canAccess = securityQuery.evaluateUnitCode();
                 } else if (securityQuery.getSecurityType() == SecurityType.ROLE_CODE){
+                    log.info("Security Check Role Name...");
                     canAccess = securityQuery.evaluateRoleCode();
                 }
 
                 customSecurityResponse.setSecurityAccess(addResponseToSecurity(canAccess, security.getTarget()));
 
             } catch (JsonProcessingException e) {
+                log.warn("Cannot Process JSON: "+ config);
+                log.error("Error: "+ e.getMessage());
                 e.printStackTrace();
             }
 
         }
-
+        log.info("Response Security Evaluate Success...");
         return customSecurityResponse;
+    }
+
+    private Boolean userCanViewTask(User user,String taskId){
+        NotificationTask notificationTask = notificationTaskRepository.getTaskByInstanceId(taskId);
+
+        List<User> assignedUsers = null;
+        if(notificationTask.getTASKOWNER().contains("cn=organizational roles")){
+            String roleName = notificationTask.getTASKOWNER().substring(notificationTask.getTASKOWNER().indexOf('=')+1,notificationTask.getTASKOWNER().indexOf(','));
+            assignedUsers = userRepository.getUsersByRoleName(roleName);
+        }else {
+             assignedUsers = userRepository.getUserDetail(notificationTask.getTASKOWNER());
+        }
+
+        Boolean canViewTask = checkIfUserInList(user, assignedUsers);
+
+        if(canViewTask) return true;
+
+        String transferUser = getTransferUser(user, taskId);
+        if(transferUser != null){
+            assignedUsers = userRepository.getUserDetail(transferUser);
+            canViewTask = checkIfUserInList(user, assignedUsers);
+            if(canViewTask) return true;
+        }
+
+        return false;
+    }
+
+    private String getTaskIdFromURL(String url){
+        Pattern pattern = Pattern.compile("(TaskId=)((\\w+-){2,}(\\w+))(?=.*)");
+        Matcher matcher = pattern.matcher(url);
+
+        if (matcher.find()) {
+            String taskId = matcher.group();
+            String[] vars = taskId.split("=");
+            if (vars.length > 1) {
+                taskId = vars[1];
+                return taskId;
+            }
+        }
+
+        return null;
+    }
+
+    private String getTransferUser(User user, String taskId){
+        Http http = new Http(property);
+        UserDetails userDetails = new UserDetails();
+        String response = http.cordysRequest(userDetails.viewMemosByTasks(taskId, user.getTicket()));
+        Document doc = Utils.convertStringToXMLDocument(response);
+        Node node = doc.getElementsByTagName("Memo").item(0);
+        if(node != null){
+            String transferUser = doc.getElementsByTagName("MemoData").item(0).getTextContent();
+            if(transferUser == null || transferUser.equals("")){
+                return null;
+            }else {
+                return transferUser;
+            }
+        }else{
+            return null;
+        }
+    }
+
+    private Boolean checkIfUserInList(User user, List<User> users){
+        if(users != null) {
+            for (User userOfList : users) {
+                if (user.getId() == userOfList.getId()) {
+                    return true;
+                }
+            }
+        }
+        log.warn("User is null");
+        return false;
     }
 
     private SecurityAccess addResponseToSecurity(boolean response, String target) {
@@ -406,7 +533,6 @@ public class RequestNumberEndPoint {
         securityAccess.setTarget(target);
         return securityAccess;
     }
-
 
     private boolean evaluateWebservice(CustomSecurityRequest request, SecurityRequest securityRequest, SecurityConfig securityConfig, SecurityQuery securityQuery,  HashMap<String, String > previousResponse){
         String response = "";
@@ -427,9 +553,6 @@ public class RequestNumberEndPoint {
 
         return securityQuery.evaluateNewWebserviceResponse(response);
     }
-
-
-
 
     private String prepareSecurityConfig(Security security, SecurityRequest securityRequest, User user){
         String config = security.getConfig();
@@ -459,8 +582,6 @@ public class RequestNumberEndPoint {
         return http.cordysRequest(webservice);
     }
 
-
-
     protected HttpServletRequest getHttpServletRequest() {
         TransportContext ctx = TransportContextHolder.getTransportContext();
         return ( null != ctx ) ? ((HttpServletConnection) ctx.getConnection()).getHttpServletRequest() : null;
@@ -476,6 +597,4 @@ public class RequestNumberEndPoint {
     public String getProperty(String pPropertyKey) {
         return env.getProperty(pPropertyKey);
     }
-
-
 }

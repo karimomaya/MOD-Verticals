@@ -28,22 +28,22 @@ public class TranslationByMonthReport {
     String numberOfRequests;
 
 
-    @ColumnName(key = "جهة الطلب")
+    @ColumnName(order = 1, key = "جهة الطلب")
     public String getUnitName(){
         return Utils.removeNullValue(unitName);
     }
 
-    @ColumnName(key = "عدد الصفحات")
+    @ColumnName(order = 2, key = "عدد الصفحات")
     public String getTranslationWordsCount(){
         return Utils.removeNullValue(translationWordsCount);
     }
 
-    @ColumnName(key = "عدد الكلامات")
+    @ColumnName(order = 3, key = "عدد الكلامات")
     public String getTranslationPagesCount(){
         return Utils.removeNullValue(translationPagesCount);
     }
 
-    @ColumnName(key = "عدد الطلبات")
+    @ColumnName(order = 4, key = "عدد الطلبات")
     public String getNumberOfRequests(){
         return Utils.removeNullValue(numberOfRequests);
     }

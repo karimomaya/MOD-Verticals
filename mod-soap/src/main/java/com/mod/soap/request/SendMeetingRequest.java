@@ -10,13 +10,23 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "meetingId", "isUpdate"
+        "meetingId", "isUpdate", "isCancel"
 })
 public class SendMeetingRequest {
     @XmlElement(name = "meetingId", required = true)
     protected long meetingId;
     @XmlElement(name = "isUpdate", required = true)
     protected boolean isUpdate;
+    @XmlElement(name = "isCancel", required = true)
+    protected boolean isCancel;
+
+    public boolean isCancel() {
+        return isCancel;
+    }
+
+    public void setCancel(boolean cancel) {
+        isCancel = cancel;
+    }
 
     public long getMeetingId() {
         return meetingId;

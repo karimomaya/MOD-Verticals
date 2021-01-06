@@ -36,47 +36,47 @@ public class IPStrategicGoal {
     String achievedValue;
 
 
-    @ColumnName(key = "اسم الهدف")
+    @ColumnName(order = 1, key = "اسم الهدف")
     public String getStrategicGoal(){
         String entity = Utils.removeNullValue(strategicGoal);
         return entity;
     }
-    @ColumnName(key = "تاريخ البدء")
+    @ColumnName(order = 2, key = "تاريخ البدء")
     public String getStartDate(){
 //        String entity = Utils.removeNullValue(startDate);
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(startDate);
     }
-    @ColumnName(key = "تاريخ الانتهاء")
+    @ColumnName(order = 3, key = "تاريخ الانتهاء")
     public String getEndDate(){
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(endDate);
     }
-    @ColumnName(key = "نسبة إنجاز الهدف")
+    @ColumnName(order = 4, key = "نسبة إنجاز الهدف")
     public String getStrategicGoalProgress(){
         String entity = Utils.removeNullValue(strategicGoalProgress);
         return entity;
     }
-    @ColumnName(key = "اسم المؤشر")
+    @ColumnName(order = 5, key = "اسم المؤشر")
     public String getIndicatorName(){
         String entity = Utils.removeNullValue(indicatorName);
         return entity;
     }
-    @ColumnName(key = "المسؤول عن المؤشر")
+    @ColumnName(order = 6, key = "المسؤول عن المؤشر")
     public String getStrategicIndicatorUnitName(){
         String entity = Utils.removeNullValue(strategicIndicatorUnitName);
         return entity;
-    } @ColumnName(key = "النصف السنوي")
+    } @ColumnName(order = 7, key = "النصف السنوي")
     public String getHalfOfYear(){
         String entity = Utils.removeNullValue(halfOfYear);
         return entity;
     }
-    @ColumnName(key = "القيمة المستهدفة")
+    @ColumnName(order = 8, key = "القيمة المستهدفة")
     public String getTargetValue(){
         String entity = Utils.removeNullValue(targetValue);
         return entity;
     }
-    @ColumnName(key = "القيمة المحققة")
+    @ColumnName(order = 9, key = "القيمة المحققة")
     public String getAchievedValue(){
         String entity = Utils.removeNullValue(achievedValue);
         return entity;

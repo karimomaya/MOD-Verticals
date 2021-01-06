@@ -39,51 +39,53 @@ public class CandidateDataReport {
     String DIR;
 
 
-    @ColumnName(key = "اسم المرشح")
+    @ColumnName(order = 1, key = "اسم المرشح")
     public String getname(){
         return Utils.removeNullValue(name);
     }
 
-    @ColumnName(key = "المديرية/المكتب")
+    @ColumnName(order = 1, key = "المديرية/المكتب")
     public String getDIR(){
         return Utils.removeNullValue(DIR);
     }
 
-    @ColumnName(key = "المسمى الوظيفي")
+    @ColumnName(order = 1, key = "المسمى الوظيفي")
     public String getproposedVacancy(){
         return Utils.removeNullValue(proposedVacancy);
     }
 
-    @ColumnName(key = "المؤهل العلمي")
+    @ColumnName(order = 1, key = "المؤهل العلمي")
     public String getacademicQualification(){
         return Utils.removeNullValue(academicQualification);
     }
 
-    @ColumnName(key = "الخبرات العملية")
+    @ColumnName(order = 1, key = "الخبرات العملية")
     public String getpracticalExperience(){
-        if (practicalExperience.equals("undefined")){
+        if(practicalExperience == null){
             return "";
-
+        }else if (practicalExperience.equals("undefined")){
+            return "";
         }else{
             return Utils.removeNullValue(practicalExperience);
         }
 
     }
 
-    @ColumnName(key = "الرتبة/الدرجة")
+    @ColumnName(order = 1, key = "الرتبة/الدرجة")
     public String getrank(){
         return Utils.removeNullValue(rank);
     }
-    @ColumnName(key = "حالة المرشح")
+    @ColumnName(order = 1, key = "حالة المرشح")
     public String getstatus(){
         return Utils.removeNullValue(status);
     }
 
-    @ColumnName(key = "ملاحظات")
+    @ColumnName(order = 1, key = "ملاحظات")
     public String getnotes(){
-        if (notes.equals("undefined")){
+        if(notes == null){
             return "";
-
+        }else if (notes.equals("undefined")){
+            return "";
         }else{
             return Utils.removeNullValue(notes);
         }

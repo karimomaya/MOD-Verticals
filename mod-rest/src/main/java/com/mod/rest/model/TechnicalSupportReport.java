@@ -21,13 +21,13 @@ public class TechnicalSupportReport {
     Integer Status;
     Integer evaluation;
 
-    @ColumnName(key = "جهة الطلب")
+    @ColumnName(order = 1, key = "جهة الطلب")
     public String getInitiatorUnit() { return Utils.removeNullValue(InitiatorUnit); }
 
-    @ColumnName(key = "عدد الطلبات")
+    @ColumnName(order = 2, key = "عدد الطلبات")
     public Integer getTotal() { return total; }
 
-    @ColumnName(key = "تم الحل")
+    @ColumnName(order = 3, key = "تم الحل")
     public String getStatus() {
         switch (Status){
             case 0:
@@ -39,7 +39,7 @@ public class TechnicalSupportReport {
         }
     }
 
-    @ColumnName(key = "متوسط التقييم")
+    @ColumnName(order = 4, key = "متوسط التقييم")
     public String getEvaluation() {
         if(evaluation == null){
             evaluation = 0;

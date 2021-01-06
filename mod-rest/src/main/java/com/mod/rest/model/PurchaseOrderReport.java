@@ -34,14 +34,14 @@ public class PurchaseOrderReport {
     @Column(name="amount")
     String amount;
 
-    @ColumnName(key = "الجهة")
+    @ColumnName(order = 1, key = "الجهة")
     public String getEntityBeneficiary(){
         String entity = Utils.removeNullValue(entity_beneficiary);
         entity = entity.split(",")[0];
         return entity;
     }
 
-    @ColumnName(key = "النوع (عقد/أمر شراء)")
+    @ColumnName(order = 2, key = "النوع (عقد/أمر شراء)")
     public String getRequestType(){
         switch (requesttype){
             case "PO":
@@ -52,12 +52,12 @@ public class PurchaseOrderReport {
         return Utils.removeNullValue(requesttype);
     }
 
-    @ColumnName(key = "رقم طلب الشراء")
+    @ColumnName(order = 3, key = "رقم طلب الشراء")
     public String getPurchaseOrderNumber(){
         return Utils.removeNullValue(purchaseOrderNumber);
     }
 
-    @ColumnName(key = "تاريخ طلب الشراء")
+    @ColumnName(order = 4, key = "تاريخ طلب الشراء")
     public String getPODate() {
         if(PODate == null){
             return "";
@@ -67,12 +67,12 @@ public class PurchaseOrderReport {
         return dateFormat.format(PODate);
     }
 
-    @ColumnName(key = "رقم العقد / أمر الشراء")
+    @ColumnName(order = 5, key = "رقم العقد / أمر الشراء")
     public String getRequestNumber(){
         return Utils.removeNullValue(reqeustNumber);
     }
 
-    @ColumnName(key = "تاريخ العقد / أمر الشراء")
+    @ColumnName(order = 6, key = "تاريخ العقد / أمر الشراء")
     public String getRequestDate() {
         if(requestDate == null){
             return "";
@@ -82,7 +82,7 @@ public class PurchaseOrderReport {
         return dateFormat.format(requestDate);
     }
 
-    @ColumnName(key = "القيمة")
+    @ColumnName(order = 7, key = "القيمة")
     public String getAmount(){
         return Utils.removeNullValue(amount);
     }

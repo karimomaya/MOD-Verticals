@@ -25,15 +25,15 @@ public class CarMaintenanceReport {
     @Column (name = "plate_number")
     String plate_number;
 
-    @ColumnName(key = "رقم اللوحة")
+    @ColumnName(order = 1, key = "رقم اللوحة")
     public String getPlateNumber(){
         return Utils.removeNullValue(plate_number);
     }
-    @ColumnName(key = "عدد الصيانات")
+    @ColumnName(order = 2, key = "عدد الصيانات")
     public String getMaintenance() {
         return Utils.removeNullValue(maintenance);
     }
-    @ColumnName(key = "عدد الحوادث")
+    @ColumnName(order = 3, key = "عدد الحوادث")
     public String getAccidents () {
         return  Utils.removeNullValue(accidents);
     }

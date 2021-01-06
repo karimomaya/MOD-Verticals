@@ -1,5 +1,6 @@
 package com.mod.soap.model;
 
+import lombok.extern.slf4j.Slf4j;
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
 import microsoft.exchange.webservices.data.core.enumeration.property.BodyType;
@@ -18,20 +19,24 @@ import java.util.Date;
 /**
  * Created by karim on 3/8/20.
  */
+@Slf4j
 public class OutlookMeeting {
     ExchangeService service = null;
     String status = "";
     Appointment appointment = null;
+    String logoPath= "";
 
 
-    public OutlookMeeting(String uniqueId){
+    public OutlookMeeting(String uniqueId, String username, String password, String exchangeServiceURL){
 
         try {
+            log.info("Initialize Outlook Object");
             service = new ExchangeService(ExchangeVersion.Exchange2010_SP2);
-            ExchangeCredentials credentials = new WebCredentials("karim.omaya@asset.com.eg", "K@omaya08");
+            ExchangeCredentials credentials = new WebCredentials(username, password);
             service.setCredentials(credentials);
             //            service.autodiscoverUrl("karim.omaya@asset.com.eg");
-            service.setUrl(new URI("https://mail.asset.com.eg/ews/exchange.asmx"));
+//            service.setUrl(new URI(""));
+            service.setUrl(new URI(exchangeServiceURL));
             if(uniqueId == null){
                 appointment = new Appointment(service);
             }else{
@@ -40,9 +45,17 @@ public class OutlookMeeting {
 
             status = "Initialized";
         } catch (Exception e) {
+            log.error("Failed to initialized Outlook Object: "+ e.getMessage());
             status = "Failed to Initialized: " + e.getMessage();
         }
     }
+
+
+    public OutlookMeeting setLogoPath(String path){
+        this.logoPath = path;
+        return this;
+    }
+
     public void sendEmail(String html, String[] emails, String subject) throws Exception {
 
         EmailMessage msg= new EmailMessage(service);
@@ -58,6 +71,13 @@ public class OutlookMeeting {
             System.out.println(emails[i]);
             msg.getToRecipients().add(emails[i]);
         }
+
+        if (!logoPath.equals("")){
+            msg.getAttachments().addFileAttachment(this.logoPath);
+            msg.getAttachments().getItems().get(0).setIsInline(true);
+            msg.getAttachments().getItems().get(0).setContentId("UAElogo.png");
+        }
+
         msg.send();
 
     }
@@ -67,6 +87,7 @@ public class OutlookMeeting {
             appointment.setSubject(subject);
             status = "set Subject to meeting";
         } catch (Exception e) {
+            log.error("Failed to set Outlook Subject: "+ e.getMessage());
             status = "Failed to set Subject: "+ e.getMessage();
         }
         return this;
@@ -77,6 +98,7 @@ public class OutlookMeeting {
             appointment.setBody(MessageBody.getMessageBodyFromText(body));
             status = "set Body to meeting";
         } catch (Exception e) {
+            log.error("Failed to set Outlook Body: "+ e.getMessage());
             status = "Failed to set Body: "+ e.getMessage();
         }
         return this;
@@ -87,6 +109,7 @@ public class OutlookMeeting {
             appointment.setStart(startDate);//new Date(2010-1900,5-1,20,20,00));
             status = "set Start Date to meeting";
         } catch (Exception e) {
+            log.error("Failed to set Outlook Start Date: "+ e.getMessage());
             status = "Failed to set Start Date: "+ e.getMessage();
         }
         return this;
@@ -97,7 +120,8 @@ public class OutlookMeeting {
             appointment.setEnd(endDate);//new Date(2010-1900,5-1,20,20,00));
             status = "set Start Date to meeting";
         } catch (Exception e) {
-            status = "Failed to set Start Date: "+ e.getMessage();
+            log.error("Failed to set Outlook End Date: "+ e.getMessage());
+            status = "Failed to set End Date: "+ e.getMessage();
         }
         return this;
     }
@@ -118,7 +142,9 @@ public class OutlookMeeting {
             }else {
                 status = "Failed to Set Periodic Type";
             }
+            log.info("Outlook Meeting is periodic: "+ status);
         } catch (Exception e) {
+            log.error("Failed to Set Periodic Date: "+ e.getMessage());
             status = "Failed to Set Periodic Date: " + e.getMessage();
         }
         return this;
@@ -131,6 +157,7 @@ public class OutlookMeeting {
             appointment.getRecurrence().setEndDate(date);
             status = "Set Periodic end Date";
         } catch (Exception e) {
+            log.error("Failed to Set Periodic end Date: "+ e.getMessage());
             status = "Failed to set Periodic end Date: " + e.getMessage();
         }
         return this;
@@ -142,6 +169,7 @@ public class OutlookMeeting {
             appointment.getRequiredAttendees().add(email);
             status = "Set Periodic end Date";
         } catch (Exception e) {
+            log.error("Failed to Set Email: "+ e.getMessage());
             status = "Failed to set Email: " + e.getMessage();
         }
         return this;
@@ -153,7 +181,8 @@ public class OutlookMeeting {
             appointment.save();
             status = "Success";
         } catch (Exception e) {
-            status = "Failed to set Periodic end Date: " + e.getMessage();
+            log.error("Failed to send Outlook Meeting: "+ e.getMessage());
+            status = "Failed to send Outlook Meeting: " + e.getMessage();
         }
         return this;
     }
@@ -163,6 +192,7 @@ public class OutlookMeeting {
             appointment.update(ConflictResolutionMode.AutoResolve);
             status = "Success";
         } catch (Exception e) {
+            log.error("Failed to update Outlook Meeting: "+ e.getMessage());
             status = "Failed to set Periodic end Date: " + e.getMessage();
         }
         return this;
@@ -172,10 +202,19 @@ public class OutlookMeeting {
         try {
             return appointment.getRootItemId().getUniqueId();
         }catch (Exception e){
+            log.error("Failed to generate Root ItemId Unique Id: "+ e.getMessage());
             e.printStackTrace();
         }
         return "";
     }
 
+    public void cancelMeeting() {
+        try {
+            this.appointment.cancelMeeting();
+        } catch (Exception e) {
+            log.error("Failed to cancel Meeting: "+ e.getMessage());
+            e.printStackTrace();
+        }
+    }
 }
 

@@ -52,7 +52,7 @@ public class VisitsByDateRangeReportController {
             List<VisitsByDateRangeReport> visitsByDateRangeReports = visitsByDateRangeRepository.getVisitsByDateRangeReport(startDate, endDate);
             System.out.println(visitsByDateRangeReports);
 
-//            lookupService.substituteLookupIds(visitsByDateRangeReports, "diaryUnderstandingPlace", "placeOfDiary", lang);
+            lookupService.substituteLookupIds(visitsByDateRangeReports, "correlationImportanceEntity", "correlationImportance", lang);
 //            lookupService.substituteLookupIds(visitsByDateRangeReports, "entityType", "sectorType", lang);
 
             file = excelWriterService.generate(visitsByDateRangeReports);

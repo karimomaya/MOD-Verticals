@@ -3,12 +3,13 @@ package com.mod.rest.model;
 import com.mod.rest.annotation.ColumnName;
 import lombok.Getter;
 import lombok.Setter;
+import javax.persistence.*;
+import javax.persistence.Entity;
+import java.util.Date;
 import org.hibernate.annotations.Immutable;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
-import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Created by amira.sherif on 3/16/2020.
@@ -45,34 +46,49 @@ public class IssueReportHelper {
 
 //    @Transient
 //    ArrayList<IssueResponsibleHelper> responsibles;
+    String project;
+    String programName;
+    String activityName;
+    String policyactivity;
+    String goal;
+    String initiative;
+    String kpi;
+//    @ManyToOne
+//    @JoinColumn(name = "projectName")
+//    @NotFound(action = NotFoundAction.IGNORE)
+//    Project project;
+//
+//    @Transient
+//    String projectDescription;
 
-    @ManyToOne
-    @JoinColumn(name = "projectName")
-    @NotFound(action = NotFoundAction.IGNORE)
-    Project project;
-
-    @Transient
-    String projectDescription;
-
-    @ColumnName(key = "رقم الخطر")
+    @ColumnName(order = 1, key = "رقم الخطر")
     public String getIssueId(){
         return (String) removeNullValue(this.issueId);
     }
 
-    @ColumnName(key = "اسم الخطر")
+    @ColumnName(order = 2, key = "اسم الخطر")
     public String getIssueName(){
         return (String) removeNullValue(this.issueName);
     }
 
-    @ColumnName(key = "وصف الخطر")
+    @ColumnName(order = 3, key = "وصف الخطر")
     public String getIssueDescription(){
         return (String) removeNullValue(this.issueDescription);
     }
+    @ColumnName(order = 4, key = "التاريخ")
+    public Date getIssueStartDate() {
+        return this.issueStartDate;
+    }
 
-    @ColumnName(key = "الأولوية")
+    @ColumnName(order = 5, key = "تاريخ المتوقع للحل")
+    public Date getIssueEndDate() {
+        return this.issueEndDate;
+    }
+
+    @ColumnName(order = 6, key = "الأولوية")
     public String getPriority() {
         switch (this.priority){
-            case 0:
+            case 1:
                 return "منخفضة";
             case 5:
                 return "متوسطة";
@@ -83,7 +99,7 @@ public class IssueReportHelper {
         }
     }
 
-    @ColumnName(key = "حالة الخطر")
+    @ColumnName(order = 7, key = "حالة الخطر")
     public String getState() {
         switch (this.issueStatus){
             case 1:
@@ -95,7 +111,7 @@ public class IssueReportHelper {
         }
     }
 
-    @ColumnName(key = "الاحتمالية")
+    @ColumnName(order = 8, key = "الاحتمالية")
     public String getProbability() {
         switch (this.probability){
             case 1:
@@ -109,7 +125,7 @@ public class IssueReportHelper {
         }
     }
 
-    @ColumnName(key = "التأثير")
+    @ColumnName(order = 9, key = "التأثير")
     public String getEffect() {
         switch (this.effect){
             case 1:
@@ -122,86 +138,120 @@ public class IssueReportHelper {
                 return "";
         }
     }
-    @ColumnName(key = "نطاق التأثير")
+    @ColumnName(order = 10, key = "نطاق التأثير")
     public String getEffectArea() {
         return (String) removeNullValue(this.effectArea);
     }
 
-    @ColumnName(key = "القرار")
+    @ColumnName(order = 11, key = "القرار")
     public String getDecision() {
         return (String) removeNullValue(this.decision);
     }
 
-    @ColumnName(key = "الملاحظات")
-    public String getNotes() {
-        return (String) removeNullValue(this.notes);
-    }
-
-    @ColumnName(key = "الخطر مرتبط ب")
+    @ColumnName(order = 12, key = "الخطر مرتبط ب")
     public String getRelatedType() {
         switch (this.relatedType){
             case 1:
                 return "مشروع";
             case 2:
                 return "نشاط";
+            case 3:
+                return "هدف";
+            case 4:
+                return "مبادرة";
+            case 5:
+                return "برنامج";
+            case 6:
+                return "أنشطة تنفيذ السياسة";
+            case 7:
+                return "مؤشر الاداء";
+
             default:
                 return "";
         }
     }
 
-    @ColumnName(key="اسم المشروع/النشاط")
+    @ColumnName(order = 13, key="الاسم ")
     public String getProjectName(){
         if (this.relatedType == 1) {
-            Project p = (Project) removeNullValue(this.project);
-            if (p != null) {
-                return p.getName();
-            }
-            return "";
-        }
-        else {
-            MainActivity a = (MainActivity) removeNullValue(this.project);
-            if (a != null) {
-                return a.getActivityName();
-            }
+//            Project p = (Project) removeNullValue(this.project);
+//            if (p instanceof Project) {
+//                return p.getName();
+//            }
+            return project;
+        } else if (this.relatedType == 2) {
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityName();
+//            }
+            return activityName;
+        } else if (this.relatedType == 3) {
+//            IPStrategicGoal a = (IPStrategicGoal) removeNullValue(this.project);
+//            if (a instanceof IPStrategicGoal) {
+//                return a.getStrategicGoal();
+//            }
+            return goal;
+        }else if (this.relatedType == 4) {
+            //            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityName();
+//            }
+
+            return initiative;
+        } else if (this.relatedType == 5) {
+//            Program a = (Program) removeNullValue(this.project);
+//            if (a instanceof Program) {
+//                return a.getName();
+//            }
+            return programName;
+        } else if (this.relatedType == 6) {
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityName();
+//            }
+            return policyactivity;
+        } else if (this.relatedType == 7) {
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a instanceof MainActivity) {
+//                return a.getActivityName();
+//            }
+            return kpi;
+        } else {
+
             return "";
         }
     }
 
-    @ColumnName(key="وصف المشروع/النشاط")
-    public String getProjectDescription(){
-        if (this.relatedType == 1) {
-            Project p = (Project) removeNullValue(this.project);
-            if (p != null) {
-                return p.getDescription();
-            }
-            return "";
-        }
-        else {
-            MainActivity a = (MainActivity) removeNullValue(this.project);
-            if (a != null) {
-                return a.getActivityDescription();
-            }
-            return "";
-        }
-    }
+//    @ColumnName(order = 1, key="وصف المشروع/النشاط")
+//    public String getProjectDescription(){
+//        if (this.relatedType == 1) {
+//            Project p = (Project) removeNullValue(this.project);
+//            if (p != null) {
+//                return p.getDescription();
+//            }
+//            return "";
+//        }
+//        else {
+//            MainActivity a = (MainActivity) removeNullValue(this.project);
+//            if (a != null) {
+//                return a.getActivityDescription();
+//            }
+//            return "";
+//        }
+//    }
 
-    @ColumnName(key = "التاريخ")
-    public Date getIssueStartDate() {
-        return this.issueStartDate;
-    }
 
-    @ColumnName(key = "تاريخ المتوقع للحل")
-    public Date getIssueEndDate() {
-        return this.issueEndDate;
-    }
 
-    @ColumnName(key = "المنشئ")
+    @ColumnName(order = 14, key = "المنشئ")
     public String getCreatedByName(){
         User user = (User) removeNullValue(this.createdBy);
         if (user != null) return user.getDisplayName();
         return "";
     }
-
+    @ColumnName(order = 15, key = "الملاحظات")
+    public String getNotes() {
+        return (String) removeNullValue(this.notes);
+    }
     private Object removeNullValue(Object object){
         if (object == null) return "";
         if (object instanceof String) {

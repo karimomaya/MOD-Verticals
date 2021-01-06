@@ -1,5 +1,6 @@
 package com.mod.rest.service;
 
+import com.google.common.primitives.Ints;
 import com.mod.rest.model.*;
 import com.mod.rest.repository.*;
 import com.mod.rest.system.Utils;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
@@ -24,6 +27,8 @@ import java.util.*;
 @Service
 public class ReportService {
 
+    @Autowired
+    EntityManager entityManager;
     @Autowired
     RiskService riskService;
     @Autowired
@@ -109,20 +114,7 @@ public class ReportService {
             List<PurchaseOrderReport> purchaseOrderReports = purchaseOrderRepository.getPurchaseOrderReport(reportObject.getStartDateString(),reportObject.getEndDateString(), reportObject.getEntityName(), 0, Integer.MAX_VALUE, reportObject.getInput());
             return (T) excelWriterService.generate(purchaseOrderReports);
         }
-    // Case Contact Tracker
-        if (reportObject.getReportType() == 20 ) {
-            List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
-            return (T) excelWriterService.generate(entityReports);
-        } else if (reportObject.getReportType() == 21 ) {
-            List<EntityReport> entityReports = entityRepository.getPrivateEntities(1, Integer.MAX_VALUE, "", "" ,reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getIsRegistered(),reportObject.getLicenseNumber(),reportObject.getSupplierStatus(),reportObject.getTags());
-            return (T) excelWriterService.generate(entityReports);
-        }else if (reportObject.getReportType() == 22 ) {
-            List<IndividualReport> individualReports = individualRepository.getIndividuals(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition(),reportObject.getTags());
-            return (T) excelWriterService.generate(individualReports);
-        }else if (reportObject.getReportType() == 23) {
-            List<User> ministryUsersReports = userRepository.getMinistryUsers(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition());
-            return (T) excelWriterService.generate(ministryUsersReports);
-        }
+
 
     // Risk Management
         //•	تقرير التحديات المتأخرة
@@ -196,7 +188,7 @@ public class ReportService {
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) riskRepository.getClosedRisksReportCount(ids, reportObject.getStartDate(), reportObject.getEndDate());
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<RiskReportHelper> risks = riskReportHelperRepository.getClosedRisksReport( 1, Integer.MAX_VALUE,ids);
+                List<RiskReportHelper> risks = riskReportHelperRepository.getClosedRisksReport( 1, Integer.MAX_VALUE,ids, reportObject.getStartDate(), reportObject.getEndDate());
                 return (T) excelWriterService.generate(risks);
 
             }
@@ -263,7 +255,9 @@ public class ReportService {
                // return (T)  reportHelper(reportObject, "delayedTaskIssueReport");
                 return (T) taskReportHelper(reportObject, "delayedTaskIssueReport");
             }else  if (reportObject.getDetectedReportType() == 1){ // table
-                return (T) taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds(), ids);
+                return (T) taskService.addUserToTask(taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds(), ids));
+
+               // return (T) taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds(), ids);
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.getDelayedTaskIssueReportCount( reportObject.getIssueIds(), ids);
             } else if(reportObject.getDetectedReportType() == 3) { // file
@@ -299,11 +293,11 @@ public class ReportService {
             if (reportObject.getDetectedReportType() == 0){ // graph
                 return (T)  issueReportHelper(reportObject, "userProductivityRiskReport");
             }else  if (reportObject.getDetectedReportType() == 1){ // table
-                return (T) issueRepository.getClosedIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), ids);
+                return (T) issueRepository.getClosedIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), ids, reportObject.getStartDate(), reportObject.getEndDate());
             } else if(reportObject.getDetectedReportType() == 2) { // count
-                return (T) issueRepository.getClosedIssuesReportCount(ids);
+                return (T) issueRepository.getClosedIssuesReportCount(ids, reportObject.getStartDate(), reportObject.getEndDate());
             } else if(reportObject.getDetectedReportType() == 3) { // file
-                List<IssueReportHelper> issues =  issueReportHelperRespository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids);
+                List<IssueReportHelper> issues =  issueReportHelperRespository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids, reportObject.getStartDate(), reportObject.getEndDate());
                 return (T) excelWriterService.generate(issues);
             }
         }
@@ -363,7 +357,7 @@ public class ReportService {
 //                return (T)  reportHelper(reportObject, "delayedTaskReport");
                 return (T)  taskReportUserHelper(reportObject, "DelayedTaskReport");
             }else  if (reportObject.getDetectedReportType() == 1){ // table
-                return (T) taskService.addUserToTask(taskRepository.getDelayedTasks(reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
+                return (T) taskService.addUserToTaskWithPerformer(taskWithPerformerRepository.getDelayedTasks(reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if(reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cDelayedTask(reportObject.getUserIds());
             } else if(reportObject.getDetectedReportType() == 3) { // file
@@ -376,7 +370,7 @@ public class ReportService {
             if (reportObject.getDetectedReportType() == 0) { // graph
                 return (T) taskReportUserHelper(reportObject, "UserProductivityReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
-                return (T) taskService.addUserToTask(taskRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
+                return (T) taskService.addUserToTaskWithPerformer(taskWithPerformerRepository.getUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds(), reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if (reportObject.getDetectedReportType() == 2) { // count
                 return (T) taskRepository.cUserProductivityReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getUserIds());
             } else if (reportObject.getDetectedReportType() == 3) { // file
@@ -390,7 +384,7 @@ public class ReportService {
                 return (T) taskReportUserHelper(reportObject, "CompletedTaskReport");
             } else if (reportObject.getDetectedReportType() == 1) { // table
                 Long userId = sessionService.getSession(reportObject.getSAMLart()).getId();
-                return (T) taskService.addUserToTask(taskRepository.getCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getPageNumber(), reportObject.getPageSize()));
+                return (T) taskService.addUserToTaskWithPerformer(taskWithPerformerRepository.getCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getPageNumber(), reportObject.getPageSize()));
             } else if (reportObject.getDetectedReportType() == 2) { // count
                 Long userId = sessionService.getSession(reportObject.getSAMLart()).getId();
                 return (T) taskRepository.cCompletedTaskReport(reportObject.getUserIds(), userId, reportObject.getStartDate(), reportObject.getEndDate());
@@ -582,17 +576,20 @@ public class ReportService {
                     int[] riskDate = new int[months];
                     for (int i = 0; i < users.length; i++) {
                         riskList1 = riskRepository.getRiskRelatedToProjectReport(1, Integer.MAX_VALUE, reportObject.getProjectIds(), users[i] + "");
-                        for (Risk risk : riskList1) {
-                            LocalDate date = LocalDate.parse(risk.getRiskDate().toString().split(" ")[0]);
-                            int indexOfRisk = (int) ChronoUnit.MONTHS.between(
-                                    startDate.withDayOfMonth(1),
-                                    date.withDayOfMonth(date.lengthOfMonth()));
-                            riskDate[indexOfRisk] += 1;
+                        if(riskList1.size() != 0){
+                            for (Risk risk : riskList1) {
+                                LocalDate date = LocalDate.parse(risk.getRiskDate().toString().split(" ")[0]);
+                                int indexOfRisk = (int) ChronoUnit.MONTHS.between(
+                                        startDate.withDayOfMonth(1),
+                                        date.withDayOfMonth(date.lengthOfMonth()));
+                                riskDate[indexOfRisk] += 1;
+                            }
+                            GraphDataHelper graphDataHelper = new GraphDataHelper();
+                            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                            graphDataHelper.setData(riskDate);
+                            graphDataHelpers.add(graphDataHelper);
                         }
-                        GraphDataHelper graphDataHelper = new GraphDataHelper();
-                        graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-                        graphDataHelper.setData(riskDate);
-                        graphDataHelpers.add(graphDataHelper);
+
                         riskDate = new int[months];
                     }
                 }
@@ -611,17 +608,19 @@ public class ReportService {
                     int[] riskDate = new int[months];
                     for (int i = 0; i < users.length; i++) {
                         riskList1 = riskRepository.getClosedRisksReport(1, Integer.MAX_VALUE, users[i] +"" ,reportObject.getStartDate(), reportObject.getEndDate());
-                        for (Risk risk : riskList1) {
-                            LocalDate date = LocalDate.parse(risk.getRiskDate().toString().split(" ")[0]);
-                            int indexOfRisk = (int) ChronoUnit.MONTHS.between(
-                                    startDate.withDayOfMonth(1),
-                                    date.withDayOfMonth(date.lengthOfMonth()));
-                            riskDate[indexOfRisk] += 1;
+                        if(riskList1.size() != 0){
+                            for (Risk risk : riskList1) {
+                                LocalDate date = LocalDate.parse(risk.getRiskDate().toString().split(" ")[0]);
+                                int indexOfRisk = (int) ChronoUnit.MONTHS.between(
+                                        startDate.withDayOfMonth(1),
+                                        date.withDayOfMonth(date.lengthOfMonth()));
+                                riskDate[indexOfRisk] += 1;
+                            }
+                            GraphDataHelper graphDataHelper = new GraphDataHelper();
+                            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                            graphDataHelper.setData(riskDate);
+                            graphDataHelpers.add(graphDataHelper);
                         }
-                        GraphDataHelper graphDataHelper = new GraphDataHelper();
-                        graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-                        graphDataHelper.setData(riskDate);
-                        graphDataHelpers.add(graphDataHelper);
                         riskDate = new int[months];
                     }
                 }
@@ -676,8 +675,8 @@ public class ReportService {
                            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
                            graphDataHelper.setData(issueDate);
                            graphDataHelpers.add(graphDataHelper);
-                           issueDate = new int[months];
                        }
+                    issueDate = new int[months];
                 }
             }
         } else if (type.equals("activityProjectIssueRelated")) {
@@ -697,22 +696,25 @@ public class ReportService {
 
                 for(int i=0; i< users.length; i++) {
                 issueList1 = issueRepository.getIssueRelatedToProjectReport(1, Integer.MAX_VALUE, reportObject.getProjectIds(), users[i] + "");
-                    for (Issue issue : issueList1) {
-                        LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
-                        int indexOfIssue = (int) ChronoUnit.MONTHS.between(
-                                startDate.withDayOfMonth(1),
-                                date.withDayOfMonth(date.lengthOfMonth()));
-                        issueDate[indexOfIssue] += 1;
+                    if(issueList1.size() != 0){
+                        for (Issue issue : issueList1) {
+                            LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
+                            int indexOfIssue = (int) ChronoUnit.MONTHS.between(
+                                    startDate.withDayOfMonth(1),
+                                    date.withDayOfMonth(date.lengthOfMonth()));
+                            issueDate[indexOfIssue] += 1;
+                        }
+                        GraphDataHelper graphDataHelper = new GraphDataHelper();
+                        graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                        graphDataHelper.setData(issueDate);
+                        graphDataHelpers.add(graphDataHelper);
                     }
-                    GraphDataHelper graphDataHelper = new GraphDataHelper();
-                    graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-                    graphDataHelper.setData(issueDate);
-                    graphDataHelpers.add(graphDataHelper);
                     issueDate = new int[months];
                 }
+
             }
         } else if (type.equals("userProductivityRiskReport")){
-            issueList = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids );
+            issueList = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, ids, reportObject.getStartDate(), reportObject.getEndDate() );
             if(issueList.size() != 0){
                 xaxis = Utils.getYearlyMonthBetweenDates(issueList.get(0).getIssueStartDate(),issueList.get(issueList.size()-1).getIssueStartDate());
                 LocalDate startDate = LocalDate.parse(issueList.get(0).getIssueStartDate().toString().split(" ")[0]);
@@ -725,18 +727,20 @@ public class ReportService {
                 int[] issueDate = new int[months];
 
                 for(int i=0; i< users.length; i++) {
-                issueList1 = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, users[i] +"" );
-                    for (Issue issue : issueList1) {
-                        LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
-                        int indexOfIssue = (int) ChronoUnit.MONTHS.between(
-                                startDate.withDayOfMonth(1),
-                                date.withDayOfMonth(date.lengthOfMonth()));
-                        issueDate[indexOfIssue] += 1;
+                issueList1 = issueRepository.getClosedIssuesReport(1, Integer.MAX_VALUE, users[i] +"", reportObject.getStartDate(), reportObject.getEndDate() );
+                    if(issueList1.size() != 0){
+                        for (Issue issue : issueList1) {
+                            LocalDate date = LocalDate.parse(issue.getIssueStartDate().toString().split(" ")[0]);
+                            int indexOfIssue = (int) ChronoUnit.MONTHS.between(
+                                    startDate.withDayOfMonth(1),
+                                    date.withDayOfMonth(date.lengthOfMonth()));
+                            issueDate[indexOfIssue] += 1;
+                        }
+                        GraphDataHelper graphDataHelper = new GraphDataHelper();
+                        graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
+                        graphDataHelper.setData(issueDate);
+                        graphDataHelpers.add(graphDataHelper);
                     }
-                    GraphDataHelper graphDataHelper = new GraphDataHelper();
-                    graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-                    graphDataHelper.setData(issueDate);
-                    graphDataHelpers.add(graphDataHelper);
                     issueDate = new int[months];
                 }
             }
@@ -872,6 +876,7 @@ public class ReportService {
         List<Integer> delayedTasksAL = new ArrayList<>();
 
         for(int i=0; i< users.length; i++){
+            entityManager.clear();
             List<Task> taskList = null;
             String user = ";"+  users[i] +";";
 
@@ -1164,14 +1169,15 @@ public class ReportService {
         } else if (type == "TaskAssignmentReport"){
             taskList = taskRepository.getTaskAssignmentReport(reportObject.getStartDate(), reportObject.getEndDate(), reportObject.getType(), 1, Integer.MAX_VALUE );
             if(reportObject.getType() == -1){
-                int[] countArray = new int[6];
+                int[] countArray = new int[5];
                 for (Task task : taskList){
                     int assignmentType = task.getTypeOfAssignment();
                     if(assignmentType > 0 && assignmentType < 6){
-                        countArray[assignmentType] += 1;
-                    }else {
-                        countArray[0] += 1;
+                        countArray[assignmentType-1] += 1;
                     }
+//                    else {
+//                        countArray[0] += 1;
+//                    }
                 }
 
                 graphDataHelper = new GraphDataHelper();
@@ -1179,10 +1185,10 @@ public class ReportService {
                 graphDataHelper.setData(countArray);
                 graphDataHelpers.add(graphDataHelper);
 
-                xaxis.add("بدون تكليف");
+//                xaxis.add("بدون تكليف");
                 xaxis.add("طلب تقرير/دراسة");
                 xaxis.add("طلب معلومات");
-                xaxis.add("طلب ملخص");
+                xaxis.add("اعداد سياسة/توجيه");
                 xaxis.add("طلب ملاحظات/مرئيات");
                 xaxis.add("أخرى");
             }else{
@@ -1204,7 +1210,7 @@ public class ReportService {
                         typeName = "طلب معلومات";
                         break;
                     case 3:
-                        typeName = "طلب ملخص";
+                        typeName = "اعداد سياسة/توجيه";
                         break;
                     case 4:
                         typeName = "طلب ملاحظات/مرئيات";
@@ -1223,75 +1229,123 @@ public class ReportService {
             long[] risks = reportObject.getRisks();
             int arraySize = risks.length;
             int[] taskCount = new int[0];
-            int[] completedTasks = new int[0];
-            int[] delayedTasks = new int[0];
-            int[] inProgressTasks = new int[0];
+            ArrayList completedTasks = new ArrayList();
+            ArrayList delayedTasks = new ArrayList();
+            ArrayList inProgressTasks = new ArrayList();
 
+//            int[] completedTasks = new int[0];
+//            int[] delayedTasks = new int[0];
+//            int[] inProgressTasks = new int[0];
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
             if(arraySize == 0) {
                 arraySize = reportObject.getRiskIds().split(",").length;
                 taskCount = new int[arraySize];
-                completedTasks = new int[arraySize];
-                delayedTasks = new int[arraySize];
-                inProgressTasks = new int[arraySize];
+//                completedTasks = new int[arraySize];
+//                delayedTasks = new int[arraySize];
+//                inProgressTasks = new int[arraySize];
 
                 for (int i = 0; i < arraySize; i++) {
-                    for(int j=0; j< users.length; j++) {
-                    taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getRiskIds().split(",")[i], users[j] + "");
+//                    for(int j=0; j< users.length; j++) {
+
+                    boolean hasCompleted = false;
+                    boolean hasProgress = false;
+                    boolean hasDelayed = false;
+
+                    taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getRiskIds().split(",")[i], ids);
                     if (taskList.size() == 0) continue;
+                    else {
                         for (Task task : taskList) {
                             if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks[i] += 1;
+                                completedTasks.add(1);
+                                hasCompleted = true;
                             } else if (task.getDueDate().before(new Date())) {
-                           // } else if (task.getDueDate().before(new Date()) && task.getStatus() != 11) {
-                                delayedTasks[i] += 1;
+                                // } else if (task.getDueDate().before(new Date()) && task.getStatus() != 11) {
+                                delayedTasks.add(1);
+                                hasDelayed = true;
                             } else {
-                                inProgressTasks[i] += 1;
+                                inProgressTasks.add(1);
+                                hasProgress = true;
                             }
                         }
 
+                        String projectName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
+                        xaxis.add(projectName);
                     }
-                    String projectName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
-                    xaxis.add(projectName);
+//                        for (Task task : taskList) {
+//                            if (task.getStatus() == 3 || task.getStatus() == 12) {
+//                                completedTasks.add(1);
+//                                hasCompleted = true;
+//                            } else if (task.getDueDate().before(new Date())) {
+//                           // } else if (task.getDueDate().before(new Date()) && task.getStatus() != 11) {
+//                                delayedTasks.add(1);
+//                                hasDelayed = true;
+//                            } else {
+//                                inProgressTasks.add(1);
+//                                hasProgress = true;
+//                            }
+//                        }
+
+//                    }
+
+//                    if(hasCompleted || hasDelayed || hasProgress){
+//                        String projectName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
+//                        xaxis.add(projectName);
+//                    }
                 }
             }else {
                  taskCount = new int[arraySize];
-                 completedTasks = new int[arraySize];
-                 delayedTasks = new int[arraySize];
-                 inProgressTasks = new int[arraySize];
+                 completedTasks = new ArrayList();
+                 delayedTasks = new ArrayList();
+                 inProgressTasks = new ArrayList();
 
                 for (int i = 0; i < arraySize; i++) {
-                    for(int j=0; j< users.length; j++) {
+                    boolean hasCompleted = false;
+                    boolean hasProgress = false;
+                    boolean hasDelayed = false;
+//                    for(int j=0; j< users.length; j++) {
                         String risk = risks[i]+"";
-                        taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(reportObject.getPageNumber(), reportObject.getPageSize(), risk, users[j] + "");
+                        taskList = taskRepository.getInProgressDelayedClosedTaskRisksReport(reportObject.getPageNumber(), reportObject.getPageSize(), risk, ids);
                         if (taskList.size() == 0) continue;
-                        for (Task task : taskList) {
-                            if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks[i] += 1;
-                            } else if (task.getDueDate().before(new Date())) {
-                                delayedTasks[i] += 1;
-                            } else {
-                                inProgressTasks[i] += 1;
+                        else {
+                            for (Task task : taskList) {
+                                if (task.getStatus() == 3 || task.getStatus() == 12) {
+                                    completedTasks.add(1);
+                                    hasCompleted = true;
+                                } else if (task.getDueDate().before(new Date())) {
+                                    delayedTasks.add(1);
+                                    hasDelayed=true;
+                                } else {
+                                    inProgressTasks.add(1);
+                                    hasProgress=true;
+                                }
                             }
+                            String projectName = riskRepository.findById(risks[i]).get().getRiskName();
+                            xaxis.add(projectName);
                         }
-                    }
-                    String projectName = riskRepository.findById(risks[i]).get().getRiskName();
-                    xaxis.add(projectName);
+
+//                    }
+//                    if(hasCompleted || hasDelayed || hasProgress){
+//
+//                    }
                 }
             }
-
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام منجزة");
-            graphDataHelper.setData(completedTasks);
+            graphDataHelper.setData(Ints.toArray(completedTasks));
             graphDataHelpers.add(graphDataHelper);
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام تحت التنفيذ");
-            graphDataHelper.setData(inProgressTasks);
+            graphDataHelper.setData(Ints.toArray(inProgressTasks));
             graphDataHelpers.add(graphDataHelper);
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام متأخرة");
-            graphDataHelper.setData(delayedTasks);
+            graphDataHelper.setData(Ints.toArray(delayedTasks));
             graphDataHelpers.add(graphDataHelper);
 
         }else if(type == "AllTaskReportIssue"){
@@ -1300,117 +1354,133 @@ public class ReportService {
             long[] issues = reportObject.getIssues();
             int arraySize = issues.length;
             int[] taskCount = new int[0];
-            int[] completedTasks = new int[0];
-            int[] delayedTasks = new int[0];
-            int[] inProgressTasks = new int[0];
-
+            ArrayList completedTasks = new ArrayList();
+            ArrayList delayedTasks = new ArrayList();
+            ArrayList inProgressTasks = new ArrayList();
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
             if(arraySize == 0) {
                 arraySize = reportObject.getIssueIds().split(",").length;
                 taskCount = new int[arraySize];
-                completedTasks = new int[arraySize];
-                delayedTasks = new int[arraySize];
-                inProgressTasks = new int[arraySize];
+//                completedTasks = new int[arraySize];
+//                delayedTasks = new int[arraySize];
+//                inProgressTasks = new int[arraySize];
 
                 for (int i = 0; i < arraySize; i++) {
-                    for(int j=0; j< users.length; j++) {
-                        taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds().split(",")[i], users[j] + "");
+//                    for(int j=0; j< users.length; j++) {
+                        taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds().split(",")[i], ids);
                         if (taskList.size() == 0) continue;
                         for (Task task : taskList) {
                             if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks[i] += 1;
+                                completedTasks.add( 1);
                             } else if (task.getDueDate().before(new Date())) {
-                                delayedTasks[i] += 1;
+                                delayedTasks.add(1);
                             } else {
-                                inProgressTasks[i] += 1;
+                                inProgressTasks.add(1);
                             }
+//                        }
                         }
-                    }
-                    String projectName = issueRepository.findById(Long.parseLong(reportObject.getIssueIds().split(",")[i])).get().getIssueName();
-                    xaxis.add(projectName);
+                        String projectName = issueRepository.findById(Long.parseLong(reportObject.getIssueIds().split(",")[i])).get().getIssueName();
+                        xaxis.add(projectName);
+
                 }
             }else {
                 taskCount = new int[arraySize];
-                completedTasks = new int[arraySize];
-                delayedTasks = new int[arraySize];
-                inProgressTasks = new int[arraySize];
+                 completedTasks = new ArrayList();
+                 delayedTasks = new ArrayList();
+                 inProgressTasks = new ArrayList();
 
                 for (int i = 0; i < arraySize; i++) {
-                    for(int j=0; j< users.length; j++) {
+//                    for(int j=0; j< users.length; j++) {
                         String issue = issues[i]+"";
-                        taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), issue, users[j] + "");
+                        taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), issue, ids);
                         if (taskList.size() == 0) continue;
                         for (Task task : taskList) {
                             if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks[i] += 1;
+                                completedTasks.add( 1);
                             } else if (task.getDueDate().before(new Date())) {
-                                delayedTasks[i] += 1;
+                                delayedTasks.add(1);
                             } else {
-                                inProgressTasks[i] += 1;
+                                inProgressTasks.add(1);
                             }
                         }
-                    }
-                    String projectName = issueRepository.findById(issues[i]).get().getIssueName();
-                    xaxis.add(projectName);
+                        String projectName = issueRepository.findById(issues[i]).get().getIssueName();
+                        xaxis.add(projectName);
+//                    }
+
                 }
             }
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام منجزة");
-            graphDataHelper.setData(completedTasks);
+            graphDataHelper.setData(Ints.toArray(completedTasks));
             graphDataHelpers.add(graphDataHelper);
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام تحت التنفيذ");
-            graphDataHelper.setData(inProgressTasks);
+            graphDataHelper.setData(Ints.toArray(inProgressTasks));
             graphDataHelpers.add(graphDataHelper);
 
             graphDataHelper = new GraphDataHelper();
             graphDataHelper.setName("مهام متأخرة");
-            graphDataHelper.setData(delayedTasks);
+            graphDataHelper.setData(Ints.toArray(delayedTasks));
             graphDataHelpers.add(graphDataHelper);
 
         }else if(type == "delayedTaskRiskReport"){
             long[] users = reportObject.getUsers();
             long[] risks = reportObject.getRisks();
+            int[] userNames = new int[users.length];
             int arraySize = risks.length;
             int[] taskCount = new int[0];
             int[] delayedTasks = new int[0];
             int[] delayedTasksFinal = new int[0];
             String riskIdsWithTasks = "";
-
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
             if(arraySize == 0) {
                 arraySize = reportObject.getRiskIds().split(",").length;
                 taskCount = new int[arraySize];
-                //int[] tempDelayedTasks = new int[arraySize];
                 delayedTasks = new int[arraySize];
                 for (int i = 0; i < arraySize; i++) {
-                    for (int j = 0; j < users.length; j++) {
-                        taskList = taskRepository.getDelayedTaskRiskReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getRiskIds().split(",")[i], users[j] + "");
+                  //  for (int j = 0; j < users.length; j++) {
+                        taskList = taskRepository.getDelayedTaskRiskReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getRiskIds().split(",")[i], ids);
                         if (taskList.size() == 0) continue;
-
-                        for (Task task : taskList) {
-                            delayedTasks[i] += 1;
+                        else {
+                            for (Task task : taskList) {
+                                delayedTasks[i] += 1;
+                            }
+                            riskIdsWithTasks += reportObject.getRiskIds().split(",")[i] + ",";
+                            // }
+                            String riskName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
+                           // xaxis.add(riskName);
                         }
-                        riskIdsWithTasks += reportObject.getRiskIds().split(",")[i] + ",";
-                    }
+                }
 
-                    String riskName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
+                String[] riskIds = riskIdsWithTasks.split(",");
+                delayedTasksFinal = (int[]) resizeArray(delayedTasks, riskIds.length);
+               // delayedTasks = new int[riskIds.length];
+                int delayedTasksIndex = 0;
+                for(int i = 0; i < delayedTasks.length ; i++){
+                    if(delayedTasks[i] == 0) continue;
+                    delayedTasksFinal[delayedTasksIndex] = delayedTasks[i];
+                    delayedTasksIndex++;
+                }
+                for (int i = 0; i< riskIds.length; i++){
+                    if(riskIds[i] == "") continue;
+                    String riskName = riskRepository.findById(Long.parseLong(riskIds[i])).get().getRiskName();
                     xaxis.add(riskName);
                 }
-//                String[] riskIds = riskIdsWithTasks.split(",");
-////                delayedTasksFinal = (int[]) resizeArray(delayedTasks, riskIds.length);
-//                delayedTasks = new int[riskIds.length];
-//                int delayedTasksIndex = 0;
-//                for(int i = 0; i < tempDelayedTasks.length ; i++){
-//                    if(tempDelayedTasks[i] == 0) continue;
-//                    delayedTasks[delayedTasksIndex] = tempDelayedTasks[i];
-//                    delayedTasksIndex++;
-//                }
-//                for (int i = 0; i< riskIds.length; i++){
-//                    if(riskIds[i] == "") continue;
-//                    String riskName = riskRepository.findById(Long.parseLong(riskIds[i])).get().getRiskName();
-//                    xaxis.add(riskName);
-//                }
+                graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName("مهام متأخرة");
+//            graphDataHelper.setName(userRepository.findById(users[j]).get().getDisplayName());
+                graphDataHelper.setData(delayedTasksFinal);
+                graphDataHelpers.add(graphDataHelper);
             }else {
                 taskCount = new int[arraySize];
                 delayedTasks = new int[arraySize];
@@ -1430,13 +1500,14 @@ public class ReportService {
                     xaxis.add(riskName);
 
                 }
+                graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName("مهام متأخرة");
+//            graphDataHelper.setName(userRepository.findById(users[j]).get().getDisplayName());
+                graphDataHelper.setData(delayedTasks);
+                graphDataHelpers.add(graphDataHelper);
             }
 
-            graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName("مهام متأخرة");
-//            graphDataHelper.setName(userRepository.findById(users[i]).get().getDisplayName());
-            graphDataHelper.setData(delayedTasks);
-            graphDataHelpers.add(graphDataHelper);
+
 
         }else if(type == "delayedTaskIssueReport"){
             long[] users = reportObject.getUsers();
@@ -1444,41 +1515,50 @@ public class ReportService {
             int arraySize = issues.length;
             int[] taskCount = new int[0];
             int[] delayedTasks = new int[0];
-
+            int[] delayedTasksFinal = new int[0];
             String issueIdswithTasks = "";
+
+            String ids = "";
+            for (int i=0; i<reportObject.getUsers().length; i++){
+                if (i != 0) ids += ",";
+                ids += reportObject.getUsers()[i]+"";
+            }
             if(arraySize == 0) {
                 arraySize = reportObject.getIssueIds().split(",").length;
                 taskCount = new int[arraySize];
                 delayedTasks = new int[arraySize];
 
                 for (int i = 0; i < arraySize; i++) {
-                    for(int j=0; j< users.length; j++) {
-                        taskList= taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds().split(",")[i], users[j] + "");
-                        if (taskList.size() == 0) continue;
-                        for (Task task : taskList) {
-                            delayedTasks[i] += 1;
-                        }
-                    }
-                    String projectName = issueRepository.findById(Long.parseLong(reportObject.getIssueIds().split(",")[i])).get().getIssueName();
-                    xaxis.add(projectName);
-                }
-
-//            if(arraySize == 0) {
-//                arraySize = reportObject.getIssueIds().split(",").length;
-//                taskCount = new int[arraySize];
-//               // int[] tempDelayedTasks = new int[arraySize];
-//                 delayedTasks = new int[arraySize];
-//                for (int i = 0; i < arraySize; i++) {
 //                    for(int j=0; j< users.length; j++) {
-//                        taskList= taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds().split(",")[i], users[j] + "");
-//                        if (taskList.size() == 0) continue;
-//
-//                        for (Task task : taskList) {
-//                            delayedTasks[i] += 1;
-//                        }
-//                        issueIdswithTasks += reportObject.getIssueIds().split(",")[i]+",";
-//                    }
-//                }
+                        taskList = taskRepository.getDelayedTaskIssueReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds().split(",")[i], ids);
+                        if (taskList.size() == 0) continue;
+                        else {
+                            for (Task task : taskList) {
+                                delayedTasks[i] += 1;
+                            }
+                            issueIdswithTasks += reportObject.getIssueIds().split(",")[i] + ",";
+                            String issueName = issueRepository.findById(Long.parseLong(reportObject.getIssueIds().split(",")[i])).get().getIssueName();
+                        }
+                }
+                String[] issueIds = issueIdswithTasks.split(",");
+                delayedTasksFinal = (int[]) resizeArray(delayedTasks, issueIds.length);
+                // delayedTasks = new int[riskIds.length];
+                int delayedTasksIndex = 0;
+                for(int i = 0; i < delayedTasks.length ; i++){
+                    if(delayedTasks[i] == 0) continue;
+                    delayedTasksFinal[delayedTasksIndex] = delayedTasks[i];
+                    delayedTasksIndex++;
+                }
+                for (int i = 0; i< issueIds.length; i++){
+                    if(issueIds[i] == "") continue;
+                    String issueName = issueRepository.findById(Long.parseLong(issueIds[i])).get().getIssueName();
+                    xaxis.add(issueName);
+                }
+                graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName("مهام متأخرة");
+                graphDataHelper.setData(delayedTasksFinal);
+                graphDataHelpers.add(graphDataHelper);
+
             }else {
                 taskCount = new int[arraySize];
                 delayedTasks = new int[arraySize];
@@ -1497,12 +1577,13 @@ public class ReportService {
                     String projectName = issueRepository.findById(issues[i]).get().getIssueName();
                     xaxis.add(projectName);
                 }
+                graphDataHelper = new GraphDataHelper();
+                graphDataHelper.setName("مهام متأخرة");
+                graphDataHelper.setData(delayedTasks);
+                graphDataHelpers.add(graphDataHelper);
             }
 
-            graphDataHelper = new GraphDataHelper();
-            graphDataHelper.setName("مهام متأخرة");
-            graphDataHelper.setData(delayedTasks);
-            graphDataHelpers.add(graphDataHelper);
+
         }
 
         HashMap<List, List> result = new HashMap<>();

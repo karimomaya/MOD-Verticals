@@ -40,50 +40,50 @@ public class ReplacementFinanceReport {
     String currentAmount;
 
 
-    @ColumnName(key = "الرمز")
+    @ColumnName(order = 1, key = "الرمز")
     public String getDIR(){
         return Utils.removeNullValue(DIR);
     }
 
-    @ColumnName(key = "اسم الجهة")
+    @ColumnName(order = 2, key = "اسم الجهة")
     public String getUnitName(){
         return Utils.removeNullValue(unitName);
     }
 
-    @ColumnName(key = "التاريخ")
+    @ColumnName(order = 3, key = "التاريخ")
     public Date getDateOfReplacement(){
         return dateOfReplacement;
     }
 
-    @ColumnName(key = "المصروف")
+    @ColumnName(order = 4, key = "المصروف")
     public String getSumOfImprest(){
         return Utils.removeNullValue(sumOfImprest);
     }
 
 
 
-    @ColumnName(key = "الإجمالي")
+    @ColumnName(order = 5, key = "الإجمالي")
     public String getAmountSpent(){
         return Utils.removeNullValue(amountSpent);
     }
-    @ColumnName(key = "رقم الشيك/رقم التحويل")
+    @ColumnName(order = 6, key = "رقم الشيك/رقم التحويل")
     public String getCheckNumber(){
         return Utils.removeNullValue(checkNumber);
     }
-    @ColumnName(key = "تاريخ إصدار الشيك/التحويل")
+    @ColumnName(order = 7, key = "تاريخ إصدار الشيك/التحويل")
     public String getDateOfIssuanceOfTheCheck(){
         return dateOfIssuanceOfTheCheck;
     }
-    @ColumnName(key = "حد المبلغ السنوي")
+    @ColumnName(order = 8, key = "حد المبلغ السنوي")
     public String getTotalAmount(){
         return Utils.removeNullValue(totalAmount);
     }
-    @ColumnName(key = "الرصيد السنوي")
+    @ColumnName(order = 9, key = "الرصيد السنوي")
     public String getCurrentAmount(){
         return Utils.removeNullValue(currentAmount);
     }
 
-    @ColumnName(key = "حد المبلغ الشهري")
+    @ColumnName(order = 10, key = "حد المبلغ الشهري")
     public String getTotalAmountMonthly(){
         return Utils.removeNullValue(totalAmountMonthly);
     }

@@ -12,7 +12,7 @@ import java.util.List;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-        "securityRequest", "username", "previousTargetTag"
+        "securityRequest", "username", "url", "previousTargetTag"
 })
 public class CustomSecurityRequest {
     @XmlElement(name = "securityRequest", required = true)
@@ -21,9 +21,11 @@ public class CustomSecurityRequest {
     @XmlElement(name = "username", required = true)
     protected String username;
 
+    @XmlElement(name = "url", required = false)
+    protected String url;
+
     @XmlElement(name = "previousTargetTag", required = false)
     protected String previousTargetTag;
-
 
     public String getPreviousTargetTag() {
         return previousTargetTag;
@@ -40,6 +42,10 @@ public class CustomSecurityRequest {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getUrl() { return url; }
+
+    public void setUrl(String url) { this.url = url; }
 
     public List<SecurityRequest> getSecurityRequest() {
         return securityRequest;

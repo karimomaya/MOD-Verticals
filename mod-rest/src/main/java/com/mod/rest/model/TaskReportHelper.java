@@ -99,31 +99,31 @@ public class TaskReportHelper {
         }
     }
 
-    @ColumnName(key = "اسم")
+    @ColumnName(order = 1, key = "اسم")
     public String getTaskName(){
         return (String) removeNullValue(this.taskName);
     }
 
-    @ColumnName(key = "منشأ")
+    @ColumnName(order = 2, key = "منشأ")
     public String getCreatedByName(){
         User user = (User) removeNullValue(this.createdBy);
         if (user instanceof User) return user.getDisplayName();
         return "";
     }
 
-    @ColumnName(key = "مالك")
+    @ColumnName(order = 3, key = "مالك")
     public String getOwnerName(){
         User user = (User) removeNullValue(this.owner);
         if (user instanceof User) return user.getDisplayName();
         return "";
     }
 
-    @ColumnName(key = "وصف")
+    @ColumnName(order = 4, key = "وصف")
     public String getDescription(){
         return (String) removeNullValue(this.description);
     }
 
-    @ColumnName(key = "حالة")
+    @ColumnName(order = 5, key = "حالة")
     public String getTaskStatus() { //0:stopped, 1: not started, 2: started, 3: finished 10: draft, 11: obselate, 12: archived
         switch (this.status){
             case 0:
@@ -142,12 +142,12 @@ public class TaskReportHelper {
                 return "";
         }
     }
-    @ColumnName(key = "تاريخ البدء")
+    @ColumnName(order = 6, key = "تاريخ البدء")
     public Date getTaskStartDate(){
        return this.startDate;
     }
 
-    @ColumnName(key = "تاريخ الانتهاء")
+    @ColumnName(order = 7, key = "تاريخ الانتهاء")
     public Date getTaskDueDate(){
         return this.dueDate;
     }
@@ -160,12 +160,12 @@ public class TaskReportHelper {
         return Utils.convertDateToArabic(this.dueDate);
     }
 
-    @ColumnName(key = "نسبة الأنجاز")
+    @ColumnName(order = 8, key = "نسبة الأنجاز")
     public String getProgressPercentage(){
         return this.progress+"%";
     }
 
-    @ColumnName(key="المشروع")
+    @ColumnName(order = 9, key="المشروع")
     public String getProjectName(){
         if(this.project == null) return "";
         Project p = (Project) removeNullValue(this.project);

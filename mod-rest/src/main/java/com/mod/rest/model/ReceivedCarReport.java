@@ -41,29 +41,29 @@ public class ReceivedCarReport {
 //    @Column (name = "status")
 //    String status;
 
-    @ColumnName(key = "رقم اللوحة")
+    @ColumnName(order = 1, key = "رقم اللوحة")
     public String getPlateNumber (){
         return Utils.removeNullValue(plateNumber);
     }
-    @ColumnName(key = "الموديل")
+    @ColumnName(order = 2, key = "الموديل")
     public String getModel (){
         return Utils.removeNullValue(model);
     }
 
-    @ColumnName(key = "التصنيف")
+    @ColumnName(order = 3, key = "التصنيف")
     public String getType (){
         return Utils.removeNullValue(type);
     }
 
-    @ColumnName(key = "اللون")
+    @ColumnName(order = 4, key = "اللون")
     public String getColor (){
         return Utils.removeNullValue(color);
     }
-//    @ColumnName(key = "الحالة")
+//    @ColumnName(order = 1, key = "الحالة")
 //    public String getStatus (){
 //        return Utils.removeNullValue(status);
 //    }
-    @ColumnName(key = "تاريخ التوفير")
+    @ColumnName(order = 5, key = "تاريخ التوفير")
     public String getDateRequiredToReceiveVehicle(){
         if(dateRequiredToReceiveVehicle == null){
             return "";
@@ -71,10 +71,10 @@ public class ReceivedCarReport {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(dateRequiredToReceiveVehicle);
     }
-    @ColumnName(key = "تاريخ التسليم")
+    @ColumnName(order = 6, key = "تاريخ التسليم")
     public String getEffectiveDeliveryDate(){
         if(effectiveDeliveryDate == null){
-            return "NA";
+            return "_";
         }
         return Utils.removeNullValue(effectiveDeliveryDate);
     }

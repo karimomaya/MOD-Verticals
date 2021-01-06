@@ -6,16 +6,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.mod.soap.system.Utils;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.time.Instant;
 import java.util.*;
 
 /**
  * Created by karim on 2/10/20.
  */
 @Data
+@Slf4j
 public class SecurityQuery {
     private SecurityType securityType;
     private Map<String, Object> orOperator;
@@ -26,7 +29,9 @@ public class SecurityQuery {
     Queue<String> operator = new LinkedList<>();
     private String newKey;
 
-    ArrayList<String> functionsKeywords = new ArrayList<>(Arrays.asList("$biggerThanOrEqual", "$biggerThan", "$smallerThanOrEqual", "$smallerThan"));
+    ArrayList<String> functionsKeywords = new ArrayList<>(Arrays.asList("$biggerThanOrEqual", "$biggerThan", "$smallerThanOrEqual", "$smallerThan",
+            "$biggerThanDate", "$smallerThanOrEqualToDate", "$smallerThanDate" , "$biggerThanOrEqualToDate"));
+
 
 
     private String template;
@@ -196,6 +201,54 @@ public class SecurityQuery {
         return queryHandlers;
     }
 
+//    public boolean evaluateNewWebserviceResponse2(String res){
+//
+//        NodeList nl= getsNodeList(res);
+//
+//        Stack<String> booleansStack =new Stack<>();
+//        Stack<String> qHandlers = produceQueryHandlerStack2(nl);
+//        while(qHandlers.size()>0){
+//            String handler = qHandlers.pop();
+//            if(!handler.equals("or") &&!handler.equals("and")){
+//                booleansStack.push(handler);
+//            }else{
+//                String evaluation = booleansStack.pop();
+//                while (booleansStack.size()>0){
+//                    evaluation = (evaluate(booleansStack.pop(),evaluation,handler))? "true" : "false";
+//                }
+//                qHandlers.push(evaluation);
+//                if(qHandlers.size() == 1){
+//                    break;
+//                }
+//            }
+//
+//        }
+//        return qHandlers.pop()=="true";
+//    }
+//
+//    private Stack<String> produceQueryHandlerStack2(NodeList results){
+//        ArrayList<AbstractMap.SimpleEntry<String, Object>> conditions;
+//        Stack<String> queryHandlers = new Stack<>();
+//
+//        while (stackHolder.size() > 0){
+//            QueryHandler queryHandler = stackHolder.pop();
+//            conditions = new ArrayList<>();
+//            if (queryHandler.getKey().equals("or") || queryHandler.getKey().equals("and")){
+//                queryHandlers.push(queryHandler.getKey());
+//            }else {
+//                AbstractMap.SimpleEntry<String, Object> condition = new AbstractMap.SimpleEntry<String, Object>(queryHandler.getKey(), queryHandler.getValue());
+//                conditions.add(condition);
+//                Boolean result = evaluateOrOperatorFromXMLUsingHashMap(results, conditions);
+//                queryHandlers.push(result.toString());
+//            }
+//        }
+//        Stack<String> queryResponse = new Stack<>();
+//        while(queryHandlers.size() > 0){
+//            queryResponse.push(queryHandlers.pop());
+//        }
+//        return queryResponse;
+//    }
+
     private boolean evaluate(String val1, String val2, String operator){
         boolean v1 = (val1.equals("true"))? true : false;
         boolean v2 = (val2.equals("true"))? true : false;
@@ -206,37 +259,6 @@ public class SecurityQuery {
             return v1 || v2;
         }
     }
-
-//    private boolean evaluateOrOperatorFromXMLUsingHashMap(NodeList nl, ArrayList<AbstractMap.SimpleEntry<String, Object>> evaluator){
-//        boolean evaluate = false;
-//
-//        if(evaluator.size() == 0) return true;
-//
-//          for (AbstractMap.SimpleEntry<String, Object> s : evaluator){
-//            ArrayList<String> output = new ArrayList<>();
-//            for(int k=0;k<nl.getLength();k++){
-//                output = getTagsByName((Node)nl.item(k), (String) s.getKey(), new ArrayList<>());
-////                if (!output.equals("")) break;
-//            }
-//            if (output.size() == 0){
-//                evaluate |= false;
-//            }else {
-//                for(String out : output) {
-//                    String predictedOutput = getRealValue((String) s.getValue());
-//                    if (containsFunctionsKeywords(predictedOutput)) {
-//                        evaluate |= executeFunction(predictedOutput, out);
-//                    } else if (out.equals(predictedOutput)) {
-//                        evaluate |= true;
-//                    } else {
-//                        evaluate |= false;
-//                    }
-//                }
-//            }
-//
-//        }
-//        return evaluate;
-//    }
-
 
     private boolean evaluateOrOperatorFromXMLUsingHashMap(NodeList nl, ArrayList<AbstractMap.SimpleEntry<String, Object>> evaluator){
 
@@ -345,8 +367,28 @@ public class SecurityQuery {
 
     private boolean executeFunction(String input, String value){
 
-
-        if (input.contains("$biggerThanOrEqual")){
+        if (input.contains("$biggerThanOrEqualToDate")){
+            input = getValueFromFunction(input, "$biggerThanOrEqualToDate");
+            Date fstVal = Date.from( Instant.parse((input)));
+            Date secondVal = Date.from(Instant.parse((value)));
+            return (secondVal.compareTo(fstVal) == 1 ||  secondVal.compareTo(fstVal) == 0);
+        }else if(input.contains("$biggerThanDate")){
+            input = getValueFromFunction(input, "$biggerThanDate");
+            Date fstVal = Date.from( Instant.parse((input)));
+            Date secondVal = Date.from(Instant.parse((value)));
+            return (secondVal.compareTo(fstVal) == 1 );
+        }
+        else if(input.contains("$smallerThanOrEqualToDate")){
+            input = getValueFromFunction(input, "$smallerThanOrEqualToDate");
+            Date fstVal = Date.from( Instant.parse((input)));
+            Date secondVal = Date.from(Instant.parse((value)));
+            return (secondVal.compareTo(fstVal) == -1  ||  secondVal.compareTo(fstVal) == 0);
+        } else if(input.contains("$smallerThanDate")){
+            input = getValueFromFunction(input, "$smallerThanDate");
+            Date fstVal = Date.from( Instant.parse((input)));
+            Date secondVal = Date.from(Instant.parse((value)));
+            return (secondVal.compareTo(fstVal) == -1  );
+        } else if (input.contains("$biggerThanOrEqual")){
             input = getValueFromFunction(input, "$biggerThanOrEqual");
             int fstVal = convertStringToInt(input);
             int secondVal = convertStringToInt(value);

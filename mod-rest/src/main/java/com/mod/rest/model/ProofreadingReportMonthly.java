@@ -23,7 +23,7 @@ public class ProofreadingReportMonthly {
     @Column(name = "number_of_requests")
     String numberOfRequests;
 
-    @ColumnName(key = "جهة الطلب")
+    @ColumnName(order = 1, key = "جهة الطلب")
     public String getRequest_Department() {
         return request_Department;
     }
@@ -32,17 +32,17 @@ public class ProofreadingReportMonthly {
         this.request_Department = request_Department;
     }
 
-    @ColumnName(key = "عدد الكلمات")
+    @ColumnName(order = 2, key = "عدد الكلمات")
     public String getWordCount() {
         return wordCount;
     }
 
-    @ColumnName(key = "عدد الصفحات")
+    @ColumnName(order = 3, key = "عدد الصفحات")
     public String getPageCount() {
         return pageCount;
     }
 
-    @ColumnName(key = "عدد الطلبات")
+    @ColumnName(order = 4, key = "عدد الطلبات")
     public String getNumberOfRequests() {
         return numberOfRequests;
     }

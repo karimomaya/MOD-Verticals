@@ -27,11 +27,11 @@ public class Gifts {
     @Column (name = "expiration_date")
     Date expirationDate;
 
-    @ColumnName(key = "نوع الهدية")
+    @ColumnName(order = 1, key = "نوع الهدية")
     public String getGiftName(){return Utils.removeNullValue(giftName);}
-    @ColumnName(key = "العدد المتوفر")
+    @ColumnName(order = 2, key = "العدد المتوفر")
     public String getNumberAvailable(){return Utils.removeNullValue(numberAvailable);}
-    @ColumnName(key = "تاريخ الشراء")
+    @ColumnName(order = 3, key = "تاريخ الشراء")
     public String getPurshaseDate() {
         if(purchaseDate == null){
             return "";
@@ -39,7 +39,7 @@ public class Gifts {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(purchaseDate);
     }
-    @ColumnName(key = "تاريخ الإنتهاء")
+    @ColumnName(order = 4, key = "تاريخ الإنتهاء")
     public String getExpirationDate(){
         if(expirationDate == null){
             return "";

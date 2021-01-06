@@ -51,12 +51,12 @@ public class TrainingYearlyEvaluationReport {
 
 
 
-    @ColumnName(key = "اسم الدورة")
+    @ColumnName(order = 1, key = "اسم الدورة")
     public String getNameOfCourse(){
         return Utils.removeNullValue(nameOfCourse);
     }
 
-//    @ColumnName(key = "النسبة المئوية للمحاضر")
+//    @ColumnName(order = 1, key = "النسبة المئوية للمحاضر")
 //    public String getLecturerPercentage(){
 //        if (!summaryLecturersOverallScore.equals(null)){
 //            float x = (Float.parseFloat(summaryLecturersOverallScore) / 5) * 100;
@@ -67,7 +67,7 @@ public class TrainingYearlyEvaluationReport {
 //
 //    }
 //
-//    @ColumnName(key = "النسبة المئوية للبرنامج التدريبي")
+//    @ColumnName(order = 1, key = "النسبة المئوية للبرنامج التدريبي")
 //    public String getCoursePercentage(){
 //        if (!summaryCoursesOverallScore.equals(null)){
 //            float x = (Float.parseFloat(summaryCoursesOverallScore) / 5) * 100;
@@ -77,7 +77,7 @@ public class TrainingYearlyEvaluationReport {
 //        }
 //    }
 //
-//    @ColumnName(key = "مجموع معدل النسبة المئوية لتقييم المحاضر/البرنامج التدريبي")
+//    @ColumnName(order = 1, key = "مجموع معدل النسبة المئوية لتقييم المحاضر/البرنامج التدريبي")
 //    public String getCourseOnLectuer(){
 //        if (!summaryCoursesOverallScore.equals(null) && !summaryLecturersOverallScore.equals(null)){
 //            float x = (((Float.parseFloat(summaryCoursesOverallScore) / 5) * 100) + ((Float.parseFloat(summaryLecturersOverallScore) / 5) * 100)) / 2;
@@ -88,18 +88,18 @@ public class TrainingYearlyEvaluationReport {
 //    }
 
 
-    @ColumnName(key = "تاريخ انعقاد الدروة")
+    @ColumnName(order = 2, key = "تاريخ انعقاد الدروة")
     public Date getDateFrom(){
         return dateFrom;
     }
 
 
-    @ColumnName(key = "تاريخ إنتهاء الدورة")
+    @ColumnName(order = 3, key = "تاريخ إنتهاء الدورة")
     public Date getRequestDate(){
         return dateTo;
     }
 
-    @ColumnName(key = "عدد المنسبين")
+    @ColumnName(order = 4, key = "عدد المنسبين")
     public String getSummaryNumberOfAttendances(){
 
             return Utils.removeNullValue(summaryNumberOfAttendances);
@@ -108,14 +108,14 @@ public class TrainingYearlyEvaluationReport {
     }
 
 
-    @ColumnName(key = "مقدم الخدمة")
+    @ColumnName(order = 5, key = "مقدم الخدمة")
     public String getLecturerName(){
         return Utils.removeNullValue(lecturerName);
     }
 
 
 
-    @ColumnName(key = "تقييم المحاضر")
+    @ColumnName(order = 6, key = "تقييم المحاضر")
     public String getSummaryLecturersOverallScore(){
         return summaryLecturersOverallScore;
     }
@@ -124,7 +124,7 @@ public class TrainingYearlyEvaluationReport {
         this.summaryLecturersOverallScore = summaryLecturersOverallScore;
     }
 
-    @ColumnName(key = "تقييم البرنامج التدريبي")
+    @ColumnName(order = 7, key = "تقييم البرنامج التدريبي")
     public String getSummaryCoursesOverallScore(){
         return Utils.removeNullValue(summaryCoursesOverallScore);
     }
@@ -133,22 +133,22 @@ public class TrainingYearlyEvaluationReport {
         this.summaryCoursesOverallScore = summaryCoursesOverallScore;
     }
 
-    @ColumnName(key = "مدة العقاد الدورة بالأيام")
+    @ColumnName(order = 8, key = "مدة العقاد الدورة بالأيام")
     public String getDuration(){
         return Utils.removeNullValue(duration);
     }
 
-    @ColumnName(key = "تاريخ استحقاق العائد من الإستثمار")
+    @ColumnName(order = 9, key = "تاريخ استحقاق العائد من الإستثمار")
     public String getEndDate(){
         return endDate;
     }
 
-    @ColumnName(key = "نسبة تطوير الموظفين من الدورة")
+    @ColumnName(order = 10, key = "نسبة تطوير الموظفين من الدورة")
     public String getAverageUserEvalPercentage(){
         return Utils.removeNullValue(averageUserEvalPercentage);
     }
 
-    @ColumnName(key = "قياس نقاط الاستفادة")
+    @ColumnName(order = 11, key = "قياس نقاط الاستفادة")
     public String getAverageUserEval(){
         return Utils.removeNullValue(averageUserEval);
     }
@@ -157,17 +157,17 @@ public class TrainingYearlyEvaluationReport {
         this.averageUserEval = averageUserEval;
     }
 
-    @ColumnName(key = "نسبة تأثير التدريب على مدى استغلال الوقت في العمل")
+    @ColumnName(order = 12, key = "نسبة تأثير التدريب على مدى استغلال الوقت في العمل")
     public String getAverageTimePercentage(){
         return Utils.removeNullValue(averageTime);
     }
 
-    @ColumnName(key = "نسبة تأثر التدريب على التحسن في الإنتاجية وجودة العمل")
+    @ColumnName(order = 13, key = "نسبة تأثر التدريب على التحسن في الإنتاجية وجودة العمل")
     public String getAverageQuality(){
         return Utils.removeNullValue(averageQuality);
     }
 
-    @ColumnName(key = "نسبة تأثر التدريب في العمل على تطوير المهارات المكتسبة ")
+    @ColumnName(order = 14, key = "نسبة تأثر التدريب في العمل على تطوير المهارات المكتسبة ")
     public String getAverageSkill(){
         return Utils.removeNullValue(averageSkill);
     }

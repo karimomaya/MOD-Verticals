@@ -70,7 +70,7 @@ th {
  display: inline-block;
  width: 100%;
  vertical-align: top;
-
+margin-bottom: 30px;
 }
 .template-subject-title{
     color: #b68a35;
@@ -141,7 +141,7 @@ img {
             <table >
                 <thead>
                     <tr>
-                        <th style="width: 400px;">اليوم</th>
+                        <th style="width: 100px;">اليوم</th>
                         <th style="width: 100px;">التاريخ</th>
                         <th style="width: 100px;">الزمن</th>
                         <th style="width: 100px;">المكان</th>
@@ -168,7 +168,7 @@ img {
             <table style="font-family: Noto Naskh Arabic">
                 <thead>
                 <tr>
-                    <th dir="rtl" style="width: 400px;">الدرجة/ الرتبة</th>
+                    <th dir="rtl" style="width: 250px;">الدرجة/ الرتبة</th>
                     <th dir="rtl" style="width: 400px;">الأسم</th>
                     <th dir="rtl" >المنصب</th>
                 </tr>
@@ -180,6 +180,29 @@ img {
                 </tbody>
             </table>
 
+            <div style="background-color: #b68a35; width: 100%; display: block; color: white;">
+                <p style="margin: 10px ; font-weight: bold;" >مهام قبل الاجتماع:</p>
+            </div>
+            <table style="font-family: Noto Naskh Arabic">
+                <thead>
+                <tr>
+                    <th dir="rtl" style="width: 30px;">اسم المهمة</th>
+                    <th dir="rtl" style="width: 30px;">وصف المهمة</th>
+                    <th dir="rtl" style="width: 50px;">المسؤول</th>
+                    <th dir="rtl">التاريخ من</th>
+                    <th dir="rtl" style="width: 30  px;">التاريخ إلى</th>
+                </tr>
+                </thead>
+                <tbody id="meeting-data">	
+                    
+                    <meeting-pre-task-replacer>getTaskName</meeting-pre-task-replacer>
+                    <meeting-pre-task-replacer>getDescription</meeting-pre-task-replacer>
+                    <meeting-pre-task-replacer>getPerformersNames</meeting-pre-task-replacer>
+                    <meeting-pre-task-replacer>getArabicTaskStartDate</meeting-pre-task-replacer>
+                    <meeting-pre-task-replacer>getArabicTaskDueDate</meeting-pre-task-replacer>
+                </tbody>
+            </table>
+            
             <span class="page-break"></span>
 
              <div style="background-color: #b68a35; width: 100%; display: block; color: white;">
@@ -221,7 +244,7 @@ img {
                     <meeting-task-replacer>getArabicTaskDueDate</meeting-task-replacer>
                 </tbody>
             </table>
-		 
+
              </div>
          </div>
          

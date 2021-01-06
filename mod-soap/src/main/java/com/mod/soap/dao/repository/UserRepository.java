@@ -18,4 +18,8 @@ public interface UserRepository extends GenericRepository<User, Long> {
     Optional<User> getUserDetail(@Param("userEntityId") long userEntityId);
     @Query(value = "{call MOD_TM_SP_task_get_subusers_of_user_without_input(:userId,  :PageNumber, :PageSize)}", nativeQuery = true)
     List<User> getSubUsers(@Param("userId") long userId, @Param("PageNumber") int pageNumber, @Param("PageSize") int pageSize );
+    @Query(value = "{call MOD_SYS_OC_SP_GetUserByRoleName(:RoleName)}", nativeQuery = true)
+    List<User> getUsersByRoleName(@Param("RoleName") String RoleName);
+    @Query(value = "{call MOD_SYS_OC_SP_GetUserDetailsByUserId(:UserId)}", nativeQuery = true)
+    List<User> getUserDetailsByUserId(@Param("UserId") String UserId);
 }

@@ -26,6 +26,7 @@
             <xs:sequence>
                 <xs:element name="meetingId" type="xs:long"/>
                 <xs:element name="isUpdate" type="xs:boolean"/>
+                <xs:element name="isCancel" type="xs:boolean"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -43,6 +44,7 @@
         <xs:complexType >
             <xs:sequence>
                 <xs:element name="username" type="xs:string"/>
+                <xs:element name="url" type="xs:string" minOccurs="0"/>
                 <xs:element name="previousTargetTag" type="xs:string" minOccurs="0"/>
                 <xs:element name="securityRequest" type="tns:SecurityRequest" minOccurs="0"
                             maxOccurs="unbounded"/>
@@ -55,6 +57,7 @@
             <xs:sequence>
                 <xs:element name="CustomSecurity" type="tns:CustomSecurity" minOccurs="0"
                             maxOccurs="unbounded"/>
+                <xs:element name="canViewTask" type="xs:string" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

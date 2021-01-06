@@ -21,6 +21,7 @@ import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.itextpdf.tool.xml.pipeline.html.LinkProvider;
 import com.mod.rest.annotation.PDFResources;
 import com.mod.rest.system.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ import java.util.List;
 /**
  * Created by omar.sabry on 1/8/2020.
  */
-
+@Slf4j
 @Service
 public class PDFService implements PDFServiceI {
 
@@ -62,6 +63,9 @@ public class PDFService implements PDFServiceI {
             Node element = document.getElementsByTagName(tagname).item(0);
             element.getParentNode().removeChild(element);
         } catch (Exception ex) {
+            log.warn("Couldn't find Node by tag name: "+ tagname);
+            log.error(ex.getMessage());
+            ex.printStackTrace();
         }
         return Utils.writeXMLDocumentToTempFile(document);
 
@@ -95,9 +99,9 @@ public class PDFService implements PDFServiceI {
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
         NodeList nodes = document.getElementsByTagName(tagName + "-replacer");
 
-        if (objects.size() == 0 || nodes.getLength() == 0)
-            return removeNodeByTagName(filename, tagName);
-
+        if (objects.size() == 0 || nodes.getLength() == 0) {
+            return removeNodeByTagName(filename, tagName + "-replacer");
+        }
         String nodeName = nodes.item(0).getParentNode().getNodeName();
         if (nodeName.equals("tbody")) {
             handlePDFTable(document, objects, nodes);
@@ -260,6 +264,8 @@ public class PDFService implements PDFServiceI {
                     td.setTextContent(innerText);
                     tr.appendChild(td);
                 } catch (Exception ex) {
+                    log.warn("Couldn't execute method in object: "+ object.getClass().getSimpleName() );
+                    log.error(ex.getMessage());
                     notAddd = true;
                 }
 
@@ -287,7 +293,7 @@ public class PDFService implements PDFServiceI {
     }
 
     public byte[] generatePDF(String filename) {
-        System.out.println("generate PDF using file name: " + filename);
+        log.info("generate PDF using file name: " + filename);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         File tempFile = null;
         try {
@@ -337,17 +343,15 @@ public class PDFService implements PDFServiceI {
 
             document.close();
         } catch (IOException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
-            System.out.println(e);
         } catch (DocumentException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
-            System.out.println(e);
         }
         return byteArrayOutputStream.toByteArray();
 
-
     }
-
 
 }
 

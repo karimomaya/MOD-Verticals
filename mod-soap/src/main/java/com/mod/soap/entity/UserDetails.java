@@ -5,6 +5,21 @@ package com.mod.soap.entity;
  */
 public class UserDetails extends Entity {
 
+    public String viewMemosByTasks(String taskId, String ticket){
+        return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <SOAP:Header>\n" +
+                "    <OTAuthentication xmlns=\"urn:api.bpm.opentext.com\">\n" +
+                "      <AuthenticationToken>"+ticket+"</AuthenticationToken>\n" +
+                "    </OTAuthentication>\n" +
+                "  </SOAP:Header>\n" +
+                "  <SOAP:Body>\n" +
+                "    <ViewMemosByTask xmlns=\"http://schemas.cordys.com/notification/workflow/1.0\">\n" +
+                "      <TaskId>"+taskId+"</TaskId>\n" +
+                "    </ViewMemosByTask>\n" +
+                "  </SOAP:Body>\n" +
+                "</SOAP:Envelope>";
+    }
+
     public String getHumanTasks(String roleName, String processName, String ticket){
         return "<SOAP:Envelope xmlns:SOAP=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
                 "  <SOAP:Header>\n" +

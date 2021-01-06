@@ -45,12 +45,12 @@ public class ProofreadingReport {
     String initiatorComments;
 
 
-    @ColumnName(key = "رقم الطلب")
+    @ColumnName(order = 1, key = "رقم الطلب")
     public Long getId() {
         return Id;
     }
 
-    @ColumnName(key = "جهة الطلب")
+    @ColumnName(order = 2, key = "جهة الطلب")
     public String getRequestDepartment() {
         return requestDepartment;
     }
@@ -59,17 +59,17 @@ public class ProofreadingReport {
         this.requestDepartment = request_Department;
     }
 
-    @ColumnName(key = "اسم مقدم الطلب")
+    @ColumnName(order = 3, key = "اسم مقدم الطلب")
     public String getRequestName() {
         return requestName;
     }
 
-    @ColumnName(key = "الموضوع")
+    @ColumnName(order = 4, key = "الموضوع")
     public String getTitle() {
         return title;
     }
 
-    @ColumnName(key = "درجة السرية")
+    @ColumnName(order = 5, key = "درجة السرية")
     public String getDegreeOfConfidentiality() {
         return degreeOfConfidentiality;
     }
@@ -78,7 +78,7 @@ public class ProofreadingReport {
         this.degreeOfConfidentiality = degreeOfConfidentiality;
     }
 
-    @ColumnName(key = "درجة الأسبقية")
+    @ColumnName(order = 6, key = "درجة الأسبقية")
     public String getDegreeOfPrecedence() {
         return degreeOfPrecedence;
     }
@@ -87,37 +87,37 @@ public class ProofreadingReport {
         this.degreeOfPrecedence = degreeOfPrecedence;
     }
 
-    @ColumnName(key = "عدد الكلمات")
+    @ColumnName(order = 7, key = "عدد الكلمات")
     public String getWordCount() {
         return wordCount;
     }
 
-    @ColumnName(key = "عدد الصفحات")
+    @ColumnName(order = 8, key = "عدد الصفحات")
     public String getPageCount() {
         return pageCount;
     }
 
-    @ColumnName(key = "حالة الطلب")
+    @ColumnName(order = 9, key = "حالة الطلب")
     public String getRequestStatus() {
         return requestStatus;
     }
 
-    @ColumnName(key = "المدقق")
+    @ColumnName(order = 10, key = "المدقق")
     public String getProofreader() {
         return proofreader;
     }
 
-    @ColumnName(key = "تاريخ الطلب")
+    @ColumnName(order = 11, key = "تاريخ الطلب")
     public Date getRequestDate() {
         return requestDate;
     }
 
-    @ColumnName(key = "تاريخ التسليم")
+    @ColumnName(order = 12, key = "تاريخ التسليم")
     public Date getProofreadingDoneOn() {
         return proofreadingDoneOn;
     }
 
-    @ColumnName(key = "التقييم")
+    @ColumnName(order = 13, key = "التقييم")
     public String getAverageRating() {
         return averageRating;
     }
@@ -126,7 +126,7 @@ public class ProofreadingReport {
         this.averageRating = averageRating;
     }
 
-    @ColumnName(key = "ملاحظات الجهة الطالبة")
+    @ColumnName(order = 14, key = "ملاحظات الجهة الطالبة")
     public String getInitiatorComments() {
         return initiatorComments;
     }

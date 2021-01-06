@@ -37,10 +37,13 @@ public class GiftController {
     @Autowired
     SpentGiftRepository spentGiftRepository;
 
-    @GetMapping("export-gifts/{reportType}/{startDate}/{endDate}")
+    @GetMapping("export-gifts/{reportType}/{startDate}/{endDate}/{receiverCounty}/{receiverName}/{giftType}")
     @ResponseBody
     public ResponseEntity<byte[]> export(@PathVariable("startDate") String startDate,
                                          @PathVariable("endDate") String endDate,
+                                         @PathVariable("receiverCounty") String receiverCounty,
+                                         @PathVariable("receiverName") String receiverName,
+                                         @PathVariable("giftType") String giftType,
                                          @PathVariable("reportType") int reportType
     ) {
         HttpHeaders respHeaders = new HttpHeaders();
@@ -48,7 +51,7 @@ public class GiftController {
         byte[] bytes = null;
         try {
             if(reportType == 1){
-                List<Gifts> giftReports = giftsRepository.getGiftsRecordsBetweenPurshaseDate(startDate,endDate,"");
+                List<Gifts> giftReports = giftsRepository.getGiftsRecordsBetweenPurshaseDate(startDate,endDate,giftType);
                 file = excelWriterService.generate(giftReports);
             }
             if(reportType == 2){
@@ -56,8 +59,19 @@ public class GiftController {
                 file = excelWriterService.generate(receivedGifts);
             }
             if(reportType == 3){
-                List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate);
-                file = excelWriterService.generate(spentGift);
+                if (receiverName != null){
+                    List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,receiverCounty,null);
+                    file = excelWriterService.generate(spentGift);
+                }else if (receiverCounty != null){
+                    List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,null,receiverName);
+                    file = excelWriterService.generate(spentGift);
+                }else if(receiverCounty != null && receiverName != null){
+                    List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,null,null);
+                    file = excelWriterService.generate(spentGift);
+                }else{
+                    List<SpentGift> spentGift = spentGiftRepository.getSpentGiftsRecordsBetweenPurshaseDate(startDate,endDate,receiverCounty,receiverName);
+                    file = excelWriterService.generate(spentGift);
+                }
             }
 
 

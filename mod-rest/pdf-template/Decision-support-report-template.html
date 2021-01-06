@@ -1,0 +1,175 @@
+<html class="rtl" lang="">
+
+<head>
+    <style>
+        table {
+            width: 100%;
+            color: #c6c6c6;
+            font-size: 16px;
+            /* border: 1px solid #c6c6c6;
+    margin-top: 20px; */
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        table.specific-class td:first-child {
+            background-color: #c6c6c6;
+            color: black;
+        }
+        
+        .english-font {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        
+        table td {
+            border: 1px solid #c6c6c6;
+            background-color: white;
+            color: black;
+            padding: 5px
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        th {
+            color: black;
+            font-weight: bold;
+            font-size: 14px;
+            background-color: #c6c6c6;
+            text-align: left;
+            padding: 5px;
+        }
+        
+        .table-gold th {
+            background-color: #b68a35;
+            color: white;
+        }
+        
+        .email-wrapper {
+            height: 768px;
+            display: block;
+            padding: 0;
+            margin: 0 auto;
+        }
+        
+        .email-header {
+            width: 100%;
+        }
+        
+        .email-template-body {
+            background-color: #fff;
+            display: block;
+            margin-top: 30px;
+        }
+        
+        .template-body-header {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+        
+        .template-subject-main {
+            display: inline-block;
+            width: 100%;
+            vertical-align: top;
+        }
+        
+        .template-subject-title {
+            color: #b68a35;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .template-subject-text {
+            color: #c6c6c6;
+            font-size: 21px;
+            text-align: center;
+            text-decoration: underline;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .template-data {
+            display: block;
+        }
+        
+        .template-data-item {
+            width: 33%;
+            display: inline-grid;
+        }
+        
+        .template-data-label {
+            color: #bfbfbf
+        }
+        
+        .template-data-info {
+            color: #606060;
+            padding: 10px 0;
+        }
+        
+        .padding {
+            padding-right: 40px;
+        }
+        
+        img {
+            width: 200px;
+        }
+        
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+
+</head>
+
+<body style="font-family: Noto Naskh Arabic">
+    <div class="email-wrapper">
+        <div class="email-header">
+            <img src="UAElogo.png" />
+        </div>
+        <div class="email-template-body">
+            <div class="template-subject">
+
+                <div class="template-subject-main">
+
+                    <div class="template-subject-text" dir="rtl">
+                        <p>تقرير توزيع المهام على التصنيفات المختلفة</p>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="template-data" dir="rtl">
+                <div style="background-color: #b68a35; width: 100%; display: block; color: white;">
+                    <p style="margin: 10px ; font-weight: bold;">المهام:</p>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">اسم المهمة</th>
+                            <th style="width: 100px;">مالك المهمة</th>
+                            <th style="width: 100px;">تاريخ البدء</th>
+                            <th style="width: 100px;">تاريخ الانتهاء</th>
+                            <th style="width: 100px;">المشروع</th>
+                            <th style="width: 100px;">نسبة الأنجاز</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <task-data-replacer>getTaskName</task-data-replacer>
+                        <task-data-replacer>getOwner</task-data-replacer>
+                        <task-data-replacer>getArabicStartDate</task-data-replacer>
+                        <task-data-replacer>getArabicDueDate</task-data-replacer>
+                        <task-data-replacer>getTaskProjectName</task-data-replacer>
+                        <task-data-replacer>getProgressPercent</task-data-replacer>
+                        <!-- <task-data-replacer>getDescription</task-data-replacer> -->
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</body>
+
+</html>
