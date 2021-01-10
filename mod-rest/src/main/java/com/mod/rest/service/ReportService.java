@@ -1261,7 +1261,7 @@ public class ReportService {
                     if (taskList.size() == 0) continue;
                     else {
                         for (Task task : taskList) {
-                            if (task.getStatus() == 3 || task.getStatus() == 12) {
+                            if (task.getStatus() == 0 ||task.getStatus() == 3 || task.getStatus() == 11 ||task.getStatus() == 12) {
                                 completedTasksCount += 1;
                                 hasCompleted = true;
                             } else if (task.getDueDate().before(new Date())) {
@@ -1319,7 +1319,7 @@ public class ReportService {
                         if (taskList.size() == 0) continue;
                         else {
                             for (Task task : taskList) {
-                                if (task.getStatus() == 3 || task.getStatus() == 12) {
+                                if (task.getStatus() == 0 ||task.getStatus() == 3 || task.getStatus() == 11 ||task.getStatus() == 12) {
                                     completedTasksCount += 1;
                                     hasCompleted = true;
                                 } else if (task.getDueDate().before(new Date())) {
@@ -1391,7 +1391,7 @@ public class ReportService {
                         taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds().split(",")[i], ids);
                         if (taskList.size() == 0) continue;
                         for (Task task : taskList) {
-                            if (task.getStatus() == 3 || task.getStatus() == 12) {
+                            if (task.getStatus() == 0 || task.getStatus() == 3 || task.getStatus() == 11 ||task.getStatus() == 12) {
                                 completedTasksCount += 1;
                             } else if (task.getDueDate().before(new Date())) {
                                 delayedTasksCount += 1;
@@ -1422,7 +1422,7 @@ public class ReportService {
                         taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), issue, ids);
                         if (taskList.size() == 0) continue;
                         for (Task task : taskList) {
-                            if (task.getStatus() == 3 || task.getStatus() == 12) {
+                            if (task.getStatus() == 0 || task.getStatus() == 3 || task.getStatus() == 11 || task.getStatus() == 12) {
                                 completedTasksCount += 1;
                             } else if (task.getDueDate().before(new Date())) {
                                 delayedTasksCount +=1;
