@@ -45,7 +45,7 @@ public class UserController {
             @RequestParam("startDate") String startDate,
             @RequestParam("endDate") String endDate,
             @RequestParam("isExternal") Boolean isExternal,
-            @RequestParam(name = "exceptionMeetings",required = false) String exceptionMeetings) {
+            @RequestParam(name = "exceptionMeetings", required = false) String exceptionMeetings) {
 
         ResponseBuilder<ObjectNode> responseBuilder = new ResponseBuilder<>();
         ObjectMapper mapper = new ObjectMapper();
@@ -54,22 +54,22 @@ public class UserController {
 
         List<String> users = new ArrayList<>();
 
-        if(!userEntityId.isEmpty()){
+        if (!userEntityId.isEmpty()) {
             String[] usersIds = userEntityId.split(",");
-            if(isExternal){
-                for(String userId: usersIds){
+            if (isExternal) {
+                for (String userId : usersIds) {
                     Optional<IndividualReport> individual = individualRepository.findById(Long.parseLong(userId));
-                    if(individual.isPresent()){
-                        if(!users.contains(individual.get().getNameArabic())){
+                    if (individual.isPresent()) {
+                        if (!users.contains(individual.get().getNameArabic())) {
                             users.add(individual.get().getNameArabic());
                         }
                     }
                 }
-            }else{
-                for(String userId : usersIds){
+            } else {
+                for (String userId : usersIds) {
                     Optional<User> user = userRepository.findById(Long.parseLong(userId));
-                    if(user.isPresent()){
-                        if(!users.contains(user.get().getDisplayName())){
+                    if (user.isPresent()) {
+                        if (!users.contains(user.get().getDisplayName())) {
                             users.add(user.get().getDisplayName());
                         }
                     }
@@ -77,21 +77,22 @@ public class UserController {
             }
         }
 
-        try {
-            int startDateDay = Utils.getDayNameFromDate(new SimpleDateFormat("yyyy-MM-dd").parse(startDate.split("T")[0]));
-            int endDateDay = Utils.getDayNameFromDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate.split("T")[0]));
-            if(startDateDay == 5 || startDateDay == 6 || endDateDay == 5 || endDateDay == 6){
-                result.put("available",false);
-                result.put("usersDisplayNames",Utils.writeObjectIntoString(users));
-                responseBuilder.status(ResponseCode.SUCCESS);
-                return responseBuilder.data(result).build();
+        if (startDate.split("T")[0].equals(endDate.split("T")[0])) {
+            try {
+                int startDateDay = Utils.getDayNameFromDate(new SimpleDateFormat("yyyy-MM-dd").parse(startDate.split("T")[0]));
+                int endDateDay = Utils.getDayNameFromDate(new SimpleDateFormat("yyyy-MM-dd").parse(endDate.split("T")[0]));
+                if (startDateDay == 5 || startDateDay == 6 || endDateDay == 5 || endDateDay == 6) {
+                    result.put("available", false);
+                    result.put("usersDisplayNames", Utils.writeObjectIntoString(users));
+                    responseBuilder.status(ResponseCode.SUCCESS);
+                    return responseBuilder.data(result).build();
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+                responseBuilder.status(ResponseCode.INTERNAL_SERVER_ERROR);
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
-            responseBuilder.status(ResponseCode.INTERNAL_SERVER_ERROR);
-        }
 
-        if(startDate.split("T")[0].equals(endDate.split("T")[0])) {
+
             List<Vacation> vacationList = vacationRepository.getByDate(startDate.split("T")[0], endDate.split("T")[0]);
 
             if (vacationList.size() > 0) {
@@ -102,40 +103,40 @@ public class UserController {
             }
         }
 
-        List<MeetingAttendee> attendeeList = meetingAttendeeRepository.getConflictAttendee(startDate,endDate,userEntityId,isExternal);
+        List<MeetingAttendee> attendeeList = meetingAttendeeRepository.getConflictAttendee(startDate, endDate, userEntityId, isExternal);
 
         ArrayList<String> attendeesDisplayName = new ArrayList<>();
 
-        for(MeetingAttendee attendee: attendeeList){
-            if(isMeetingException(attendee.getMeeting_to_attendees_Id(), exceptionMeetings)){
+        for (MeetingAttendee attendee : attendeeList) {
+            if (isMeetingException(attendee.getMeeting_to_attendees_Id(), exceptionMeetings)) {
                 continue;
-            }else{
-                if(!attendeesDisplayName.contains(attendee.getDisplayName())){
+            } else {
+                if (!attendeesDisplayName.contains(attendee.getDisplayName())) {
                     attendeesDisplayName.add(attendee.getDisplayName());
                 }
             }
         }
 
-        if(attendeesDisplayName.size() > 0){
-            result.put("available",false);
+        if (attendeesDisplayName.size() > 0) {
+            result.put("available", false);
             result.put("usersDisplayNames", Utils.writeObjectIntoString(attendeesDisplayName));
-        }else{
-            result.put("available",true);
+        } else {
+            result.put("available", true);
         }
 
         responseBuilder.status(ResponseCode.SUCCESS);
         return responseBuilder.data(result).build();
     }
 
-    private boolean isMeetingException(String meetingId, String exceptionMeetings){
-        if(exceptionMeetings == null){
+    private boolean isMeetingException(String meetingId, String exceptionMeetings) {
+        if (exceptionMeetings == null) {
             return false;
-        }else if(exceptionMeetings.isEmpty()){
+        } else if (exceptionMeetings.isEmpty()) {
             return false;
-        }else{
+        } else {
             String[] exceptionMeetingsList = exceptionMeetings.split(",");
-            for(int i = 0 ; i < exceptionMeetingsList.length ; i++){
-                if(exceptionMeetingsList[i].equals(meetingId)){
+            for (int i = 0; i < exceptionMeetingsList.length; i++) {
+                if (exceptionMeetingsList[i].equals(meetingId)) {
                     return true;
                 }
             }
