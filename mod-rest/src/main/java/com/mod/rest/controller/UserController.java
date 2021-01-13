@@ -91,13 +91,15 @@ public class UserController {
             responseBuilder.status(ResponseCode.INTERNAL_SERVER_ERROR);
         }
 
-        List<Vacation> vacationList = vacationRepository.getByDate(startDate.split("T")[0],endDate.split("T")[0]);
+        if(startDate.split("T")[0].equals(endDate.split("T")[0])) {
+            List<Vacation> vacationList = vacationRepository.getByDate(startDate.split("T")[0], endDate.split("T")[0]);
 
-        if(vacationList.size()> 0){
-            result.put("available",false);
-            result.put("usersDisplayNames",Utils.writeObjectIntoString(users));
-            responseBuilder.status(ResponseCode.SUCCESS);
-            return responseBuilder.data(result).build();
+            if (vacationList.size() > 0) {
+                result.put("available", false);
+                result.put("usersDisplayNames", Utils.writeObjectIntoString(users));
+                responseBuilder.status(ResponseCode.SUCCESS);
+                return responseBuilder.data(result).build();
+            }
         }
 
         List<MeetingAttendee> attendeeList = meetingAttendeeRepository.getConflictAttendee(startDate,endDate,userEntityId,isExternal);
