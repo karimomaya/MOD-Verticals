@@ -1,6 +1,5 @@
 package com.mod.rest.model;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +10,7 @@ import javax.persistence.Id;
  */
 
 @Entity
-@Immutable
+
 public class Lookup {
     @Id
     Long Id;

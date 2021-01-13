@@ -2,7 +2,6 @@ package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
 import com.mod.rest.system.Utils;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +16,6 @@ import java.util.Date;
  */
 
 @Entity
-@Immutable
 public class CandidateDataReport {
     @Id
     Long candidateId;

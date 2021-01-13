@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-@Immutable
+
 @Table(name = "MOD_SYS_OC_DB_Role_User_V")
 public class User implements Serializable {
     @Id

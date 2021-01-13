@@ -2,7 +2,7 @@ package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
 import com.mod.rest.system.Utils;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+
 
 import javax.persistence.*;
 import java.text.DateFormat;
@@ -15,7 +15,7 @@ import java.util.Date;
  */
 
 @Entity
-@Immutable
+
 public class PurchaseOrderReport {
     @Id
     Long POID;

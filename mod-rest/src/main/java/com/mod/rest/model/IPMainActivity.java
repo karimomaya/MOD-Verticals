@@ -2,7 +2,7 @@ package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
 import com.mod.rest.system.Utils;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+
 import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -13,7 +13,7 @@ import java.util.Date;
  */
 
 @Entity
-@Immutable
+
 @Data
 public class IPMainActivity {
     @Id

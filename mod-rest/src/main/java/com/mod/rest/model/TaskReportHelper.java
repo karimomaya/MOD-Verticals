@@ -25,7 +25,7 @@ import java.util.Locale;
 @Getter
 @Setter
 @Entity
-@Immutable
+
 public class TaskReportHelper {
     @Id
     long Id;

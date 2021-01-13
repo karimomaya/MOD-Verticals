@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 
 @Entity
-@Immutable
+
 public class TechnicalSupportReport {
     @Id
     Long Id;

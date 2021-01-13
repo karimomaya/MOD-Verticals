@@ -2,7 +2,7 @@ package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
 import com.mod.rest.system.Utils;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -18,7 +18,7 @@ import java.util.Date;
  */
 
 @Entity
-@Immutable
+
 @Data
 public class IPStrategicGoal {
     @Id

@@ -1,7 +1,7 @@
 package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+
 import lombok.Data;
 import com.mod.rest.system.Utils;
 
@@ -16,7 +16,7 @@ import java.util.Date;
  * Created by abdallah.shaaban on 9/1/2020.
  */
 @Entity
-@Immutable
+
 @Data
 public class InstitutionalSupportHousingUnitStatusReport {
     @Id

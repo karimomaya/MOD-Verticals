@@ -2,7 +2,7 @@ package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
 import com.mod.rest.system.Utils;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+
 import lombok.Data;
 
 import javax.persistence.Entity;
@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
  * Created by abdallah.shaaban on 7/26/2020.
  */
 @Entity
-@Immutable
+
 @Data
 public class IPOperationalIndicatorReport {
     @Id

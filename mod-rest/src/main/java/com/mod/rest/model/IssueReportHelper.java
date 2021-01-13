@@ -17,7 +17,7 @@ import org.hibernate.annotations.NotFoundAction;
 @Getter
 @Setter
 @Entity
-@Immutable
+
 public class IssueReportHelper {
 
     @Id

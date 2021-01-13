@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @Entity
-@Immutable
+
 public class Statistics {
     @Id
     @Column(name="id")

@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Immutable
+
 public class TaskPerformerHelper {
     @Id
     @Column(name="Id")

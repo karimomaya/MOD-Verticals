@@ -17,7 +17,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Immutable
+
 public class TaskWithPerformer {
     @Id
     @Column(name="RowNum")

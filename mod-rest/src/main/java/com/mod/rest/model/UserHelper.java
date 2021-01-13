@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @Entity
-@Immutable
+
 public class UserHelper {
     @Id
     @Column(name="UserEntityId")

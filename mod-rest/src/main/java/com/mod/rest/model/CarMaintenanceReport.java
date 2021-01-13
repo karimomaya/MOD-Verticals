@@ -2,7 +2,7 @@ package com.mod.rest.model;
 
 import com.mod.rest.annotation.ColumnName;
 import com.mod.rest.system.Utils;
-import jdk.nashorn.internal.ir.annotations.Immutable;
+
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -11,7 +11,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-@Immutable
+
 public class CarMaintenanceReport {
     @Id
     Long Id;
