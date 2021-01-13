@@ -50,11 +50,11 @@ public class TrainingYearlyEvaluationReportController {
         byte[] bytes = null;
         try{
             List<TrainingYearlyEvaluationReport> trainingYearlyEvaluationReports = trainingYearlyEvaluationRepository.getTrainingYearlyEvaluationReport(startDate, endDate);
-            System.out.println(trainingYearlyEvaluationReports);
 
-//            lookupService.substituteLookupIds(trainingYearlyEvaluationReports, "analysisEvaluation", "summaryLecturersOverallScore", lang);
-//            lookupService.substituteLookupIds(trainingYearlyEvaluationReports, "analysisEvaluation", "summaryCoursesOverallScore", lang);
-//            lookupService.substituteLookupIds(trainingYearlyEvaluationReports, "trainingEvaluation", "averageUserEval", lang);
+
+            lookupService.substituteLookupIds(trainingYearlyEvaluationReports, "trainingEvaluation", "summaryLecturersOverallScore", lang);
+            lookupService.substituteLookupIds(trainingYearlyEvaluationReports, "trainingEvaluation", "summaryCoursesOverallScore", lang);
+            lookupService.substituteLookupIds(trainingYearlyEvaluationReports, "analysisEvaluation", "averageUserEval", lang);
 
             file = excelWriterService.generate(trainingYearlyEvaluationReports);
 

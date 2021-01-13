@@ -28,19 +28,34 @@ public class PolicyReport {
     Date main_activity;
 
     @ColumnName(order = 1, key = "التسلسل")
-    public String getSerialNumber() { return Utils.removeNullValue(serial_num); }
+    public String getSerialNumber() {
+        String sn = Utils.removeNullValue(serial_num).trim();
+        return sn.isEmpty()? "-" : sn ;
+    }
 
     @ColumnName(order = 2, key = "اسم وثيقة السياسة")
-    public String getTotal() { return policyDocumentName; }
+    public String getTotal() {
+        String sn = Utils.removeNullValue(policyDocumentName).trim();
+        return sn.isEmpty()? "-" : sn ;
+    }
 
     @ColumnName(order = 3, key = "رمز وثيقة السياسة")
-    public String getDocumentCode() { return Utils.removeNullValue(document_code); }
+    public String getDocumentCode() {
+        String sn = Utils.removeNullValue(document_code).trim();
+        return sn.isEmpty()? "-" : sn ;
+    }
 
     @ColumnName(order = 4, key = "تاريخ تنفيذ السياسة")
-    public String getExecutionDate() { return Utils.dateFormat( main_activity, "YYYY-MM-dd")  ; }
+    public String getExecutionDate() {
+        String sn = Utils.dateFormat( main_activity, "YYYY-MM-dd");
+        return sn.isEmpty()? "-" : sn ;
+    }
 
     @ColumnName(order = 5, key = "الهدف من السياسة")
-    public String getGoal() { return Utils.removeNullValue(mainTarget); }
+    public String getGoal() {
+        String sn = Utils.removeNullValue(mainTarget).trim();
+        return sn.isEmpty()? "-" : sn ;
+    }
 
     @ColumnName(order = 6, key = "حالة الخطر الرئيسي")
     public String getmainIssueStatus() {

@@ -117,16 +117,28 @@ public class TrainingYearlyEvaluationReport {
 
     @ColumnName(order = 6, key = "تقييم المحاضر")
     public String getSummaryLecturersOverallScore(){
-        return summaryLecturersOverallScore;
+        if (summaryLecturersOverallScore != null){
+            return summaryLecturersOverallScore.substring(0,1);
+        }else{
+            return summaryLecturersOverallScore;
+        }
+
     }
 
     public void setSummaryLecturersOverallScore(String summaryLecturersOverallScore){
+
         this.summaryLecturersOverallScore = summaryLecturersOverallScore;
     }
 
     @ColumnName(order = 7, key = "تقييم البرنامج التدريبي")
     public String getSummaryCoursesOverallScore(){
-        return Utils.removeNullValue(summaryCoursesOverallScore);
+
+        if (summaryCoursesOverallScore != null){
+            return summaryCoursesOverallScore.substring(0,1);
+        }else{
+            return summaryCoursesOverallScore;
+        }
+
     }
 
     public void setSummaryCoursesOverallScore(String summaryCoursesOverallScore){
@@ -150,7 +162,12 @@ public class TrainingYearlyEvaluationReport {
 
     @ColumnName(order = 11, key = "قياس نقاط الاستفادة")
     public String getAverageUserEval(){
-        return Utils.removeNullValue(averageUserEval);
+
+        if (averageUserEval != null){
+            return averageUserEval.substring(0,1);
+        }else{
+            return averageUserEval;
+        }
     }
 
     public void setAverageUserEval(String averageUserEval){

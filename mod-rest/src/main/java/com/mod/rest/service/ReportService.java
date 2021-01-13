@@ -1232,7 +1232,9 @@ public class ReportService {
             ArrayList completedTasks = new ArrayList();
             ArrayList delayedTasks = new ArrayList();
             ArrayList inProgressTasks = new ArrayList();
-
+            int completedTasksCount = 0;
+            int delayedTasksCount = 0;
+            int inProgressTasksCount = 0;
 //            int[] completedTasks = new int[0];
 //            int[] delayedTasks = new int[0];
 //            int[] inProgressTasks = new int[0];
@@ -1259,19 +1261,24 @@ public class ReportService {
                     if (taskList.size() == 0) continue;
                     else {
                         for (Task task : taskList) {
-                            if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks.add(1);
+                            if (task.getStatus() == 0 ||task.getStatus() == 3 || task.getStatus() == 11 ||task.getStatus() == 12) {
+                                completedTasksCount += 1;
                                 hasCompleted = true;
                             } else if (task.getDueDate().before(new Date())) {
                                 // } else if (task.getDueDate().before(new Date()) && task.getStatus() != 11) {
-                                delayedTasks.add(1);
+                                delayedTasksCount += 1;
                                 hasDelayed = true;
                             } else {
-                                inProgressTasks.add(1);
+                                inProgressTasksCount += 1;
                                 hasProgress = true;
                             }
                         }
-
+                        completedTasks.add(completedTasksCount);
+                        delayedTasks.add(delayedTasksCount);
+                        inProgressTasks.add(inProgressTasksCount);
+                        completedTasksCount = 0;
+                        delayedTasksCount = 0;
+                        inProgressTasksCount = 0;
                         String projectName = riskRepository.findById(Long.parseLong(reportObject.getRiskIds().split(",")[i])).get().getRiskName();
                         xaxis.add(projectName);
                     }
@@ -1312,17 +1319,24 @@ public class ReportService {
                         if (taskList.size() == 0) continue;
                         else {
                             for (Task task : taskList) {
-                                if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                    completedTasks.add(1);
+                                if (task.getStatus() == 0 ||task.getStatus() == 3 || task.getStatus() == 11 ||task.getStatus() == 12) {
+                                    completedTasksCount += 1;
                                     hasCompleted = true;
                                 } else if (task.getDueDate().before(new Date())) {
-                                    delayedTasks.add(1);
+                                    delayedTasksCount += 1;
                                     hasDelayed=true;
                                 } else {
-                                    inProgressTasks.add(1);
+                                    inProgressTasksCount += 1;
                                     hasProgress=true;
                                 }
                             }
+                            completedTasks.add(completedTasksCount);
+                            delayedTasks.add(delayedTasksCount);
+                            inProgressTasks.add(inProgressTasksCount);
+                            completedTasksCount = 0;
+                            delayedTasksCount = 0;
+                            inProgressTasksCount = 0;
+
                             String projectName = riskRepository.findById(risks[i]).get().getRiskName();
                             xaxis.add(projectName);
                         }
@@ -1357,6 +1371,9 @@ public class ReportService {
             ArrayList completedTasks = new ArrayList();
             ArrayList delayedTasks = new ArrayList();
             ArrayList inProgressTasks = new ArrayList();
+            int completedTasksCount = 0;
+            int delayedTasksCount = 0;
+            int inProgressTasksCount = 0;
             String ids = "";
             for (int i=0; i<reportObject.getUsers().length; i++){
                 if (i != 0) ids += ",";
@@ -1374,15 +1391,21 @@ public class ReportService {
                         taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), reportObject.getIssueIds().split(",")[i], ids);
                         if (taskList.size() == 0) continue;
                         for (Task task : taskList) {
-                            if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks.add( 1);
+                            if (task.getStatus() == 0 || task.getStatus() == 3 || task.getStatus() == 11 ||task.getStatus() == 12) {
+                                completedTasksCount += 1;
                             } else if (task.getDueDate().before(new Date())) {
-                                delayedTasks.add(1);
+                                delayedTasksCount += 1;
                             } else {
-                                inProgressTasks.add(1);
+                                inProgressTasksCount += 1;
                             }
 //                        }
                         }
+                    completedTasks.add(completedTasksCount);
+                    delayedTasks.add(delayedTasksCount);
+                    inProgressTasks.add(inProgressTasksCount);
+                    completedTasksCount = 0;
+                    delayedTasksCount = 0;
+                    inProgressTasksCount = 0;
                         String projectName = issueRepository.findById(Long.parseLong(reportObject.getIssueIds().split(",")[i])).get().getIssueName();
                         xaxis.add(projectName);
 
@@ -1399,14 +1422,20 @@ public class ReportService {
                         taskList = taskRepository.getInProgressDelayedClosedTaskIssuesReport(reportObject.getPageNumber(), reportObject.getPageSize(), issue, ids);
                         if (taskList.size() == 0) continue;
                         for (Task task : taskList) {
-                            if (task.getStatus() == 3 || task.getStatus() == 12) {
-                                completedTasks.add( 1);
+                            if (task.getStatus() == 0 || task.getStatus() == 3 || task.getStatus() == 11 || task.getStatus() == 12) {
+                                completedTasksCount += 1;
                             } else if (task.getDueDate().before(new Date())) {
-                                delayedTasks.add(1);
+                                delayedTasksCount +=1;
                             } else {
-                                inProgressTasks.add(1);
+                                inProgressTasksCount += 1;
                             }
                         }
+                    completedTasks.add(completedTasksCount);
+                    delayedTasks.add(delayedTasksCount);
+                    inProgressTasks.add(inProgressTasksCount);
+                    completedTasksCount = 0;
+                    delayedTasksCount = 0;
+                    inProgressTasksCount = 0;
                         String projectName = issueRepository.findById(issues[i]).get().getIssueName();
                         xaxis.add(projectName);
 //                    }

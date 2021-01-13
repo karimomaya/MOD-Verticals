@@ -36,18 +36,21 @@ public class PolicyReportController {
     @Autowired
     Environment env;
 
-    @GetMapping("exportPDF/{startDate}/{endDate}/{userEntityId}/{userUnitId}")
+    @GetMapping("exportPDF/{startDate}/{endDate}/{userEntityId}/{userUnitId}/{pageNumber}/{pageSize}")
     @ResponseBody
     public ResponseEntity<byte[]> generatePolicyPDF(
                                          @PathVariable("startDate") String startDate,
                                          @PathVariable("endDate") String endDate,
                                          @PathVariable("userEntityId") int userEntityId,
-                                         @PathVariable("userUnitId") String userUnitId) {
+                                         @PathVariable("userUnitId") String userUnitId,
+                                         @PathVariable("pageNumber") int pageNumber,
+                                         @PathVariable("pageSize") int pageSize) {
        Date sDate=Utils.convertStringToDate(startDate);
        Date eDate=Utils.convertStringToDate(endDate);
         HttpHeaders respHeaders = new HttpHeaders();
-        ArrayList<PolicyReport> policies =policyReporttRepository.getPolicyReportStatistics("",sDate,eDate,1, Integer.MAX_VALUE,userEntityId,userUnitId );
+        ArrayList<PolicyReport> policies =policyReporttRepository.getPolicyReportStatistics("",sDate,eDate,pageNumber, pageSize,userEntityId,userUnitId );
         String templateName = "";
+        String fname = env.getProperty("policy-management-name");
         if(policies.size() > 0) templateName = pdfService.getTemplateName(policies.get(0));
         System.out.println("get template name: " + templateName);
         try {
@@ -57,7 +60,7 @@ public class PolicyReportController {
             respHeaders.setContentLength(bytes.length);
             respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=attachment.pdf");
+            respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fname+".pdf");
 
             return new ResponseEntity<byte[]>(bytes, respHeaders, HttpStatus.OK);
 
