@@ -153,8 +153,7 @@
                             </tr>
                             <tr class="single-view">
                                 <td class="header"
-                                    style="width: 400px; background-color: #c6c6c6;color: black;">المنصب
-                                    الحالي
+                                    style="width: 400px; background-color: #c6c6c6;color: black;">المنصب الحالي
                                 </td>
                                 <td style="width: 200px;">
                                     <leader-replacer>getCurrentPosition</leader-replacer>
@@ -280,6 +279,276 @@
             </DP>
             <DP-holder>
             </DP-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">أوجه التعاون</th>
+                </tr>
+                </thead>
+            </table>
+            <AC>
+                <AC-remover>
+                    <attribute>cooperation-aspects-replacer</attribute>
+                    <div class="discussion-point template-subject-main">
+                        <table style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">التاريخ
+                                </td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <cooperation-aspects-replacer>getDate</cooperation-aspects-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">أوجه التعاون</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <cooperation-aspects-replacer>getAspectsOfCooperation</cooperation-aspects-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <cooperation-aspects-replacer>getDetails</cooperation-aspects-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </AC-remover>
+            </AC>
+            <AC-holder>
+            </AC-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">شخصيات معنية بملف العرض</th>
+                </tr>
+                </thead>
+            </table>
+            <RP>
+                <RP-remover>
+                    <attribute>related-people-replacer</attribute>
+                    <div class="discussion-point template-subject-main">
+                        <table style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الاسم</td>
+                                <td style="width: 200px;">
+                                    <related-people-replacer>getName</related-people-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">المنصب الحالي
+                                </td>
+                                <td style="width: 200px;">
+                                    <related-people-replacer>getPosition</related-people-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">المكان</td>
+                                <td style="width: 200px;">
+                                    <related-people-replacer>getPlace</related-people-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الهاتف
+                                </td>
+                                <td style="width: 200px;">
+                                    <related-people-replacer>getPhone</related-people-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </RP-remover>
+            </RP>
+            <RP-holder>
+            </RP-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">آخر المستجدات</th>
+                </tr>
+                </thead>
+            </table>
+            <MM>
+                <MM-remover>
+                    <attribute>media-monitoring-replacer</attribute>
+                    <div class="discussion-point template-subject-main">
+                        <table style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عنوان الحدث المستجد
+                                </td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getNewEventTitle</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">التصنيف</td>
+                                <td style="width: 200px;">
+                                    <media-monitoring-replacer>getCategory</media-monitoring-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">التاريخ
+                                </td>
+                                <td style="width: 200px;">
+                                    <media-monitoring-replacer>getDate</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الموضوع</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getSubject</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الخلاصة</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getSynopsis</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">موقف دولة الإمارات العربية المتحدة</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getUAEposition</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">ملاحظات</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getNotes</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </MM-remover>
+            </MM>
+            <MM-holder>
+            </MM-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">نقاط التباحث اللإقليمية</th>
+                </tr>
+                </thead>
+            </table>
+            <RD>
+                <RD-remover>
+                    <attribute>media-monitoring-replacer</attribute>
+                    <div class="discussion-point template-subject-main">
+                        <table style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">التاريخ</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getDate</media-monitoring-replacer>
+                                </td>
+                            </tr><tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الموضوع</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getSubject</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">المختصر</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getBrief</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">موقف دولة الإمارات العربية المتحدة</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getPositionOfUAE</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">ملاحظات</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <media-monitoring-replacer>getNotes</media-monitoring-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </RD-remover>
+            </RD>
+            <RD-holder>
+            </RD-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">اللجان المشتركة</th>
+                </tr>
+                </thead>
+            </table>
+            <JC>
+                <JC-remover>
+                    <attribute>joined-committee-replacer</attribute>
+                    <div class="discussion-point template-subject-main">
+                        <table class="simple-table"
+                               style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th>اسم اللجنة</th>
+                                <th>نوع اللجنة</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 200px;">
+                                    <joined-committee-replacer>getCommitteeName</joined-committee-replacer>
+                                </td>
+                                <td style="width: 400px;">
+                                    <joined-committee-replacer>getCommitteeType</joined-committee-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </JC-remover>
+            </JC>
+            <JC-holder>
+            </JC-holder>
         </div>
     </div>
 </div>
