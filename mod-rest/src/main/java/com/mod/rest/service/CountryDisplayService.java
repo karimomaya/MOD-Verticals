@@ -73,7 +73,11 @@ public class CountryDisplayService {
         lookupService.substituteLookupIds(discussionPointDIAList, "countryLookup", "suggestedBy", "ar");
         // lookupService.substituteLookupIds(mediaMonitoringDIAS,  "countryLookup", "suggestedBy", "ar");
         // lookupService.substituteLookupIds(joinedCommitteeDIAS,  "countryLookup", "suggestedBy", "ar");
+
+
+
 //http://localhost:8081/api/country-display/pdf/32769
+
         try {
             file = pdfService.generate(countryLeaders, file.toURI().getPath(), "CV");
             file = pdfService.generate(discussionPointDIAList, file.toURI().getPath(), "DP");

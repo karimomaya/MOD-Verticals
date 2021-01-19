@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by amira.sherif on 1/13/2021.
@@ -24,5 +25,14 @@ public class JoinedCommitteeDIA {
     String entityBWSId;
     String notes;
     String jointCommittee_to_countryFileBasic_Id;
+
+    @OneToMany
+    @JoinColumn(name = "activityJointCommittee_to_jointCommittee_Id")
+    List<ActivityJointCommittee> activityJointCommittees;
+
+    @OneToMany
+    @JoinColumn(name = "parentEntityId")
+    List<CountryAdditionalData> countryAdditionalDatas;
+
 
 }

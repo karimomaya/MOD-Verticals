@@ -161,7 +161,6 @@
                             </tr>
                             </tbody>
                         </table>
-
                         <table class="simple-table"
                                style="width: 690px;">
                             <thead>
@@ -217,8 +216,6 @@
                             </tr>
                             </tbody>
                         </table>
-
-
                     </div>
                 </CV-remover>
             </CV>
@@ -524,9 +521,25 @@
             <JC>
                 <JC-remover>
                     <attribute>joined-committee-replacer</attribute>
+                    <attribute>getCountryAdditionalDatas</attribute>
+                    <attribute>getActivityJointCommittees</attribute>
+
+                    <getCountryAdditionalDatas-attribute>joined-committee-additional-replacer
+                    </getCountryAdditionalDatas-attribute>
+
+
+                    <getActivityJointCommittees-attribute>joined-committee-activities-replacer
+                    </getActivityJointCommittees-attribute>
+
                     <div class="discussion-point template-subject-main">
-                        <table class="simple-table"
-                               style="width: 690px;">
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">لجنة مشتركة</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table" style="width: 690px;">
                             <thead>
                             <tr>
                                 <th>اسم اللجنة</th>
@@ -540,6 +553,66 @@
                                 </td>
                                 <td style="width: 400px;">
                                     <joined-committee-replacer>getCommitteeType</joined-committee-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table" style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr class="single-view">
+                                <td class="header"
+                                    style="width: 400px; background-color: #c6c6c6;color: black;">العنوان</td>
+                                <td style="width: 200px;">
+                                    <joined-committee-additional-replacer>getTitle</joined-committee-additional-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td class="header"
+                                    style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
+                                <td style="width: 200px;">
+                                    <joined-committee-additional-replacer>getDetails</joined-committee-additional-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">مختصر أنشطة التعاون</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table" style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عنوان النشاط</td>
+                                <td style="width: 200px;">
+                                    <joined-committee-activities-replacer>getActivity</joined-committee-activities-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">التاريخ
+                                </td>
+                                <td style="width: 200px;">
+                                    <joined-committee-activities-replacer>getDate</joined-committee-activities-replacer>
                                 </td>
                             </tr>
                             </tbody>
