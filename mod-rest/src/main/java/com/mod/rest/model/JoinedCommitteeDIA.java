@@ -3,7 +3,6 @@ package com.mod.rest.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -22,7 +21,6 @@ public class JoinedCommitteeDIA {
     String committeeNumber;
     String committeeType;
     String countryName;
-    String entityBWSId;
     String notes;
     String jointCommittee_to_countryFileBasic_Id;
 
@@ -31,8 +29,12 @@ public class JoinedCommitteeDIA {
     List<ActivityJointCommittee> activityJointCommittees;
 
     @OneToMany
+    @JoinColumn(name = "committeeMeeting_to_jointCommittee_Id")
+    List<MeetingsJointCommitteeDIA> meetingsJointCommittees;
+
+    @OneToMany
     @JoinColumn(name = "parentEntityId")
-    List<CountryAdditionalData> countryAdditionalDatas;
+    List<CountryAdditionalData> countryAdditionalData;
 
 
 }

@@ -195,25 +195,37 @@
                             </tr>
                             </thead>
                             <tbody>
-
-                            <tr class="single-view">
-                                <td class="header"
-                                    style="width: 400px; background-color: #c6c6c6;color: black;">
-                                    العنوان
-                                </td>
-                                <td style="width: 200px;">
-                                    <leaderAdditionalData-replacer>getTitle</leaderAdditionalData-replacer>
-                                </td>
-                            </tr>
-                            <tr class="single-view">
-                                <td class="header"
-                                    style="width: 400px; background-color: #c6c6c6;color: black;">
-                                    التفاصيل
-                                </td>
-                                <td style="width: 200px;">
-                                    <leaderAdditionalData-replacer>getDetails</leaderAdditionalData-replacer>
-                                </td>
-                            </tr>
+                            <table class="simple-table"
+                                   style="width: 690px;">
+                                <thead>
+                                <tr>
+                                    <th  style="width: 400px;">العنوان</th>
+                                    <th  style="width: 200px;">التفاصيل</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <leaderAdditionalData-replacer>getTitle</leaderAdditionalData-replacer>
+                                <leaderAdditionalData-replacer>getDetails</leaderAdditionalData-replacer>
+                                </tbody>
+                            </table>
+                            <!--<tr class="single-view">-->
+                                <!--<td class="header"-->
+                                    <!--style="width: 400px; background-color: #c6c6c6;color: black;">-->
+                                    <!--العنوان-->
+                                <!--</td>-->
+                                <!--<td style="width: 200px;">-->
+                                    <!--<leaderAdditionalData-replacer>getTitle</leaderAdditionalData-replacer>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                            <!--<tr class="single-view">-->
+                                <!--<td class="header"-->
+                                    <!--style="width: 400px; background-color: #c6c6c6;color: black;">-->
+                                    <!--التفاصيل-->
+                                <!--</td>-->
+                                <!--<td style="width: 200px;">-->
+                                    <!--<leaderAdditionalData-replacer>getDetails</leaderAdditionalData-replacer>-->
+                                <!--</td>-->
+                            <!--</tr>-->
                             </tbody>
                         </table>
                     </div>
@@ -521,15 +533,19 @@
             <JC>
                 <JC-remover>
                     <attribute>joined-committee-replacer</attribute>
-                    <attribute>getCountryAdditionalDatas</attribute>
+                    <attribute>getCountryAdditionalData</attribute>
                     <attribute>getActivityJointCommittees</attribute>
+                    <attribute>getMeetingsJointCommittees</attribute>
 
-                    <getCountryAdditionalDatas-attribute>joined-committee-additional-replacer
-                    </getCountryAdditionalDatas-attribute>
+                    <getCountryAdditionalData-attribute>joined-committee-additional-replacer
+                    </getCountryAdditionalData-attribute>
 
 
                     <getActivityJointCommittees-attribute>joined-committee-activities-replacer
                     </getActivityJointCommittees-attribute>
+
+                    <getMeetingsJointCommittees-attribute>joined-committee-meeting-replacer
+                    </getMeetingsJointCommittees-attribute>
 
                     <div class="discussion-point template-subject-main">
                         <table style="border: 0;width: 690px;">
@@ -564,29 +580,17 @@
                             </tr>
                             </thead>
                         </table>
-                        <table class="simple-table" style="width: 690px;">
+                        <table class="simple-table"
+                               style="width: 690px;">
                             <thead>
                             <tr>
-                                <th></th>
-                                <th></th>
+                                <th  style="width: 400px;">العنوان</th>
+                                <th  style="width: 200px;">التفاصيل</th>
                             </tr>
                             </thead>
                             <tbody>
-
-                            <tr class="single-view">
-                                <td class="header"
-                                    style="width: 400px; background-color: #c6c6c6;color: black;">العنوان</td>
-                                <td style="width: 200px;">
-                                    <joined-committee-additional-replacer>getTitle</joined-committee-additional-replacer>
-                                </td>
-                            </tr>
-                            <tr class="single-view">
-                                <td class="header"
-                                    style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                <td style="width: 200px;">
-                                    <joined-committee-additional-replacer>getDetails</joined-committee-additional-replacer>
-                                </td>
-                            </tr>
+                                <joined-committee-additional-replacer>getTitle</joined-committee-additional-replacer>
+                                <joined-committee-additional-replacer>getDetails</joined-committee-additional-replacer>
                             </tbody>
                         </table>
                         <table style="border: 0;width: 690px;">
@@ -596,25 +600,75 @@
                             </tr>
                             </thead>
                         </table>
-                        <table class="simple-table" style="width: 690px;">
+                        <table class="simple-table"
+                               style="width: 690px;">
                             <thead>
                             <tr>
-                                <th></th>
+                                <th  style="width: 400px;">عنوان النشاط</th>
+                                <th  style="width: 200px;">التاريخ</th>
                             </tr>
                             </thead>
                             <tbody>
+                            <joined-committee-activities-replacer>getActivity</joined-committee-activities-replacer>
+                            <joined-committee-activities-replacer>getDate</joined-committee-activities-replacer>
+                            </tbody>
+                        </table>
+                        <!--<table class="simple-table" style="width: 690px;">-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--<th></th>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <!--<tbody>-->
 
-                            <tr class="single-view">
-                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عنوان النشاط</td>
-                                <td style="width: 200px;">
-                                    <joined-committee-activities-replacer>getActivity</joined-committee-activities-replacer>
-                                </td>
-                                <td style="width: 400px; background-color: #c6c6c6;color: black;">التاريخ
-                                </td>
-                                <td style="width: 200px;">
-                                    <joined-committee-activities-replacer>getDate</joined-committee-activities-replacer>
-                                </td>
+                            <!--<tr class="single-view">-->
+                                <!--<td style="width: 400px; background-color: #c6c6c6;color: black;">عنوان النشاط</td>-->
+                                <!--<td style="width: 200px;">-->
+                                    <!--<joined-committee-activities-replacer>getActivity</joined-committee-activities-replacer>-->
+                                <!--</td>-->
+                                <!--<td style="width: 400px; background-color: #c6c6c6;color: black;">التاريخ-->
+                                <!--</td>-->
+                                <!--<td style="width: 200px;">-->
+                                    <!--<joined-committee-activities-replacer>getDate</joined-committee-activities-replacer>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                            <!--</tbody>-->
+                        <!--</table>-->
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">الإجتماعات</th>
                             </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table" style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th style="width: 200px;">الحدث</th>
+                                <th style="width: 200px;">التصنيف</th>
+                                <th style="width: 400px;">التاريخ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--<tr class="single-view">-->
+                                <!--<td style="width: 400px; background-color: #c6c6c6;color: black;">الحدث-->
+                                <!--</td>-->
+                                <!--<td colspan="3"-->
+                                    <!--style="width: 200px;">-->
+                                    <joined-committee-meeting-replacer>getEvent</joined-committee-meeting-replacer>
+                                <!--</td>-->
+                            <!--</tr>-->
+                            <!--<tr class="single-view">-->
+                                <!--<td style="width: 200px; background-color: #c6c6c6;color: black;">التصنيف</td>-->
+                                <!--<td style="width: 200px;">-->
+                                    <joined-committee-meeting-replacer>getPlace</joined-committee-meeting-replacer>
+                                <!--</td>-->
+                                <!--<td style="width: 200px; background-color: #c6c6c6;color: black;">التاريخ-->
+                                <!--</td>-->
+                                <!--<td style="width: 200px;">-->
+                                    <joined-committee-meeting-replacer>getDate</joined-committee-meeting-replacer>
+                                <!--</td>-->
+                            <!--</tr>-->
                             </tbody>
                         </table>
                     </div>
@@ -622,6 +676,369 @@
             </JC>
             <JC-holder>
             </JC-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">اللجان المشتركة</th>
+                </tr>
+                </thead>
+            </table>
+            <PM>
+                <PM-remover>
+                    <attribute>previous-meetings-replacer</attribute>
+                    <attribute>getCountryAdditionalDataDIA</attribute>
+                    <attribute>getMeetingsResultsDIA</attribute>
+
+                    <getCountryAdditionalDataDIA-attribute>previous-meetings-additional-replacer
+                    </getCountryAdditionalDataDIA-attribute>
+
+                    <getMeetingsResultsDIA-attribute>previous-meetings-results-replacer
+                    </getMeetingsResultsDIA-attribute>
+
+                    <div class="discussion-point template-subject-main">
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">إجتماع سابق</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table" style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th>عنوان الإجتماع</th>
+                                <th>التاريخ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 200px;">
+                                    <previous-meetings-replacer>getMeetingTitle</previous-meetings-replacer>
+                                </td>
+                                <td style="width: 400px;">
+                                    <previous-meetings-replacer>getDate</previous-meetings-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">نتيجة إجتماع</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table"
+                               style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">النتيجة</td>
+                                <td style="width: 200px;">
+                                    <previous-meetings-results-replacer>getResult</previous-meetings-results-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الوضع</td>
+                                <td style="width: 200px;">
+                                    <previous-meetings-results-replacer>getSituation</previous-meetings-results-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <previous-meetings-results-replacer>getNotes</previous-meetings-results-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table"
+                               style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th  style="width: 400px;">العنوان</th>
+                                <th  style="width: 200px;">التفاصيل</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <previous-meetings-additional-replacer>getTitle</previous-meetings-additional-replacer>
+                            <previous-meetings-additional-replacer>getDetails</previous-meetings-additional-replacer>
+                            </tbody>
+                        </table>
+                    </div>
+                </PM-remover>
+            </PM>
+            <PM-holder>
+            </PM-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">موقف القوات</th>
+                </tr>
+                </thead>
+            </table>
+            <TS>
+                <TS-remover>
+                    <attribute>troops-replacer</attribute>
+                    <attribute>getTroopsSituationDIAS</attribute>
+
+                    <getTroopsSituationDIAS-attribute>troops-situation-replacer
+                    </getTroopsSituationDIAS-attribute>
+
+                    <div class="discussion-point template-subject-main">
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">وثيقة القوات</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table" style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th>عنوان الوثيقة</th>
+                                <th>جهة الإصدار</th>
+                                <th>التاريخ</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 200px;">
+                                    <troops-replacer>getTitle</troops-replacer>
+                                </td>
+                                <td style="width: 400px;">
+                                    <troops-replacer>getIssuer</troops-replacer>
+                                </td>
+                                <td style="width: 400px;">
+                                    <troops-replacer>getDate</troops-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">معسكر</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table"
+                               style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عدد الضباط</td>
+                                <td style="width: 200px;">
+                                    <troops-situation-replacer>getNumOfOfficers</troops-situation-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عدد ضباط الصف</td>
+                                <td style="width: 200px;">
+                                    <troops-situation-replacer>getNumOfNoncommissionedOfficers</troops-situation-replacer>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عدد المدنيين</td>
+                                <td style="width: 200px;">
+                                    <troops-situation-replacer>getNumOfCivillians</troops-situation-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عدد الطائرات</td>
+                                <td style="width: 200px;">
+                                    <troops-situation-replacer>getNumberOfAircraft</troops-situation-replacer>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عدد السفن</td>
+                                <td style="width: 200px;">
+                                    <troops-situation-replacer>getNumberOfVessels</troops-situation-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">عدد المعدات</td>
+                                <td style="width: 200px;">
+                                    <troops-situation-replacer>getHardware</troops-situation-replacer>
+                                </td>
+
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">إجمالي القوات</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <troops-situation-replacer>getTotalTroops</troops-situation-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <troops-situation-replacer>getNotes</troops-situation-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </TS-remover>
+            </TS>
+            <TS-holder>
+            </TS-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">مختصر الوثائق القانونية</th>
+                </tr>
+                </thead>
+            </table>
+            <LD>
+                <LD-remover>
+                    <attribute>legal-documents-replacer</attribute>
+                    <div class="discussion-point template-subject-main">
+                        <table class="simple-table" style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th>عنوان الوثيقة</th>
+                                <th>نوع الوثيقة</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 200px;">
+                                    <legal-documents-replacer>getTitle</legal-documents-replacer>
+                                </td>
+                                <td style="width: 400px;">
+                                    <legal-documents-replacer>getDocumentType</legal-documents-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="simple-table"
+                               style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">تاريخ البدء</td>
+                                <td style="width: 200px;">
+                                    <legal-documents-replacer>getStartDate</legal-documents-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">تاريخ الإنتهاء</td>
+                                <td style="width: 200px;">
+                                    <legal-documents-replacer>getEndDate</legal-documents-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <legal-documents-replacer>getNotes</legal-documents-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </LD-remover>
+            </LD>
+            <LD-holder>
+            </LD-holder>
+            <table style="border: 0;width: 690px;">
+                <thead style="background-color: #b68a35;color: white; ">
+                <tr style="background-color: #b68a35;color: white; ">
+                    <th style="background-color: #b68a35;color: white; ">التقارير</th>
+                </tr>
+                </thead>
+            </table>
+            <RPT>
+                <RPT-remover>
+                    <attribute>reports-replacer</attribute>
+                    <attribute>getCountryAdditionalData</attribute>
+                    <getCountryAdditionalData-attribute>reports-additional-replacer
+                    </getCountryAdditionalData-attribute>
+                    <div class="discussion-point template-subject-main">
+                        <table class="simple-table" style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th>عنوان التقرير</th>
+                                <th>نوع التقرير</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 200px;">
+                                    <reports-replacer>getTitle</reports-replacer>
+                                </td>
+                                <td style="width: 400px;">
+                                    <reports-replacer>getReportType</reports-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table class="simple-table"
+                               style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">جهة إصدار التقرير</td>
+                                <td style="width: 200px;">
+                                    <reports-replacer>getReportIssuer</reports-replacer>
+                                </td>
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">التاريخ</td>
+                                <td style="width: 200px;">
+                                    <reports-replacer>getDate</reports-replacer>
+                                </td>
+                            </tr>
+                            <tr class="single-view">
+                                <td style="width: 400px; background-color: #c6c6c6;color: black;">الخلاصة</td>
+                                <td colspan="3"
+                                    style="width: 200px;">
+                                    <reports-replacer>getConclusion</reports-replacer>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <table style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="simple-table"
+                               style="width: 690px;">
+                            <thead>
+                            <tr>
+                                <th  style="width: 400px;">العنوان</th>
+                                <th  style="width: 200px;">التفاصيل</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <reports-additional-replacer>getTitle</reports-additional-replacer>
+                            <reports-additional-replacer>getDetails</reports-additional-replacer>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </RPT-remover>
+            </RPT>
+            <RPT-holder>
+            </RPT-holder>
         </div>
     </div>
 </div>

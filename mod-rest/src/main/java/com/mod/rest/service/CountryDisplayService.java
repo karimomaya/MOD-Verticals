@@ -36,9 +36,19 @@ public class CountryDisplayService {
     RegionalTalkingPointsDIARepository rdRepo;
     @Autowired
     JointCommitteeDIARepository jcRepo;
+    @Autowired
+    PreviousMeetingsDIARepository pmRepo;
+    @Autowired
+    TroopsDIARepository tsRepo;
+    @Autowired
+    LegalDocumentsDIARepository ldRepo;
+    @Autowired
+    ReportsDIARepository rptRepo;
+
 
     public ResponseEntity<byte[]> generatePDF(Long id) {
-        List<String> sections = new LinkedList<String>(Arrays.asList("DP", "CV", "AC", "RP", "MM", "RD", "JC"));
+        List<String> sections = new LinkedList<String>(Arrays.asList("DP", "CV", "AC", "RP", "MM", "RD", "JC",
+                "PM", "TS", "LD", "RPT"));
 
 
         Optional<CountryDisplay> displayOptional = countryDisplayRepository.findById(id);
@@ -61,6 +71,7 @@ public class CountryDisplayService {
                 e.printStackTrace();
             }
         }
+
         List <CountryLeader> countryLeaders = leaderRepo.getCountryLeaderByDisplayFileId(0, Integer.MAX_VALUE, id);
         List <DiscussionPointDIA> discussionPointDIAList = dpRepo.getDiscussionPointDIAByCountryDisplayFileId(id);
         List <AspectsOfCooperationDIA> aspectsOfCooperations = acRepo.getAspectsOfCooperationDIAByCountryDisplayFileId(id);
@@ -68,9 +79,14 @@ public class CountryDisplayService {
         List <MediaMonitoringDIA> mediaMonitoringDIAS = mmRepo.getMediaMonitoringDIAByCountryDisplayFileId(id);
         List <RegionalTalkingPointsDIA> regionalTalkingPointsDIAS = rdRepo.getRegionalTalkingPointsDIAByCountryDisplayFileId(id);
         List <JoinedCommitteeDIA> joinedCommitteeDIAS = jcRepo.getJointCommitteeDIAByCountryDisplayFileId(id);
+        List <PreviousMeetingsDIA> previousMeetingsDIAS = pmRepo.getPreviousMeetingsDIAByCountryDisplayFileId(id);
+        List <TroopsDIA> troopsDIAS = tsRepo.getTroopsDIAByCountryDisplayFileId(id);
+        List <LegalDocumentsDIA> legalDocumentsDIAS = ldRepo.getLegalDocumentsDIAByCountryDisplayFileId(id);
+        List <ReportsDIA> reportsDIAS = rptRepo.getReportsDIAByCountryDisplayFileId(id);
 
-        lookupService.substituteLookupIds(discussionPointDIAList, "discussionPointField", "field", "ar");
-        lookupService.substituteLookupIds(discussionPointDIAList, "countryLookup", "suggestedBy", "ar");
+
+//        lookupService.substituteLookupIds(discussionPointDIAList, "discussionPointField", "field", "ar");
+//        lookupService.substituteLookupIds(discussionPointDIAList, "countryLookup", "suggestedBy", "ar");
         // lookupService.substituteLookupIds(mediaMonitoringDIAS,  "countryLookup", "suggestedBy", "ar");
         // lookupService.substituteLookupIds(joinedCommitteeDIAS,  "countryLookup", "suggestedBy", "ar");
 
@@ -86,6 +102,10 @@ public class CountryDisplayService {
             file = pdfService.generate(mediaMonitoringDIAS, file.toURI().getPath(), "MM");
             file = pdfService.generate(regionalTalkingPointsDIAS, file.toURI().getPath(), "RD");
             file = pdfService.generate(joinedCommitteeDIAS, file.toURI().getPath(), "JC");
+            file = pdfService.generate(previousMeetingsDIAS, file.toURI().getPath(), "PM");
+            file = pdfService.generate(troopsDIAS, file.toURI().getPath(), "TS");
+            file = pdfService.generate(legalDocumentsDIAS, file.toURI().getPath(), "LD");
+            file = pdfService.generate(reportsDIAS, file.toURI().getPath(), "RPT");
 
         } catch (Exception e) {
             e.printStackTrace();
