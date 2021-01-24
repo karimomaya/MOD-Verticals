@@ -30,19 +30,17 @@ import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-//import org.w3c.dom.ls.DOMImplementationLS;
-//import org.w3c.dom.ls.LSSerializer;
 
-import javax.xml.transform.*;
-//import javax.xml.transform.dom.DOMSource;
-//import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import javax.xml.transform.TransformerException;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.charset.Charset;
-//import java.nio.charset.StandardCharsets;
-//import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 //import java.util.regex.Pattern;
@@ -63,7 +61,7 @@ public class PDFService implements PDFServiceI {
             Node element = document.getElementsByTagName(tagname).item(0);
             element.getParentNode().removeChild(element);
         } catch (Exception ex) {
-            log.warn("Couldn't find Node by tag name: "+ tagname);
+            log.warn("Couldn't find Node by tag name: " + tagname);
             log.error(ex.getMessage());
             ex.printStackTrace();
         }
@@ -81,16 +79,16 @@ public class PDFService implements PDFServiceI {
         }
     }
 
-    public String getFileName(Object object){
-            Class cls = object.getClass();
-            String filename= "";
-            try {
-                filename = config.getProperty( cls.getSimpleName());
-            }catch (Exception ex){
-                filename = cls.getSimpleName();
-            }
-            if (filename == null)filename = cls.getSimpleName();
-            return filename;
+    public String getFileName(Object object) {
+        Class cls = object.getClass();
+        String filename = "";
+        try {
+            filename = config.getProperty(cls.getSimpleName());
+        } catch (Exception ex) {
+            filename = cls.getSimpleName();
+        }
+        if (filename == null) filename = cls.getSimpleName();
+        return filename;
     }
 
     public File generate(List<?> objects, String filename, String tagName) throws Exception {
@@ -103,18 +101,64 @@ public class PDFService implements PDFServiceI {
             return removeNodeByTagName(filename, tagName + "-replacer");
         }
         String nodeName = nodes.item(0).getParentNode().getNodeName();
-        if (nodeName.equals("tbody")) {
+
+        if (nodes.item(0).getAttributes().getLength() > 0) {
+            handleRedundancyTable(document, objects, nodes, tagName + "-replacer");
+        } else if (nodeName.equals("tbody")) {
             handlePDFTable(document, objects, nodes);
         } else if (nodeName.equals("tr")) {
             handlePDFTableRow(document, objects, nodes);
-        } else if (nodeName.equals("img")){
-            handlePDFImage(document,objects,nodes);
-        }else {
+        } else if (nodeName.equals("img")) {
+            handlePDFImage(document, objects, nodes);
+        } else {
             handlePDFTableParag(document, objects, nodes);
         }
 
 
         return Utils.writeXMLDocumentToTempFile(document);
+    }
+
+    public org.w3c.dom.Document handleRedundancyTable(org.w3c.dom.Document document, List<?> objects, NodeList nodes, String attr) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        Node tableNode = nodes.item(0).getParentNode().getParentNode().getParentNode().getParentNode();
+        String holder = tableNode.getAttributes().getNamedItem("holder").getTextContent();
+        String html = Utils.getInnerHTML(tableNode.getParentNode().getParentNode());
+        Node toBeDeleted = tableNode.getParentNode().getParentNode();
+        while (toBeDeleted.getChildNodes().getLength() > 0) {
+            toBeDeleted.getChildNodes().item(0).getParentNode().removeChild(toBeDeleted.getChildNodes().item(0));
+        }
+        toBeDeleted.getParentNode().removeChild(toBeDeleted);
+        for (Object object : objects) {
+            org.w3c.dom.Document tempDoc = Utils.convertStringToXMLDocument(html);
+            NodeList nodeList = tempDoc.getElementsByTagName(attr);
+            String nodeName = nodeList.item(0).getParentNode().getNodeName();
+            List<Object> o = new ArrayList<>();
+            o.add(object);
+
+            switch (nodeName) {
+                case "tbody":
+                    handlePDFTable(tempDoc, o, nodeList);
+                    break;
+                case "tr":
+                    handlePDFTableRow(tempDoc, o, nodeList);
+                    break;
+                case "img":
+                    handlePDFImage(tempDoc, o, nodeList);
+                    break;
+                default:
+                    handlePDFTableParag(tempDoc, o, nodeList);
+                    break;
+            }
+
+//            handlePDFTableParag(tempDoc, o, nodeList);
+            org.jsoup.nodes.Document jsoupDoc = Jsoup.parse(Utils.convertXMLDocumentToString(document), "", Parser.xmlParser());
+            org.jsoup.nodes.Element element = jsoupDoc.getElementsByTag(holder).get(0);
+
+            element.append(Utils.getInnerHTML(tempDoc.getFirstChild()));
+            document = Utils.convertStringToXMLDocument(jsoupDoc.html());
+            System.out.println("updated document object");
+
+        }
+        return document;
     }
 
     protected void handlePDFTableParag(org.w3c.dom.Document document, List<?> objects, NodeList nodes) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -142,18 +186,18 @@ public class PDFService implements PDFServiceI {
                     }
                 }
 
-                String[]  innerTexts = innerText.split("\\n");
+                String[] innerTexts = innerText.split("\\n");
 
-                if (innerTexts.length > 1){
-                    for (int j=0 ; j< innerTexts.length; j++){
+                if (innerTexts.length > 1) {
+                    for (int j = 0; j < innerTexts.length; j++) {
                         Element p = document.createElement("p");
                         p.setAttribute("dir", "rtl");
-                        if (isEnglishFont) p.setAttribute("class","english-font");
+                        if (isEnglishFont) p.setAttribute("class", "english-font");
 
                         p.setTextContent(innerTexts[j]);
                         parent.appendChild(p);
                     }
-                }else {
+                } else {
                     div.setTextContent(innerText);
                     parent.appendChild(div);
                 }
@@ -213,7 +257,7 @@ public class PDFService implements PDFServiceI {
                 if (!o.equals("")) {
                     String imgSource = extractText(o);
                     parent.setAttribute("src", "UAElogo.png");
-                }else {
+                } else {
                     parent.setAttribute("src", "UAElogo.png");
                 }
 //                parent.appendChild(img);
@@ -264,7 +308,7 @@ public class PDFService implements PDFServiceI {
                     td.setTextContent(innerText);
                     tr.appendChild(td);
                 } catch (Exception ex) {
-                    log.warn("Couldn't execute method in object: "+ object.getClass().getSimpleName() );
+                    log.warn("Couldn't execute method in object: " + object.getClass().getSimpleName());
                     log.error(ex.getMessage());
                     notAddd = true;
                 }
@@ -339,7 +383,7 @@ public class PDFService implements PDFServiceI {
 
             XMLWorker worker = new XMLWorker(css, true);
             XMLParser p = new XMLParser(worker);
-            p.parse(new FileInputStream(filename), Charset.forName("UTF-8"));
+            p.parse(new FileInputStream(filename), StandardCharsets.UTF_8);
 
             document.close();
         } catch (IOException e) {

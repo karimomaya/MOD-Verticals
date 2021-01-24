@@ -71,9 +71,9 @@ public class PDFServiceEx implements PDFServiceI {
                         pdfService.handlePDFTable(tempDoc, o, attrNodeList);
                     } else if (nodeName.equals("tr")) {
                         pdfService.handlePDFTableRow(tempDoc, o, attrNodeList);
-                    } else if (nodeName.equals("img")){
-                        pdfService.handlePDFImage(tempDoc,o,attrNodeList);
-                    }else {
+                    } else if (nodeName.equals("img")) {
+                        pdfService.handlePDFImage(tempDoc, o, attrNodeList);
+                    } else {
                         pdfService.handlePDFTableParag(tempDoc, o, attrNodeList);
                     }
 
@@ -92,8 +92,6 @@ public class PDFServiceEx implements PDFServiceI {
             org.jsoup.nodes.Element element = jsoupDoc.getElementsByTag(tagName + "-holder").get(0);
 
             element.append(Utils.getInnerHTML(tempDoc.getFirstChild()));
-//            String html = jsoupDoc.html().replaceAll("</META>", "");
-//            html = html.replaceAll("<META content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\">", "");
             document = Utils.convertStringToXMLDocument(jsoupDoc.html());
             System.out.println("updated document object");
 
@@ -131,8 +129,9 @@ public class PDFServiceEx implements PDFServiceI {
             attrNodeList = tempDoc.getElementsByTagName(attribute);
 
             String nodeName = attrNodeList.item(0).getParentNode().getNodeName();
-
-            if (nodeName.equals("tbody")) {
+            if (attrNodeList.item(0).getAttributes().getLength() > 0) {
+                tempDoc = pdfService.handleRedundancyTable(tempDoc, objects, attrNodeList, attribute);
+            } else if (nodeName.equals("tbody")) {
                 pdfService.handlePDFTable(tempDoc, objects, attrNodeList);
 
             } else if (nodeName.equals("tr")) {

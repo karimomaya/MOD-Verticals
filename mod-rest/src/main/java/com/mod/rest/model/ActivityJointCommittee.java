@@ -20,3 +20,4 @@ public class ActivityJointCommittee {
     Date date;
     Long activityJointCommittee_to_jointCommittee_Id;
 }
+
