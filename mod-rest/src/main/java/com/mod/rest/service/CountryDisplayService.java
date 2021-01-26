@@ -1,9 +1,6 @@
 package com.mod.rest.service;
 
-import com.mod.rest.dto.ActivityJointCommitteeDto;
-import com.mod.rest.dto.CountryAdditionalDto;
-import com.mod.rest.dto.HumanAidDto;
-import com.mod.rest.dto.VisitsDto;
+import com.mod.rest.dto.*;
 import com.mod.rest.model.*;
 import com.mod.rest.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,19 +55,22 @@ public class CountryDisplayService {
     CooperationImportanceDIARepository ciRepo;
     @Autowired
     CountryAdditionalRepository caRepo;
-//    @Autowired
-//    ActivityJointCommitteeRepository ajRepo;
+    @Autowired
+    CountryRepository cRepo;
     @Autowired
     HumanAidDIARepository haRepo;
     @Autowired
     ActivityJointCommitteeRepository ajRepo;
     @Autowired
     VisitsDIARepository vRepo;
-
+    @Autowired
+    TrainingAndCoursesDIARepository tcRepo;
+    @Autowired
+    HistoryOfCommonRelationDIARepository hcRepo;
     public ResponseEntity<byte[]> generatePDF(Long id) {
         List<String> sections = new LinkedList<String>(Arrays.asList("DP", "CV", "AC", "RP", "MM", "RD", "JC",
-                "PM", "TS", "LD", "RPT", "OM", "PC", "GE", "CI", "AV", "AG"));
-
+                "PM", "TS", "LD", "RPT", "OM", "PC", "GE", "CI", "AV", "AG", "TC", "PD"));
+        //CB- egaz el dawla, //LM- latest meetings
 
         Optional<CountryDisplay> displayOptional = countryDisplayRepository.findById(id);
 
@@ -113,10 +113,15 @@ public class CountryDisplayService {
         List <CountryAdditionalDto> countryAdditionalDatasListAG = caRepo.findAllByTypeAndParentEntityId(0,0, Long.valueOf(countryDisplay.getCountryValue()), "humanAid", 1,id );
         List <ActivityJointCommitteeDto> ActivityJointCommitteeDto = ajRepo.getActivityJointCommitteeByCountryFileId(0,Integer.MAX_VALUE,id );
         List <VisitsDto> visitsDto = vRepo.getSelectedVisitsDIAByCountryFileId(0,Integer.MAX_VALUE,id );
+        List <TrainingAndCoursesDto> trainingDtoList = tcRepo.getTrainingAndCoursesDIAByType(0,Integer.MAX_VALUE,"training",id );
+        List <TrainingAndCoursesDto> coursesDtoList = tcRepo.getTrainingAndCoursesDIAByType(0,Integer.MAX_VALUE,"course",id );
+        List <CountryAdditionalDto> countryAdditionalDatasListTC = caRepo.findAllByTypeAndParentEntityId(0,0, Long.valueOf(countryDisplay.getCountryValue()), "trainingCourses", 1,id );
+        List <PreviousMeetingsDto> previousMeetingsDtos = pmRepo.getLatestMeeting(id);
+        Optional <Country> country = cRepo.findById(Long.valueOf(countryDisplay.getCountryValue()));
+//        List country1 = (List) country.get();
 
-
-
-
+//        List <DiscussionPointsDto> stuckedPointsLists = dpRepo.getSelectedStuckedPoints(0,Integer.MAX_VALUE,id, previousMeetingsDtos);
+        List <HistoryOfCommonRelationDto> historyOfCommonRelationDtos = hcRepo.getSelectedHistoryOfCommonRel(0,Integer.MAX_VALUE,id);
 
 
 
@@ -151,8 +156,16 @@ public class CountryDisplayService {
 //            file = pdfService.generate(humanAidDIAList, file.toURI().getPath(), "AG");
 //            file = pdfService.generate(humanAidDIAListMilitary, file.toURI().getPath(), "AGMilitary");
 //            file = pdfService.generate(countryAdditionalDatasListAG, file.toURI().getPath(), "AG-additionalData");
-            file = pdfService.generate(ActivityJointCommitteeDto, file.toURI().getPath(), "AV");
-            file = pdfService.generate(visitsDto, file.toURI().getPath(), "AVV");
+          //  file = pdfService.generate(ActivityJointCommitteeDto, file.toURI().getPath(), "AV");
+        //    file = pdfService.generate(visitsDto, file.toURI().getPath(), "AVV");
+//            file = pdfService.generate(trainingDtoList, file.toURI().getPath(), "TC");
+//            file = pdfService.generate(coursesDtoList, file.toURI().getPath(), "TCcourses");
+//            file = pdfService.generate(countryAdditionalDatasListTC, file.toURI().getPath(), "TC-additionalData");
+         //     file = pdfService.generate(previousMeetingsDtos, file.toURI().getPath(), "LM");
+      //      file = pdfService.generate(previousMeetingsDtos, file.toURI().getPath(), "SP");
+          //  file = pdfService.generate(country1, file.toURI().getPath(), "PD");
+            file = pdfService.generate(visitsDto, file.toURI().getPath(), "PD-visits");
+            file = pdfService.generate(historyOfCommonRelationDtos, file.toURI().getPath(), "PD-CR");
 
 
         } catch (Exception e) {

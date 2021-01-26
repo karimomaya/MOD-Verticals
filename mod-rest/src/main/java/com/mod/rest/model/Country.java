@@ -19,4 +19,12 @@ public class Country {
     String MODLogoImg;
     String countryName;
     String armedforcesLogo;
+    String territory;
+    String officialLanguage;
+    String capital;
+    String area;
+    String numberOfCommunity;
+    String relationshiphLevel;
+    String currency;
+    String ethnicGroups;
 }

@@ -26,6 +26,6 @@ public class VisitsDIA {
 
     @OneToMany
     @JoinColumn(name = "parentEntityId")
-    List<CountryAdditionalData> countryAdditionalData;
+    List<CountryAdditionalData> countryAdditionalDataVisits;
 
 }
