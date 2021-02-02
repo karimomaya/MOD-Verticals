@@ -557,7 +557,7 @@ public class RequestNumberEndPoint {
     private String prepareSecurityConfig(Security security, SecurityRequest securityRequest, User user){
         String config = security.getConfig();
 
-        if ((!securityRequest.getInput().equals("?") || !securityRequest.getInput().equals("PARAMETER") || !securityRequest.equals(" ")) && securityRequest.getInput().length() > 1 ){
+        if ((!securityRequest.getInput().equals("?") || !securityRequest.getInput().equals("PARAMETER") || !securityRequest.equals(" ")) && securityRequest.getInput().length() >= 1 ){
 
             String[] inputs = securityRequest.getInput().split(",");
 
