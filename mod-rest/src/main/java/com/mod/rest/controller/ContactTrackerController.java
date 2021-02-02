@@ -58,22 +58,22 @@ public class ContactTrackerController {
             reportObject = reportObject.build();
             if (reportObject.getReportType() == 1 ) {
                 log.info("Report Type Entities");
-                List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
+                List<EntityReport> entityReports = entityRepository.getEntitiesByType(1, Integer.MAX_VALUE, reportObject.getSortBy(), reportObject.getSortDir() ,reportObject.getEntityType(),reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getTags());
                 log.info("Number of element founds: " + entityReports.size());
                 file = excelWriterService.generate(entityReports, "Contact Tracker Entities");
             } else if (reportObject.getReportType() == 2 ) {
                 log.info("Report Type Private Entities");
-                List<EntityReport> entityReports = entityRepository.getPrivateEntities(1, Integer.MAX_VALUE, "", "" ,reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getIsRegistered(),reportObject.getLicenseNumber(),reportObject.getSupplierStatus(),reportObject.getTags());
+                List<EntityReport> entityReports = entityRepository.getPrivateEntities(1, Integer.MAX_VALUE, reportObject.getSortBy(), reportObject.getSortDir() ,reportObject.getNameArabic(),reportObject.getNameEnglish(),reportObject.getPhone(),reportObject.getIsRegistered(),reportObject.getLicenseNumber(),reportObject.getSupplierStatus(),reportObject.getTags());
                 log.info("Number of element founds: " + entityReports.size());
                 file = excelWriterService.generate(entityReports, "Contact Tracker Entities");
             }else if (reportObject.getReportType() == 3 ) {
                 log.info("Report Type Individuals");
-                List<IndividualReport> individualReports = individualRepository.getIndividuals(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition(),reportObject.getTags());
+                List<IndividualReport> individualReports = individualRepository.getIndividuals(1, Integer.MAX_VALUE, reportObject.getSortBy(), reportObject.getSortDir() ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition(),reportObject.getTags());
                 log.info("Number of element founds: " + individualReports.size());
                 file = excelWriterService.generate(individualReports);
             }else if (reportObject.getReportType() == 4) {
                 log.info("Report Type Ministry Users");
-                List<User> ministryUsersReports = userRepository.getMinistryUsers(1, Integer.MAX_VALUE, "", "" ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition());
+                List<User> ministryUsersReports = userRepository.getMinistryUsers(1, Integer.MAX_VALUE, reportObject.getSortBy(), reportObject.getSortDir() ,reportObject.getEntityName(),reportObject.getName(),reportObject.getPosition());
                 log.info("Number of element founds: " + ministryUsersReports.size());
                 file = excelWriterService.generate(ministryUsersReports);
             }
