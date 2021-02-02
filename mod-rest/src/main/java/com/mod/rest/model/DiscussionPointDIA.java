@@ -17,6 +17,7 @@ public class DiscussionPointDIA {
     long id;
     String field;
     String suggestedBy;
+    String suggestedByValue;
     String notes;
     String discussionSubject;
     String discussionPoint_to_countryDisplayFile_Id;

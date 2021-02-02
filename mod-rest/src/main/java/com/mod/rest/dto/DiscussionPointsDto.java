@@ -9,4 +9,6 @@ public interface DiscussionPointsDto {
      String getDebateSubject();
      String getResponsibleParty();
      String getSuggestedBy();
+     String getNotes();
+     String getSuggestedByValue();
 }

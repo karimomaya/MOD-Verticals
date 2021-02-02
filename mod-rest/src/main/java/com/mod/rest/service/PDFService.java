@@ -351,6 +351,7 @@ public class PDFService implements PDFServiceI {
 
             System.out.println("try to read font: NotoNaskhArabic");
             fontProvider.register("resources/fonts/NotoNaskhArabic-Regular.ttf");
+            fontProvider.register("resources/fonts/FreeSans.ttf");
 //            fontProvider.register("C:/Windows/Fonts/arabtype.ttf");
             System.out.println("read Success");
             System.out.println("try to apply CSS");

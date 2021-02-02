@@ -1,5 +1,6 @@
 package com.mod.rest.repository;
 
+import com.mod.rest.dto.MeetingsResultsDto;
 import com.mod.rest.dto.PreviousMeetingsDto;
 import com.mod.rest.model.JoinedCommitteeDIA;
 import com.mod.rest.model.PreviousMeetingsDIA;
@@ -17,5 +18,11 @@ public interface PreviousMeetingsDIARepository extends GenericRepository<Previou
 
     @Query(value = "{call MOD_DIA_SP_getLastMeeting( :displayFileId)}", nativeQuery = true)
     List<PreviousMeetingsDto> getLatestMeeting(@Param("displayFileId") Long displayFileId);
+
+    @Query(value = "{call MOD_DIA_SP_getSelectedLastMeetingResults(:PageNumber,:PageSize,:countryDisplayFileId, :previousMeetingId)}", nativeQuery = true)
+    List<MeetingsResultsDto> getSelectedLastMeetingResults(@Param("PageNumber") Integer PageNumber,
+                                                           @Param("PageSize") Integer PageSize,
+                                                           @Param("countryDisplayFileId") Long countryDisplayFileId,
+                                                           @Param("previousMeetingId") Long previousMeetingId);
 
 }

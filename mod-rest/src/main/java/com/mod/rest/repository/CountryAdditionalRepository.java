@@ -17,4 +17,12 @@ public interface CountryAdditionalRepository extends GenericRepository<CountryAd
                                                               @Param("type") String type,
                                                               @Param("getALL") Integer getALL,
                                                               @Param("countryDisplayFileId") Long countryDisplayFileId);
+
+
+    @Query(value = "{call MOD_DIA_SP_getSelectedLastMeetingAdditionalData(:PageNumber,:PageSize,:countryDisplayFileId, :previousMeetingId)}", nativeQuery = true)
+    List<CountryAdditionalDto> getSelectedLastMeetingAdditionalData(@Param("PageNumber") Integer PageNumber,
+                                                           @Param("PageSize") Integer PageSize,
+                                                           @Param("countryDisplayFileId") Long countryDisplayFileId,
+                                                           @Param("previousMeetingId") Long previousMeetingId);
+
 }
