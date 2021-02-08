@@ -78,13 +78,14 @@ public class RequestNumberEndPoint {
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "SendEmailRequest")
     @ResponsePayload
     public SendEmailResponse sendEmail(@RequestPayload SendEmailRequest request) {
-
+        log.info("Send Email Request..");
         SendEmailResponse response = new SendEmailResponse();
 
 
         InputStream is = null;
         String mailTemplatePath = env.getProperty("mail-template-path");
         try {
+            log.info("Reading JSON Webservice Template: "+request.getTemplate());
             is = new FileInputStream(mailTemplatePath+request.getTemplate()+".json");
             BufferedReader buf = new BufferedReader(new InputStreamReader(is));
 
@@ -97,25 +98,31 @@ public class RequestNumberEndPoint {
             }
 
             String fileAsString = sb.toString();
-
+            log.info("JSON Webservice Read Success...");
+            log.info("Set Inputs in JSON...");
             String[] inputs = request.getInputs().split(",");
 
             for (int i =0; i< inputs.length; i++){
                 fileAsString = fileAsString.replaceAll("\\$"+i , inputs[i] );
             }
 
+            log.info("Setting Inputs in JSON Success...");
+            log.info("Convert JSON Webservice To XML...");
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(fileAsString);
 
             String webservice = updateWebserviceTemplate(SecurityType.WEBSERVICE.getTemplate(), jsonNode);
+            log.info("Convert JSON Webservice To XML  Success...");
+            log.info("Send Webservice Request...");
             Http http = new Http(property);
             String webserviceResponse = http.cordysRequest(webservice);
+            log.info("Send Webservice Request Success...");
 
             Document dom = Utils.convertStringToXMLDocument(webserviceResponse);
             NodeList nl=dom.getDocumentElement().getChildNodes();
 
 
-
+            log.info("Read HTML Template: "+ request.getTemplate());
             is = new FileInputStream(request.getTemplate()+".html");
             buf = new BufferedReader(new InputStreamReader(is));
 
@@ -129,11 +136,13 @@ public class RequestNumberEndPoint {
 
 
             fileAsString = sb.toString();
+            log.info("Read HTML Template Success...");
 
 
             Pattern regex = Pattern.compile("\\((.*?)\\)");
             Matcher regexMatcher = regex.matcher(fileAsString );
 
+            log.info("Update HTML Template Webservice Response Data...");
             while (regexMatcher.find()) {//Finds Matching Pattern in String
                 String token = regexMatcher.group(1);
                 String value = "";
@@ -150,28 +159,31 @@ public class RequestNumberEndPoint {
                 else if (value.equals("null") || value.equals("undefined")) value = "";
                 fileAsString = fileAsString.replace("("+token+")", value);
             }
+            log.info("Update HTML Template Webservice Response Data Success...");
 
             String username= env.getProperty("outlook-user-name");
             String logoPath= env.getProperty("outlook-logo-path");
             String password= env.getProperty("outlook-user-password");
             String exchangeServerUrl=env.getProperty("outlook-exchange-server-url");
 
+            log.info("Creating New Outlook Class With Properties...");
             OutlookMeeting outlookMeeting = new OutlookMeeting(null, username, password, exchangeServerUrl);
+            log.info("Start Sending Email...");
             outlookMeeting.setLogoPath(logoPath).sendEmail(fileAsString, request.getEmails().split(","), request.getSubject());
 
             System.out.println("Contents : " + fileAsString);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            log.info("File Not Found Exception: ", e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            log.info("IO Exception: ", e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
+            log.info("Exception: ", e.getMessage());
         }
 
-
-        System.out.println("Here");
-
-
+        log.info("Send Email Request Done..");
         return response.setStatus("done");
     }
 
@@ -310,6 +322,7 @@ public class RequestNumberEndPoint {
                 .setStartDate(meeting.getStartDate())
                 .setEndDate(meeting.getEndDate());
 
+        log.info("Set Attendees To outlook Meeting..");
         for (MeetingAttendee meetingAttendee : meetingAttendees){
             if (meetingAttendee.getIsExternal() ){
                 Optional<ExternalUser> externalUserOptional = externalUserRepository.getExternalUserDetail(meetingAttendee.getAttendeeID());
@@ -325,10 +338,13 @@ public class RequestNumberEndPoint {
         }
 
         if(!isUpdate) {
+            log.info("Send outlook Meeting..");
             outlookMeeting = outlookMeeting.send();
             meeting.setOutlookId(outlookMeeting.getUniqueId());
+            log.info("Send outlook Meeting Id in Meeting Entity..");
             meetingRepository.save(meeting);
         }else{
+            log.info("Update outlook Meeting..");
             outlookMeeting.update();
         }
     }

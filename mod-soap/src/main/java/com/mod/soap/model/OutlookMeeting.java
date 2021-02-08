@@ -5,6 +5,7 @@ import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.misc.ExchangeVersion;
 import microsoft.exchange.webservices.data.core.enumeration.property.BodyType;
 import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.core.service.item.EmailMessage;
 import microsoft.exchange.webservices.data.credential.ExchangeCredentials;
@@ -57,29 +58,48 @@ public class OutlookMeeting {
     }
 
     public void sendEmail(String html, String[] emails, String subject) throws Exception {
+        String logo = this.logoPath;
+        log.info("Send Email Function Started...");
+        log.info("Create New Thread For Sending Email...");
+        Thread thread = new Thread("Send Email Thread") {
+            public void run(){
+                try {
+                    log.info("Create Email Message...");
+                    EmailMessage msg= new EmailMessage(service);
+                    log.info("Set Email Subject: "+ subject);
+                    msg.setSubject(subject);
 
-        EmailMessage msg= new EmailMessage(service);
-        msg.setSubject(subject);
+                    log.info("Set Email Body...");
+                    MessageBody msgBody = new MessageBody();
+                    msgBody.setBodyType(BodyType.HTML);
+                    msgBody.setText(html);
 
-        MessageBody msgBody = new MessageBody();
-        msgBody.setBodyType(BodyType.HTML);
-        msgBody.setText(html);
+                    msg.setBody(msgBody );
+                    log.info("Set Email Recipients: "+ emails.toString());
+                    for (int i=0; i< emails.length; i++){
+                        System.out.println(emails[i]);
+                        msg.getToRecipients().add(emails[i]);
+                    }
 
+                    log.info("Attach Logo...");
+                    if (!logoPath.equals("")){
+                        msg.getAttachments().addFileAttachment(logo);
+                        msg.getAttachments().getItems().get(0).setIsInline(true);
+                        msg.getAttachments().getItems().get(0).setContentId("UAElogo.png");
+                    }
 
-        msg.setBody(msgBody );
-        for (int i=0; i< emails.length; i++){
-            System.out.println(emails[i]);
-            msg.getToRecipients().add(emails[i]);
-        }
+                    log.info("Send Email...");
+                    msg.send();
+                    log.info("Send Email Success...");
+                }catch (ServiceLocalException e){
+                    log.error("Error Add File Attachment in Send Email");
+                }catch (Exception e){
+                    log.error("Error Sending Email");
+                }
+            }
+        };
 
-        if (!logoPath.equals("")){
-            msg.getAttachments().addFileAttachment(this.logoPath);
-            msg.getAttachments().getItems().get(0).setIsInline(true);
-            msg.getAttachments().getItems().get(0).setContentId("UAElogo.png");
-        }
-
-        msg.send();
-
+        thread.start();
     }
 
     public OutlookMeeting setSubject(String subject){
