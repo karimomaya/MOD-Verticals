@@ -10,4 +10,5 @@ public interface VisitsDto {
      String getNotes();
      String getGoals();
      Date getDate();
+     Long getVisitId();
 }

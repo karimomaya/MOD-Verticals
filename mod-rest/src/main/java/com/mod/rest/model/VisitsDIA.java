@@ -1,5 +1,8 @@
 package com.mod.rest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mod.rest.dto.CountryAdditionalDto;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -24,8 +27,9 @@ public class VisitsDIA {
     String notes;
     long visit_to_countryFileBasic_Id;
 
-    @OneToMany
-    @JoinColumn(name = "parentEntityId")
-    List<CountryAdditionalData> countryAdditionalDataVisits;
+//    @OneToMany
+//    @JoinColumn(name = "parentEntityId")
+    @Transient
+    List<CountryAdditionalDto> countryAdditionalDataVisits;
 
 }

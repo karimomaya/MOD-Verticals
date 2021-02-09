@@ -1,5 +1,7 @@
 package com.mod.rest.model;
 
+import com.mod.rest.dto.CountryAdditionalDto;
+import com.mod.rest.dto.LeaderPositionDto;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,11 +20,21 @@ public class CountryLeader {
     String generalInformation;
     String currentPosition;
 //    المناصب
-    @OneToMany
-    @JoinColumn(name = "position_to_leader_Id")
-    List<CountryLeaderPosition> countryLeaderPositions;
+//    @OneToMany
+//    @JoinColumn(name = "position_to_leader_Id")
+    @Transient
+    List<LeaderPositionDto> countryLeaderPositions;
 
-    @OneToMany
-    @JoinColumn(name = "parentEntityId")
-    List<CountryAdditionalData> countryAdditionalDatas;
+
+//    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "O2MyCompanyDirectorateofInternationalAffairsDIAMOD_DIA_entity_displayToAdditionalData",
+//            joinColumns = {@JoinColumn(name = "parentEntityId")},
+//            inverseJoinColumns = {@JoinColumn(name = "displayToLeaderAdditionalData_to_addtionalData_Id")}
+//    )
+//    @OneToMany
+//    @JoinColumn(name = "parentEntityId")
+
+    @Transient
+    List<CountryAdditionalDto> countryAdditionalDatas;
 }

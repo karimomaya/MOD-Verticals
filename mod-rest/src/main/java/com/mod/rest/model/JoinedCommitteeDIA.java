@@ -1,5 +1,8 @@
 package com.mod.rest.model;
 
+import com.mod.rest.dto.ActivityJointCommitteeDto;
+import com.mod.rest.dto.CountryAdditionalDto;
+import com.mod.rest.dto.MeetingJointCommitteeDto;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,18 +26,21 @@ public class JoinedCommitteeDIA {
     String countryName;
     String notes;
     String jointCommittee_to_countryFileBasic_Id;
+//
+//    @OneToMany
+//    @JoinColumn(name = "activityJointCommittee_to_jointCommittee_Id")
+    @Transient
+    List<ActivityJointCommitteeDto> activityJointCommittees;
 
-    @OneToMany
-    @JoinColumn(name = "activityJointCommittee_to_jointCommittee_Id")
-    List<ActivityJointCommittee> activityJointCommittees;
-
-    @OneToMany
-    @JoinColumn(name = "committeeMeeting_to_jointCommittee_Id")
-    List<MeetingsJointCommitteeDIA> meetingsJointCommittees;
-
-    @OneToMany
-    @JoinColumn(name = "parentEntityId")
-    List<CountryAdditionalData> countryAdditionalData;
+//    @OneToMany
+//    @JoinColumn(name = "committeeMeeting_to_jointCommittee_Id")
+    @Transient
+    List<MeetingJointCommitteeDto> meetingsJointCommittees;
+//
+//    @OneToMany
+//    @JoinColumn(name = "parentEntityId")
+    @Transient
+    List<CountryAdditionalDto> countryAdditionalData;
 
 
 }

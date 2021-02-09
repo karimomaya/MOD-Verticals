@@ -19,4 +19,10 @@ public interface ActivityJointCommitteeRepository extends GenericRepository<Acti
                                                          @Param("countryDisplayFileId") Long countryDisplayFileId);
 
     //    List<ActivityJointCommittee> findAllByCountryValueId(Long parentEntityId);
+
+
+    @Query(value = "{call MOD_DIA_SP_getSelectedActivityJointCommittee(:countryDisplayFileId, :jointCommitteeId)}", nativeQuery = true)
+    List<ActivityJointCommitteeDto> getSelectedActivityJointCommittee(@Param("countryDisplayFileId") Long countryDisplayFileId,
+            @Param("jointCommitteeId") Long jointCommitteeId );
+
 }

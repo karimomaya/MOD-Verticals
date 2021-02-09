@@ -9,4 +9,5 @@ public interface ActivityJointCommitteeDto {
      String getActivity();
      String getNotes();
      Date getDate();
+     Long getActivityId();
 }

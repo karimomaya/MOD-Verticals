@@ -25,4 +25,8 @@ public interface CountryAdditionalRepository extends GenericRepository<CountryAd
                                                            @Param("countryDisplayFileId") Long countryDisplayFileId,
                                                            @Param("previousMeetingId") Long previousMeetingId);
 
+
+    @Query(value = "{call MOD_DIA_SP_getSelectedLeaderAdditionalData(:leaderId,:countryDisplayFileId)}", nativeQuery = true)
+    List<CountryAdditionalDto> getSelectedLeaderAdditionalData(@Param("leaderId") Long leaderId,
+                                                                @Param("countryDisplayFileId") Long countryDisplayFileId);
 }

@@ -1,7 +1,9 @@
 package com.mod.rest.model;
 
+import com.mod.rest.dto.CountryAdditionalDto;
 import lombok.Data;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 /**
@@ -19,5 +21,8 @@ public class ActivityJointCommittee {
     String notes;
     Date date;
     Long activityJointCommittee_to_jointCommittee_Id;
+
+    @Transient
+    List<CountryAdditionalDto> countryAdditionalDataVisits;
 }
 
