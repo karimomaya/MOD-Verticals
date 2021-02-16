@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.IOException;
@@ -77,7 +76,6 @@ public class CountryDisplayService {
                 "PM", "TS", "LD", "RPT", "OM", "PC", "GE", "CI", "AV", "AG", "TC", "PD", "CB"));
 
         Optional<CountryDisplay> displayOptional = countryDisplayRepository.findById(id);
-
         if (!displayOptional.isPresent()) return null;
 
         CountryDisplay countryDisplay = displayOptional.get();
@@ -104,37 +102,57 @@ public class CountryDisplayService {
         List <DiscussionPointDIA> discussionPointDIAList = dpRepo.getDiscussionPointDIAByCountryDisplayFileId(id);
         List <AspectsOfCooperationDIA> aspectsOfCooperations = acRepo.getAspectsOfCooperationDIAByCountryDisplayFileId(id);
         List <RelatedPeopleDIA> relatedPeopleDIAS = rpRepo.getRelatedPeopleDIAByCountryDisplayFileId(id);
+
         List <MediaMonitoringDIA> mediaMonitoringDIAS = mmRepo.getMediaMonitoringDIAByCountryDisplayFileId(id);
+        lookupService.substituteLookupIds(mediaMonitoringDIAS, "latestNewsType", "category", "ar");
+
         List <RegionalTalkingPointsDIA> regionalTalkingPointsDIAS = rdRepo.getRegionalTalkingPointsDIAByCountryDisplayFileId(id);
+        List <JoinedCommitteeDIA> joinedCommitteeDIAS = new ArrayList<>();
 
+        List <JointCommitteeDto> joinedCommitteeDTO = jcRepo.getSelectedJointCommittees(0,Integer.MAX_VALUE, id);
+        for (JointCommitteeDto committee : joinedCommitteeDTO) {
 
+            List<MeetingJointCommitteeDto> meetingsJointCommitteeDIA = jmRepo.getSelectedCommitteeMeeting(id, committee.getJointCommitteeId());
+//            committee.setMeetingsJointCommittees(meetingsJointCommitteeDIA);
+            List<CountryAdditionalDto> additionalJointCommitteeDIA = caRepo.findAllByTypeAndParentEntityId(0,Integer.MAX_VALUE, committee.getJointCommitteeId(), "jointCommittee", 1,id );
+//            committee.setCountryAdditionalData(additionalJointCommitteeDIA);
+            List <ActivityJointCommitteeDto> activityCommittee = ajRepo.getSelectedActivityJointCommittee(id, committee.getJointCommitteeId());
+//            committee.setActivityJointCommittees(activityCommittee);
 
-        List <JoinedCommitteeDIA> joinedCommitteeDIAS = jcRepo.getJointCommitteeDIAByCountryDisplayFileId(id);
-        for (JoinedCommitteeDIA committee : joinedCommitteeDIAS) {
-            List<MeetingJointCommitteeDto> meetingsJointCommitteeDIA = jmRepo.getSelectedCommitteeMeeting(id, committee.getId());
-            committee.setMeetingsJointCommittees(meetingsJointCommitteeDIA);
+            JoinedCommitteeDIA target = new JoinedCommitteeDIA();
+            BeanUtils.copyProperties(committee , target);
 
-            List<CountryAdditionalDto> additionalJointCommitteeDIA = caRepo.findAllByTypeAndParentEntityId(0,0, committee.getId(), "jointCommittee", 1,id );
-            committee.setCountryAdditionalData(additionalJointCommitteeDIA);
-
-            List <ActivityJointCommitteeDto> activityCommittee = ajRepo.getSelectedActivityJointCommittee(id, committee.getId());
-            committee.setActivityJointCommittees(activityCommittee);
+            target.setCountryAdditionalData(additionalJointCommitteeDIA);
+            target.setActivityJointCommittees(activityCommittee);
+            target.setMeetingsJointCommittees(meetingsJointCommitteeDIA);
+            target.setCommitteeType(committee.getCommitteeTypeValue());
+            joinedCommitteeDIAS.add(target);
         }
 
         List <PreviousMeetingsDIA> previousMeetingsDIAS = pmRepo.getPreviousMeetingsDIAByCountryDisplayFileId(id);
+        for (PreviousMeetingsDIA meetings : previousMeetingsDIAS) {
+            List<CountryAdditionalDto> meetingsAdditionalData = caRepo.getSelectedLeaderAdditionalData(meetings.getId(), id);
+            meetings.setCountryAdditionalDataDIA(meetingsAdditionalData);
+            List <MeetingsResultsDto> lastMeetingResults = pmRepo.getSelectedLastMeetingResults(0,Integer.MAX_VALUE,id, meetings.getId());
+            meetings.setMeetingsResultsDIA(lastMeetingResults);
+        }
         List <TroopsDIA> troopsDIAS = tsRepo.getTroopsDIAByCountryDisplayFileId(id);
         List <LegalDocumentsDIA> legalDocumentsDIAS = ldRepo.getLegalDocumentsDIAByCountryDisplayFileId(id);
+        lookupService.substituteLookupIds(legalDocumentsDIAS, "countryDocumentType", "documentType", "ar");
+
         List <ReportsDIA> reportsDIAS = rptRepo.getReportsDIAByCountryDisplayFileId(id);
-        List <CountryAdditionalDto> countryAdditionalDatasListRPT = caRepo.findAllByTypeAndParentEntityId(0,0, Long.valueOf(countryDisplay.getCountryValue()), "report", 1,id );
-        List <CountryAdditionalDto> countryAdditionalDatasListPC = caRepo.findAllByTypeAndParentEntityId(0,0, Long.valueOf(countryDisplay.getCountryValue()), "purchasesAndContracts", 1,id );
+        lookupService.substituteLookupIds(reportsDIAS, "reportType", "reportType", "ar");
+
+        List <CountryAdditionalDto> countryAdditionalDatasListRPT = caRepo.findAllByTypeAndParentEntityId(0,Integer.MAX_VALUE, Long.valueOf(countryDisplay.getCountryValue()), "report", 1,id );
+        List <CountryAdditionalDto> countryAdditionalDatasListPC = caRepo.findAllByTypeAndParentEntityId(0,Integer.MAX_VALUE, Long.valueOf(countryDisplay.getCountryValue()), "purchasesAndContracts", 1,id );
         List <OfficialMissionsDIA> officialMissionsDIA = omRepo.getOfficialMissionsDIAByCountryDisplayFileId(id);
         List <PurchasesAndContractsDIA> purchasesAndContractsDIAS = pcRepo.getPurchasesAndContractsDIAByCountryDisplayFileId(id);
         List <GeoStrategicalEventsDIA> geoStrategicalEventsDIAS = geRepo.getGeoStrategicalEventsDIAByCountryDisplayFileId(id);
         List <CooperationImportanceDIA> cooperationImportanceDIAS = ciRepo.getCooperationImportanceDIABycountryFileBasicId(countryDisplay.getCountryValue());
-        List <CountryAdditionalDto> countryAdditionalDatasListCI = caRepo.findAllByTypeAndParentEntityId(0,0, Long.valueOf(countryDisplay.getCountryValue()), "cooperationImportance", 1,id );
+        List <CountryAdditionalDto> countryAdditionalDatasListCI = caRepo.findAllByTypeAndParentEntityId(0,Integer.MAX_VALUE, Long.valueOf(countryDisplay.getCountryValue()), "cooperationImportance", 1,id );
         List <HumanAidDto> humanAidDIAList = haRepo.getHumanAidDIAByType(0,Integer.MAX_VALUE, 2, id);
         List <HumanAidDto> humanAidDIAListMilitary = haRepo.getHumanAidDIAByType(0,Integer.MAX_VALUE, 1, id);
-        List <CountryAdditionalDto> countryAdditionalDatasListAG = caRepo.findAllByTypeAndParentEntityId(0,0, Long.valueOf(countryDisplay.getCountryValue()), "humanAid", 1,id );
+        List <CountryAdditionalDto> countryAdditionalDatasListAG = caRepo.findAllByTypeAndParentEntityId(0,Integer.MAX_VALUE, Long.valueOf(countryDisplay.getCountryValue()), "humanAid", 1,id );
         List <ActivityJointCommitteeDto> ActivityJointCommitteeDto = ajRepo.getActivityJointCommitteeByCountryFileId(0,Integer.MAX_VALUE,id );
         List <VisitsDIA> visitsDIAList = new ArrayList<>();
 
@@ -159,12 +177,14 @@ public class CountryDisplayService {
         Optional <Country> country = cRepo.findById(Long.valueOf(countryDisplay.getCountryValue()));
         List countryList = Arrays.asList(country.get());
         List <DiscussionPointsDto> stuckedPointsLists = dpRepo.getSelectedStuckedPoints(0,Integer.MAX_VALUE,id, previousMeetingsDtos.get(0).getId());
-        List <MeetingsResultsDto> lastMeetingResults = pmRepo.getSelectedLastMeetingResults(0,Integer.MAX_VALUE,id, previousMeetingsDtos.get(0).getId());
+//        unitService.substituteUnitCodes(stuckedPointsLists, "responsibleParty",  "ar");
+
+        //   List <MeetingsResultsDto> lastMeetingResults = pmRepo.getSelectedLastMeetingResults(0,Integer.MAX_VALUE,id, previousMeetingsDtos.get(0).getId());
         List <HistoryOfCommonRelationDto> historyOfCommonRelationDtos = hcRepo.getSelectedHistoryOfCommonRel(0,Integer.MAX_VALUE,id);
 
-
         lookupService.substituteLookupIds(discussionPointDIAList, "discussionPointField", "field", "ar");
-//        unitService.substituteUnitCodes(stuckedPointsLists, "responsibleParty",  "ar");
+      //  lookupService.substituteLookupIds(lastMeetingResults, "meetingResultSituation", "situation", "ar");
+        lookupService.substituteLookupIds(countryList, "countryRelationshipLevel", "relationshiphLevel", "ar");
 
 //http://localhost:8081/api/country-display/pdf/32769
         try {
@@ -183,7 +203,6 @@ public class CountryDisplayService {
             file = pdfService.generate(countryAdditionalDatasListRPT, file.toURI().getPath(), "RPT-additionalData");
             file = pdfService.generate(officialMissionsDIA, file.toURI().getPath(), "OM");
             file = pdfService.generate(countryAdditionalDatasListOM, file.toURI().getPath(), "OM-additionalData");
-
             file = pdfService.generate(purchasesAndContractsDIAS, file.toURI().getPath(), "PC");
             file = pdfService.generate(countryAdditionalDatasListPC, file.toURI().getPath(), "PC-additionalData");
             file = pdfService.generate(geoStrategicalEventsDIAS, file.toURI().getPath(), "GE");
@@ -205,6 +224,7 @@ public class CountryDisplayService {
             file = pdfService.generate(countryList, file.toURI().getPath(), "PD");
             file = pdfService.generate(visitsDto, file.toURI().getPath(), "PD-visits");
             file = pdfService.generate(historyOfCommonRelationDtos, file.toURI().getPath(), "PD-CR");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

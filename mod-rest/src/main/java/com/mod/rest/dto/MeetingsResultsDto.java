@@ -5,6 +5,9 @@ package com.mod.rest.dto;
  */
 public interface MeetingsResultsDto {
      Long getId();
+     String getResult();
      String getRecommendationsAndResults();
      String getSituationValue();
+     String getNotes();
+     String getSituation();
 }

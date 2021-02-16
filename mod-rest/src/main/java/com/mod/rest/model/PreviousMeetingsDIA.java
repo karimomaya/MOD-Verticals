@@ -1,5 +1,7 @@
 package com.mod.rest.model;
 
+import com.mod.rest.dto.CountryAdditionalDto;
+import com.mod.rest.dto.MeetingsResultsDto;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,13 +31,15 @@ public class PreviousMeetingsDIA {
     Date date;
     long previousMeeting_to_countryFileBasic_id;
 
-    @OneToMany
-    @JoinColumn(name = "meetingResult_to_previousMeeting_Id")
-    List<MeetingsResultsDIA> meetingsResultsDIA;
-
-    @OneToMany
-    @JoinColumn(name = "parentEntityId")
-    List<CountryAdditionalData> countryAdditionalDataDIA;
+//    @OneToMany
+//    @JoinColumn(name = "meetingResult_to_previousMeeting_Id")
+    @Transient
+    List<MeetingsResultsDto> meetingsResultsDIA;
+//
+//    @OneToMany
+//    @JoinColumn(name = "parentEntityId")
+    @Transient
+    List<CountryAdditionalDto> countryAdditionalDataDIA;
 
 
 }

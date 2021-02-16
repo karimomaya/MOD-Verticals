@@ -1,5 +1,6 @@
 package com.mod.rest.model;
 
+import com.mod.rest.annotation.ColumnName;
 import lombok.Data;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -25,7 +26,7 @@ public class OfficialMissionsDIA {
     Date dateOfBookDispatch;
     Date missionDate;
     String fieldBookNumber;
-    String headOfDelegation;
+//    String headOfDelegation;
     String membersOfTheDelegation;
     String missionDescription;
     String notes;
@@ -38,18 +39,14 @@ public class OfficialMissionsDIA {
     @JoinColumn(name = "parentEntityId")
     List<CountryAdditionalData> countryAdditionalData;
 
-//    @ManyToOne
-//    @JoinColumn(name = "headOfDelegation")
-//    @NotFound(action = NotFoundAction.IGNORE)
-//    User userOwner;
-
-
-//    public String getOwnerName(){
-////        return this.userOwner.getDisplayName();
-//        User user = this.userOwner;
-//        if (user != null) return user.getDisplayName();
-//        return "";
-//    }
-
+    @ManyToOne
+    @JoinColumn(name = "headOfDelegation")
+    @NotFound(action = NotFoundAction.IGNORE)
+    User headOfDelegation;
+    public String getheadOfDelegation(){
+        User user = this.headOfDelegation;
+        if (user != null) return user.getDisplayName();
+        return "";
+    }
 
 }

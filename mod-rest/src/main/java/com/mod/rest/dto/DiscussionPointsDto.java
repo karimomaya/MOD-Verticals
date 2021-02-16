@@ -11,4 +11,5 @@ public interface DiscussionPointsDto {
      String getSuggestedBy();
      String getNotes();
      String getSuggestedByValue();
+
 }
