@@ -21,6 +21,7 @@ import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.itextpdf.tool.xml.pipeline.html.LinkProvider;
 import com.mod.rest.annotation.PDFResources;
 import com.mod.rest.system.Utils;
+import com.sun.org.apache.xerces.internal.dom.DeferredTextImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;
@@ -59,6 +60,8 @@ public class PDFService implements PDFServiceI {
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
         try {
             Node element = document.getElementsByTagName(tagname).item(0);
+//            Node elementTable =  element.getPreviousSibling();
+//            ((DeferredTextImpl) elementTable).removeData();
             element.getParentNode().removeChild(element);
         } catch (Exception ex) {
             log.warn("Couldn't find Node by tag name: " + tagname);

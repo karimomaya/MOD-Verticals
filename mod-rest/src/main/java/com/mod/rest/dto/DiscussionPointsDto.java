@@ -8,6 +8,7 @@ import java.util.Date;
 public interface DiscussionPointsDto {
      String getDebateSubject();
      String getResponsibleParty();
+     String getResponsiblePartyValue();
      String getSuggestedBy();
      String getNotes();
      String getSuggestedByValue();

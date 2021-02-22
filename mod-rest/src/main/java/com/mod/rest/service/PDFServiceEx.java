@@ -106,6 +106,7 @@ public class PDFServiceEx implements PDFServiceI {
 
 
     public File removeNodeByTagName(String filename, String tagname) throws TransformerException, IOException {
+
         return pdfService.removeNodeByTagName(filename, tagname);
     }
 

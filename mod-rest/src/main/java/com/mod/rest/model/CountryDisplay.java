@@ -16,4 +16,5 @@ public class CountryDisplay {
     String sections;
     String countryValue;
     String degreeOfConfidentiality;
+    Long S_WORKSPACEID;
 }

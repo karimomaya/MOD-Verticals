@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -16,7 +18,13 @@ public class CountryDisplayController {
 
     @GetMapping("pdf/{id}")
     @ResponseBody
-    public ResponseEntity<byte[]> generatePDF(@PathVariable long id) {
-        return countryDisplayService.generatePDF(id);
+    public ResponseEntity<byte[]> generatePDF(@PathVariable long id)  {
+        ResponseEntity<byte[]> responseEntity = null;
+        try {
+            responseEntity = countryDisplayService.generatePDF(id);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return responseEntity;
     }
 }
