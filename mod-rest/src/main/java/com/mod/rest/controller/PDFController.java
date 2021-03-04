@@ -270,7 +270,7 @@ public class PDFController {
             System.out.println("get template name: " + templateName);
 
             try {
-                File file = pdfService.generate(arrayList, "pdf-template/" + templateName + ".html", "card-identification");
+                File file = pdfService.generate(arrayList,   templateName + ".html", "card-identification");
                 file = pdfService.generate(arrayList, file.toURI().getPath(), "card-identification-note");
 
                 byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
