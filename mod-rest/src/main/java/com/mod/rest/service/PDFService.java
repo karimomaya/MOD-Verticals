@@ -60,8 +60,7 @@ public class PDFService implements PDFServiceI {
         org.w3c.dom.Document document = Utils.convertFileToXMLDocument(filename);
         try {
             Node element = document.getElementsByTagName(tagname).item(0);
-//            Node elementTable =  element.getPreviousSibling();
-//            ((DeferredTextImpl) elementTable).removeData();
+
             element.getParentNode().removeChild(element);
         } catch (Exception ex) {
             log.warn("Couldn't find Node by tag name: " + tagname);
