@@ -352,7 +352,7 @@ public class PDFService implements PDFServiceI {
                     new XMLWorkerFontProvider(XMLWorkerFontProvider.DONTLOOKFORFONTS);
 
             System.out.println("try to read font: NotoNaskhArabic");
-//            fontProvider.register("resources/fonts/NotoNaskhArabic-Regular.ttf");
+            fontProvider.register("resources/fonts/NotoNaskhArabic-Regular.ttf");
             fontProvider.register("resources/fonts/ARIAL.ttf");
 //            fontProvider.register("C:/Windows/Fonts/arabtype.ttf");
             System.out.println("read Success");

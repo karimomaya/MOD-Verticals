@@ -27,11 +27,11 @@ public class DesignSeal {
     String notes;
 
     public String getColors(){
-        if(red_color && green_color){
+        if((red_color != null && red_color) && (green_color != null && green_color)){
             return "أحمر, أخضر";
-        }else if(red_color){
+        }else if(red_color != null && red_color){
             return "أحمر";
-        }else if(green_color){
+        }else if(green_color != null && green_color){
             return "أخضر";
         }
         return "";
