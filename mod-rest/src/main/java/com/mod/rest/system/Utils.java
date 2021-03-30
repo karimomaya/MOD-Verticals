@@ -365,7 +365,7 @@ public class Utils {
     }
 
     public static String convertDateToArabic(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy , MM , dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy - MM - dd");
         String dateString = sdf.format(date);
         char[] arabicChars = {'٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'};
         StringBuilder builder = new StringBuilder();
