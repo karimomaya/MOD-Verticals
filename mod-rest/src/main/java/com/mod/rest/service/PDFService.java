@@ -21,7 +21,6 @@ import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import com.itextpdf.tool.xml.pipeline.html.LinkProvider;
 import com.mod.rest.annotation.PDFResources;
 import com.mod.rest.system.Utils;
-import com.sun.org.apache.xerces.internal.dom.DeferredTextImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.parser.Parser;

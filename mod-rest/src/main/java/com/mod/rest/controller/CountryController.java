@@ -7,7 +7,6 @@ import com.mod.rest.repository.CountryRepository;
 import com.mod.rest.service.ImageService;
 import com.mod.rest.system.Config;
 import com.mod.rest.system.ResponseBuilder;
-import com.mod.rest.system.ResponseCode;
 import com.mod.rest.system.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -54,7 +53,7 @@ public class CountryController {
                                          @PathVariable long countryId, @RequestParam String countryCode) throws Exception {
 
         ResponseBuilder<Country> responseBuilder = new ResponseBuilder<Country>();
-        responseBuilder.data(new Country()).status(ResponseCode.NO_DATA_SAVED).build();
+//        responseBuilder.data(new Country()).status(ResponseCode.NO_DATA_SAVED).build();
         countryCode = URLDecoder.decode(countryCode, StandardCharsets.UTF_8.toString());
 
         Optional<Country> countryOptional = countryRepository.findById(countryId);
@@ -101,25 +100,25 @@ public class CountryController {
         }
 
 
-        return null;
+        return responseBuilder.build();
     }
 
 
     @SuppressWarnings("Duplicates")
     @PostMapping("/leader/upload/{leaderId}/{type}")
-    public ResponseBuilder<Country> saveLeaderImages(@RequestParam("file") MultipartFile file, @PathVariable int type,
-                                                     @PathVariable long leaderId, @RequestParam String countryCode) throws Exception {
+    public ResponseBuilder<CountryLeader> saveLeaderImages(@RequestParam("file") MultipartFile file, @PathVariable int type,
+                                                           @PathVariable long leaderId, @RequestParam String countryCode) throws Exception {
         countryCode = URLDecoder.decode(countryCode, StandardCharsets.UTF_8.toString());
 
         ResponseBuilder<CountryLeader> responseBuilder = new ResponseBuilder<>();
-        responseBuilder.data(new CountryLeader()).status(ResponseCode.NO_DATA_SAVED).build();
+//        responseBuilder.data(new CountryLeader()).status(ResponseCode.NO_DATA_SAVED).build();
 
         Optional<CountryLeader> countryLeaderOptional = countryLeaderRepository.findById(leaderId);
 
         if (countryLeaderOptional.isPresent()) {
             CountryLeader countryLeader = countryLeaderOptional.get();
 
-            String location = store(file, Integer.toString(type), countryCode, "Leader");
+            String location = store(file, leaderId + File.separator + type, countryCode, "Leader");
 
             if (type == 1) {
                 imageService.delete(countryLeader.getPicture());
@@ -132,7 +131,7 @@ public class CountryController {
         }
 
 
-        return null;
+        return responseBuilder.build();
     }
 
 
@@ -152,9 +151,8 @@ public class CountryController {
             System.out.println(countryCode);
 
             Path currentRelativePath = Paths.get("");
-            String s = currentRelativePath.toAbsolutePath().toString();
             String dir = configUtil.getProperty("uploadDir");
-            originalPath = dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + "PrimaryData" + "\\" + type + "\\default.png";
+            originalPath = dir + File.separator + "CountryImages" + File.separator + countryCode + File.separator + "PrimaryData" + File.separator + type + File.separator + "default.png";
 
             switch (type) {
 
@@ -237,10 +235,8 @@ public class CountryController {
 
             System.out.println(countryCode);
 
-            Path currentRelativePath = Paths.get("");
-            String s = currentRelativePath.toAbsolutePath().toString();
             String dir = configUtil.getProperty("uploadDir");
-            originalPath = dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + "Leader" + "\\" + type + "\\default.png";
+            originalPath = dir + File.separator + "CountryImages" + File.separator + countryCode + File.separator + "Leader" + File.separator + leaderId + File.separator + type + File.separator + "default.png";
 
             if (type == 1) {
                 if (countryLeader.getPicture() != null) {
@@ -267,6 +263,9 @@ public class CountryController {
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+            } else {
+                System.out.println("default leader img is not found");
+                return null;
             }
 
 
@@ -282,11 +281,9 @@ public class CountryController {
 
 
         //delete default image if exists
-        Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
         String dir = configUtil.getProperty("uploadDir");
 
-        String directory = dir + "\\" + "CountryImages" + "\\" + countryCode + "\\" + category + "\\" + id;
+        String directory = dir + File.separator + "CountryImages" + File.separator + countryCode + File.separator + category + File.separator + id;
 
         File imageDir = new File(directory);
         if (imageDir.exists())
