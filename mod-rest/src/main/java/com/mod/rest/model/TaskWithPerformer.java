@@ -88,9 +88,9 @@ public class TaskWithPerformer {
         tomorrowDate = c.getTime();
 
         if(this.getStatus() == 3 || this.getStatus() == 12 ||(this.getStatus() == 2 && this.getPerformerStatus() == 2)){
-            return "delayed";
-        }else if(this.getDueDate().before(tomorrowDate) && (this.getStatus() == 1 || (this.getStatus() == 2 && this.getPerformerStatus() <= 1))){
             return "finished";
+        }else if(this.getDueDate().before(tomorrowDate) && (this.getStatus() == 1 || (this.getStatus() == 2 && this.getPerformerStatus() <= 1))){
+            return "delayed";
         }else{
             return "inProgress";
         }

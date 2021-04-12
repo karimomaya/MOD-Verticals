@@ -22,20 +22,20 @@ public class MeetingAttendee {
     Boolean attendedMeeting;
     Boolean isExternal;
     // Internal Attendee
-    @Transient
+//    @Transient
     String userDisplayName;
-    @Transient
+//    @Transient
     String RoleName;
-    @Transient
+//    @Transient
     String RoleName_ar;
-    @Transient
+//    @Transient
     String title;
     // External Attendee
-    @Transient
+//    @Transient
     String nameArabic;
-    @Transient
+//    @Transient
     String positionArabic;
-    @Transient
+//    @Transient
     String entityName;
 
     String meeting_to_attendees_Id;
