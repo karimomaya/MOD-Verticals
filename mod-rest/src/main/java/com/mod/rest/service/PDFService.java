@@ -251,15 +251,15 @@ public class PDFService implements PDFServiceI {
                 Element parent = (Element) nodes.item(0).getParentNode();
 //                Element img = document.createElement("img");
 
-                Method method = cls.getMethod(nodes.item(0).getTextContent());
+                Method method = cls.getMethod(nodes.item(0).getTextContent().trim());
                 Object o = method.invoke(object);
                 if (o == null) o = "";
 
                 if (!o.equals("")) {
                     String imgSource = extractText(o);
-                    parent.setAttribute("src", "UAElogo.png");
+                    parent.setAttribute("src", imgSource);
                 } else {
-                    parent.setAttribute("src", "UAElogo.png");
+                    parent.setAttribute("src", "");
                 }
 //                parent.appendChild(img);
                 parent.removeChild(nodes.item(0));

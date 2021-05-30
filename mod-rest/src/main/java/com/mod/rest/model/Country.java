@@ -23,6 +23,7 @@ public class Country {
     String officialLanguage;
     String capital;
     String area;
+    String countryCode;
     String numberOfCommunity;
     String relationshiphLevel;
     String currency;
