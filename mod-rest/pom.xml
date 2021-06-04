@@ -88,7 +88,7 @@ java -jar -Dspring.profiles.active=staging mod-rest-1.0-SNAPSHOT.jar-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.5</version>
+            <version>4.5.13</version>
         </dependency>
         <dependency>
             <groupId>commons-httpclient</groupId>
