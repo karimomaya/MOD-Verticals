@@ -99,67 +99,82 @@
 <body style="font-family: Arial">
 
 <div class="email-wrapper" >
-    <div class="email-header">
-        <img class="header-image"
-             src="UAElogo.png"/>
-    </div>
     <div class="email-template-body">
         <div class="template-data" dir="rtl">
-            <cover-image>
-                <cover-image-remover>
-                    <attribute>cover-replacer</attribute>
+            <div style="background-color:#fafafa">
+                <div class="email-header" style="padding: 10px 0px">
+                    <img class="header-image"
+                         src="UAElogo.png"/>
+                </div>
+                <cover-image>
+                    <cover-image-remover>
 
-                     <div class="flag-section single-view" style="background-image: url(images/033.jpg);
-                        width:690px;
-                        height: 200px;
-                        background-position: center;
-                        background-position-x:200px ;
-                        background-repeat: no-repeat;
-                        background-size: 50%;">
-
-                    </div>
-                    <div class="section-flag-cont" style=" width: 50%; padding: 50px 0;
-                     float:left;
-                     position: absolute;
-                     top:-100px">
-                        <img src="" style="width: 80%; float: right; margin-right: 10px;">
-                        <cover-replacer>getFlagImage</cover-replacer>
-                        </img>
-                    </div>
-                    <div class="section-flag-cont" style=" width: 50%; padding: 50px 0; float:left;">
-                        <img src="images/1280px-Flag_of_the_United_Arab_Emirates.svg.png"
-                             style="width: 80%; margin-right: 10px;"/>
-                    </div>
-                    <div style="height:400px">
-                    <div class="map-section single-view" style="width:470px; position: absolute;
-                     top:-100px">
-                        <img src="" style="width: 200%; margin: 50px; ">
-                        <cover-replacer>getMapImg</cover-replacer>
-                        </img>
-                    </div>
-                    </div>
-                </cover-image-remover>
-            </cover-image>
-            <cover-image-holder>
-            </cover-image-holder>
+                        <attribute>cover-replacer</attribute>
+                        <attribute>cover-country-replacer</attribute>
 
 
                         <div class="title-section"
-                             style="background-color: #c9a869;
-                                color: #fff;
-                                font-size: 55px;
+                             style=" color: #0000;
+                                font-size: 45px;
                                 text-align: center;
-                                padding: 10px 20px;">        ملف التعاون مع المملكة المتحدة
-
+                                padding-top: -25px;
+                                padding-bottom: 15px;
+                                ">
+                            <strong>
+                                <u>
+                                    <cover-country-replacer>getDegreeOfConf</cover-country-replacer>
+                                </u>
+                            </strong>
                         </div>
 
-                    <div class="title-section"
-                     style=" color: #666;
-                     font-size: 28px;
-                     text-align: center;
-                     padding: 15px;">
-                                2019
+
+                        <div class="flag-section single-view" style="background-image: url(images/map-3.png);
+                            width:690px;
+                            height: 200px;
+                            background-position: center;
+                            background-position-x:200px ;
+                            background-repeat: no-repeat;
+                            background-size: 50%;">
+                        </div>
+                        <div class="section-flag-cont" style=" width:45%; height: 160px; float:left; padding-top: 20px">
+                                <img src="" style="width: 130%;height:110px; margin-right: 10px;">
+                                    <cover-replacer>getFlagImage</cover-replacer>
+                                </img>
+                        </div>
+                        <div class="section-flag-cont" style="width: 55%; height:160px;
+                            float:left; padding-top: 20px">
+                                <img src="images/1280px-Flag_of_the_United_Arab_Emirates.svg.png"
+                                     style="width: 130%; height:110px; float: left; margin-right: 100px;"/>
+                        </div>
+                        <div style="height:330px">
+                            <div class="map-section single-view" style="width:470px; position: absolute;
+                            top:-10px">
+                                <img src="" style="width: 200%; max-height: 310px">
+                                    <cover-replacer>getMapImg</cover-replacer>
+                                </img>
                             </div>
+                        </div>
+                        <div class="title-section"
+                             style="background-color: #c9a869;
+                                color: #fff;
+                                font-size: 50px;
+                                text-align: center;
+                                padding: 5px 10px;">
+                            <cover-country-replacer>getCountryCoverName</cover-country-replacer>
+                        </div>
+                        <div class="title-section"
+                             style=" color: #666;
+                             font-size: 28px;
+                             text-align: center;
+                             padding: 15px;">
+                            <cover-country-replacer>getCurrentYear</cover-country-replacer>
+                        </div>
+                    </cover-image-remover>
+                </cover-image>
+                <cover-image-holder>
+                </cover-image-holder>
+            </div>
+
             <CV-table>
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
@@ -197,7 +212,8 @@
                                 <tbody>
                                 <tr class="single-view">
                                     <td colspan="2">
-                                        <img>
+
+                                        <img style="height: 200px">
                                         <image-replacer>getPicture</image-replacer>
                                         </img>
                                     </td>

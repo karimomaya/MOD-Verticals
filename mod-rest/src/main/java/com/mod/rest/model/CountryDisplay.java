@@ -15,6 +15,22 @@ public class CountryDisplay {
     long id;
     String sections;
     String countryValue;
-    String degreeOfConfidentiality;
+    int degreeOfConfidentiality;
     Long S_WORKSPACEID;
+
+
+    public String confidentialityDegree(){
+        switch (this.degreeOfConfidentiality){
+            case 1:
+                return "سري للغاية";
+            case 2:
+                return "سري";
+            case 3:
+                return "محظور";
+            case 4:
+                return "مكتوم";
+            default:
+                return "";
+        }
+    }
 }

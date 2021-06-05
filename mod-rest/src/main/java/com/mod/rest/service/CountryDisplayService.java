@@ -94,8 +94,10 @@ public class CountryDisplayService {
 
 
     public ResponseEntity<byte[]> generatePDF(Long id) throws UnsupportedEncodingException {
-        List<String> sections = new LinkedList<String>(Arrays.asList("DP", "CV", "AC", "RP", "MM", "RD", "JC",
-                "PM", "TS", "LD", "RPT", "OM", "PC", "GE", "CI", "AV", "AG", "TC", "PD", "CB"));
+        List<String> sections = new LinkedList<String>(
+                Arrays.asList("DP", "CV", "AC", "RP", "MM", "RD", "JC",
+                "PM", "TS", "LD", "RPT", "OM", "PC", "GE", "CI", "AV", "AG", "TC", "PD", "CB")
+        );
 
         Optional<CountryDisplay> displayOptional = countryDisplayRepository.findById(id);
         if (!displayOptional.isPresent()) return null;
@@ -110,7 +112,8 @@ public class CountryDisplayService {
         country.get().setFlagImage(env.getProperty("domain-port")+"/api/country/view/"+country.get().getId()+"/2?countryCode="+country.get().getCountryCode());
         country.get().setMapImg(env.getProperty("domain-port")+"/api/country/view/"+country.get().getId()+"/3?countryCode="+country.get().getCountryCode());
 
-
+        String doc = displayOptional.get().confidentialityDegree();
+        country.get().setDegreeOfConf(doc);
 
         File file = new File("pdf-template/countryDisplay-template.html");
         for (String sec : sections) {
@@ -257,13 +260,6 @@ public class CountryDisplayService {
                 file = pdfService.generate(regionalTalkingPointsDIAS, file.toURI().getPath(), "RD");
                 file = pdfService.generate(countryAdditionalDatasListRD, file.toURI().getPath(), "RD-additionalData");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "RD-additionalData");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
             if (sectionList.contains("JC")) {
                 file = pdfService.generate(joinedCommitteeDIAS, file.toURI().getPath(), "JC");
             }
@@ -280,129 +276,50 @@ public class CountryDisplayService {
                 file = pdfService.generate(reportsDIAS, file.toURI().getPath(), "RPT");
                 file = pdfService.generate(countryAdditionalDatasListRPT, file.toURI().getPath(), "RPT-additionalData");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "RPT-additionalData");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
+
             if (sectionList.contains("OM")) {
                 file = pdfService.generate(officialMissionsDIA, file.toURI().getPath(), "OM");
                 file = pdfService.generate(countryAdditionalDatasListOM, file.toURI().getPath(), "OM-additionalData");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "OM-additionalData");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
+
             if (sectionList.contains("PC")) {
                 file = pdfService.generate(purchasesAndContractsDIAS, file.toURI().getPath(), "PC");
                 file = pdfService.generate(countryAdditionalDatasListPC, file.toURI().getPath(), "PC-additionalData");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "PC-additionalData");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
+
             if (sectionList.contains("GE")) {
                 file = pdfService.generate(geoStrategicalEventsDIAS, file.toURI().getPath(), "GE");
                 file = pdfService.generate(countryAdditionalDatasListGE, file.toURI().getPath(), "GE-additionalData");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "GE-additionalData");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
+
             if (sectionList.contains("CI")) {
                 file = pdfService.generate(cooperationImportanceDIAS, file.toURI().getPath(), "CI");
                 file = pdfService.generate(countryAdditionalDatasListCI, file.toURI().getPath(), "CI-additionalData");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "CI-additionalData");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
+
             if (sectionList.contains("AG")) {
                 file = pdfService.generate(humanAidDIAList, file.toURI().getPath(), "AG");
                 file = pdfService.generate(humanAidDIAListMilitary, file.toURI().getPath(), "AG-military");
                 file = pdfService.generate(countryAdditionalDatasListAG, file.toURI().getPath(), "AG-additionalData");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "AG-military");
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "AG-additionalData");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
+
             if (sectionList.contains("AV")) {
                 file = pdfService.generate(ActivityJointCommitteeDto, file.toURI().getPath(), "AV");
                 file = pdfService.generate(visitsDIAList, file.toURI().getPath(), "AV-visits");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "AV-visits");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
+
             if (sectionList.contains("TC")) {
                 file = pdfService.generate(trainingDtoList, file.toURI().getPath(), "TC");
                 file = pdfService.generate(coursesDtoList, file.toURI().getPath(), "TC-courses");
                 file = pdfService.generate(countryAdditionalDatasListTC, file.toURI().getPath(), "TC-additionalData");
             }
-////            else {
-////                try {
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "TC-courses");
-////                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "TC-additionalData");
-////                } catch (TransformerException | IOException e) {
-////                    e.printStackTrace();
-////                }
-////            }
+
             if (sectionList.contains("CB")) {
                 file = pdfService.generate(previousMeetingsDtos, file.toURI().getPath(), "CB");
                 file = pdfService.generate(previousMeetingsDtos, file.toURI().getPath(), "CB-recommendation");
                 file = pdfService.generate(countryAdditionalDatasListCB, file.toURI().getPath(), "CB-additionalData");
                 file = pdfService.generate(stuckedPointsLists, file.toURI().getPath(), "SP");
             }
-//            else {
-//                try {
-//                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "CB-recommendation");
-//                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "CB-additionalData");
-//                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "SP");
-//                } catch (TransformerException | IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
-//            else {
-//                try {
-//                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "PD-visits");
-//                    file = pdfService.removeNodeByTagName(file.toURI().getPath(), "PD-CR");
-//                } catch (TransformerException | IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-
-
-
-
-
-
-
-
-
-
-
 
 
         } catch (Exception e) {

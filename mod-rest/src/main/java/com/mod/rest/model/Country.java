@@ -4,6 +4,8 @@ package com.mod.rest.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Calendar;
+import java.util.Date;
 
 @Entity
 @Data
@@ -28,4 +30,18 @@ public class Country {
     String relationshiphLevel;
     String currency;
     String ethnicGroups;
+    @Transient
+    String degreeOfConf;
+
+    public int getCurrentYear() {
+        Calendar cal = Calendar.getInstance();
+        return cal.get(Calendar.YEAR);
+    }
+
+    public String getCountryCoverName(){
+        return "ملف التعاون مع "+ this.countryName;
+    }
+
+
+
 }
