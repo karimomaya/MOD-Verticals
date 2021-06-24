@@ -25,6 +25,7 @@ public class ReportsDIA {
     String reportType;
     String reportFrom;
     String reportIssuer;
+    String reportExternalIssuer;
     String title;
     Date date;
     long report_to_countryFileBasic_Id;

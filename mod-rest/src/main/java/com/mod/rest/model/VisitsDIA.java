@@ -25,6 +25,7 @@ public class VisitsDIA {
     String goals;
     Date date;
     String notes;
+    String name;
     long visit_to_countryFileBasic_Id;
 
 //    @OneToMany

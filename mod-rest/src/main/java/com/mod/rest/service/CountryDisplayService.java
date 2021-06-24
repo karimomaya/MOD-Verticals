@@ -91,7 +91,8 @@ public class CountryDisplayService {
     JointCommitteeMeetingDIARepository jmRepo;
     @Autowired
     Environment env;
-
+    @Autowired
+    UnitRepository unitRepository;
 
     public ResponseEntity<byte[]> generatePDF(Long id) throws UnsupportedEncodingException {
         List<String> sections = new LinkedList<String>(
@@ -186,6 +187,15 @@ public class CountryDisplayService {
         List<ReportsDIA> reportsDIAS = rptRepo.getReportsDIAByCountryDisplayFileId(id);
         if (reportsDIAS.size() > 0){
             lookupService.substituteLookupIds(reportsDIAS, "reportType", "reportType", "ar");
+            // lookupService.substituteLookupIds(reportsDIAS, "reportFrom", "reportFrom", "ar");
+            for (ReportsDIA report : reportsDIAS) {
+                if(report.getReportFrom() == "1"){
+                    String issuerName = unitRepository.getUnitByUnitCode(report.getReportIssuer()).get(0).getUnitNameByLanguage("ar");
+                    report.setReportIssuer(issuerName);
+                }else {
+                    report.setReportIssuer(report.getReportExternalIssuer());
+                }
+            }
         }
 
         List<CountryAdditionalDto> countryAdditionalDatasListRPT = caRepo.findAllByTypeAndParentEntityId(0, Integer.MAX_VALUE, Long.valueOf(countryDisplay.getCountryValue()), "report", 1, id);
@@ -234,12 +244,13 @@ public class CountryDisplayService {
 
 //http://localhost:8081/api/country-display/pdf/32769
         try {
+            file = pdfService.generate(countryList, file.toURI().getPath(), "cover-image");
+
             if (sectionList.contains("CV")){
                 file = pdfService.generate(countryLeaders, file.toURI().getPath(), "CV");
             }
             if (sectionList.contains("PD")) {
                 file = pdfService.generate(countryList, file.toURI().getPath(), "PD");
-                file = pdfService.generate(countryList, file.toURI().getPath(), "cover-image");
                 file = pdfService.generate(visitsDto, file.toURI().getPath(), "PD-visits");
                 file = pdfService.generate(historyOfCommonRelationDtos, file.toURI().getPath(), "PD-CR");
             }
@@ -326,14 +337,13 @@ public class CountryDisplayService {
             e.printStackTrace();
         }
 
+
         byte[] bytes = pdfService.generatePDF(file.getAbsolutePath());
         HttpHeaders respHeaders = new HttpHeaders();
-
         respHeaders.setContentLength(bytes.length);
-        respHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        respHeaders.setContentType(MediaType.APPLICATION_PDF);
         respHeaders.setCacheControl("must-revalidate, post-check=0, pre-check=0");
-        respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=attachment.pdf");
-
+        respHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+URLEncoder.encode(countryDisplay.getDisplayFileTitle(), StandardCharsets.UTF_8.toString())+".pdf");
 
 
         /*
@@ -387,8 +397,9 @@ public class CountryDisplayService {
                                         bytes)),
                         new StringPart("type", "144", StandardCharsets.UTF_8.name()),
                         new StringPart("parent_id", countryDisplay.getS_WORKSPACEID().toString(), StandardCharsets.UTF_8.name()),
-                        new StringPart("name", file.getName().replace(".html",".pdf"), StandardCharsets.UTF_8.name()),
+                        new StringPart("name", file.getName().replace("template", URLEncoder.encode(countryDisplay.getDisplayFileTitle(), StandardCharsets.UTF_8.toString()) + "-").replace(".html",".pdf"), StandardCharsets.UTF_8.name()),
                 };
+
                 RequestEntity re = new MultipartRequestEntity(parts, new HttpMethodParams());
                 method.setRequestEntity(re);
                 HttpClient client = new HttpClient();

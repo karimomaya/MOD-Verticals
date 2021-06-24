@@ -17,7 +17,7 @@ public class CountryDisplay {
     String countryValue;
     int degreeOfConfidentiality;
     Long S_WORKSPACEID;
-
+    String displayFileTitle;
 
     public String confidentialityDegree(){
         switch (this.degreeOfConfidentiality){

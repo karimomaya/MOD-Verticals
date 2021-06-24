@@ -5,7 +5,6 @@
         table {
             border-top: 1px solid #636566;
             border-right: 1px solid #636566;
-
             color: black;
             font-size: 16px;
             border-collapse: collapse;
@@ -14,7 +13,7 @@
         }
 
         .span-tables {
-            margin-bottom: 20px !important;
+            margin-bottom: 50px !important;
             margin-top: 20px !important;
         }
         .english-font {
@@ -32,7 +31,15 @@
         .header {
             text-align: center;
         }
-
+        .header-title {
+            font-size: large;
+        }
+        .header-title-gold {
+            font-size: x-large;
+        }
+        .text-fields-align {
+            text-align: right !important;
+        }
         th {
             color: black;
             font-size: 14px;
@@ -176,10 +183,10 @@
             </div>
 
             <CV-table>
-                <table class="template-subject-main" style="border: 0;width: 690px;">
+                <table class="template-subject-main" style="border: 0;width: 690px; page-break-before: always;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">السيرة الذاتية</th>
+                        <th style="background-color: #b68a35;color: white;" class="header-title-gold">السيرة الذاتية</th>
                     </tr>
                     </thead>
                 </table>
@@ -198,7 +205,7 @@
                             <table style="border: 0;width: 690px;">
                                 <thead style="background-color: #636566;color: white; ">
                                 <tr style="background-color: #636566;color: white; ">
-                                    <th class="header" style="background-color: #636566;color: white; ">بيانات القائد</th>
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">بيانات القائد</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -236,15 +243,16 @@
                                 </tr>
                                 </tbody>
                             </table>
+
+                            <table style="border: 0;width: 690px;">
+                                <thead style="background-color: #636566;color: white; ">
+                                <tr style="background-color: #636566;color: white; ">
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">المهام و المناصب</th>
+                                </tr>
+                                </thead>
+                            </table>
                             <span>
                             <span>
-                                <table style="border: 0;width: 690px;">
-                                    <thead style="background-color: #636566;color: white; ">
-                                    <tr style="background-color: #636566;color: white; ">
-                                        <th class="header" style="background-color: #636566;color: white; ">المهام و المناصب</th>
-                                    </tr>
-                                    </thead>
-                                </table>
                                 <table class="simple-table" holder="Table-holder-positions"
                                        style="width: 690px;">
                                     <thead>
@@ -274,21 +282,18 @@
                                 </table>
                             </span>
                         </span>
-
                             <Table-holder-positions>
-
                             </Table-holder-positions>
                             <div>
+                                <table style="border: 0;width: 690px;">
+                                    <thead style="background-color: #636566;color: white; ">
+                                    <tr style="background-color: #636566;color: white; ">
+                                        <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                                    </tr>
+                                    </thead>
+                                </table>
                             <span style="display: block">
                             <span>
-
-                                <table style="border: 0;width: 690px;">
-                            <thead style="background-color: #636566;color: white; ">
-                            <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
-                            </tr>
-                            </thead>
-                        </table>
                                 <table class="simple-table" holder="Table-holder"
                                        style="width: 690px;">
                                     <thead>
@@ -320,7 +325,6 @@
                         </span>
                         </div>
                             <Table-holder>
-
                             </Table-holder>
                         </div>
                     </CV-remover>
@@ -328,13 +332,11 @@
                 <CV-holder>
                 </CV-holder>
             </CV-table>
-
-
             <PD-table>
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">المعلومات الرئيسية</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">المعلومات الرئيسية</th>
                     </tr>
                     </thead>
                 </table>
@@ -345,7 +347,7 @@
                             <table style="border: 0;width: 690px;">
                                 <thead style="background-color: #636566;color: white; ">
                                 <tr style="background-color: #636566;color: white; ">
-                                    <th class="header" style="background-color: #636566;color: white; ">بيانات أساسية</th>
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">بيانات أساسية</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -413,7 +415,7 @@
                     <table class="template-subject-main" style="border: 0;width: 690px;">
                         <thead style="background-color: #636566;color: white; ">
                         <tr style="background-color: #636566;color: white; ">
-                            <th class="header" style="background-color: #636566;color: white; ">الزيارات</th>
+                            <th class="header header-title" style="background-color: #636566;color: white; ">الزيارات</th>
                         </tr>
                         </thead>
                     </table>
@@ -440,7 +442,7 @@
                                     <tr class="single-view">
                                         <td style="width: 400px; background-color: #c6c6c6;color: black;">أهداف الزيارة</td>
                                         <td colspan="3"
-                                            style="width: 200px;">
+                                            style="width: 200px;" class="text-fields-align">
                                             <primary-details-visits-replacer>getGoals</primary-details-visits-replacer>
                                         </td>
                                     </tr>
@@ -457,7 +459,7 @@
                         <table class="template-subject-main" style="border: 0;width: 690px;">
                             <thead style="background-color: #636566;color: white; ">
                             <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">العلاقات الثنائية بين البلدين</th>
+                                <th class="header header-title" style="background-color: #636566;color: white; ">العلاقات الثنائية بين البلدين</th>
                             </tr>
                             </thead>
                         </table>
@@ -492,7 +494,7 @@
                                     <tr class="single-view">
                                         <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                         <td colspan="3"
-                                            style="width: 200px;">
+                                            style="width: 200px;" class="text-fields-align">
                                             <primary-details-commercial-replacer>getNotes</primary-details-commercial-replacer>
                                         </td>
                                     </tr>
@@ -506,12 +508,11 @@
                 </PD-visits-table>
             </PD-table>
 
-
             <DP-table>
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">نقاط النقاش</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">نقاط النقاش</th>
                     </tr>
                     </thead>
                 </table>
@@ -552,7 +553,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">ملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <discussion-point-replacer>getNotes</discussion-point-replacer>
                                     </td>
                                 </tr>
@@ -570,7 +571,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">أوجه التعاون</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">أوجه التعاون</th>
                     </tr>
                     </thead>
                 </table>
@@ -608,7 +609,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <cooperation-aspects-replacer>getDetails</cooperation-aspects-replacer>
                                     </td>
                                 </tr>
@@ -626,7 +627,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">شخصيات معنية بملف العرض</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">شخصيات معنية بملف العرض</th>
                     </tr>
                     </thead>
                 </table>
@@ -678,7 +679,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">آخر المستجدات</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">آخر المستجدات</th>
                     </tr>
                     </thead>
                 </table>
@@ -719,14 +720,14 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الموضوع</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <media-monitoring-replacer>getSubject</media-monitoring-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الخلاصة</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <media-monitoring-replacer>getSynopsis</media-monitoring-replacer>
                                     </td>
                                 </tr>
@@ -735,14 +736,14 @@
                                         الإمارات العربية المتحدة
                                     </td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <media-monitoring-replacer>getUAEposition</media-monitoring-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">ملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <media-monitoring-replacer>getNotes</media-monitoring-replacer>
                                     </td>
                                 </tr>
@@ -760,7 +761,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">نقاط التباحث اللإقليمية</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">نقاط التباحث اللإقليمية</th>
                     </tr>
                     </thead>
                 </table>
@@ -788,14 +789,14 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الموضوع</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <media-monitoring-replacer>getSubject</media-monitoring-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">المختصر</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <media-monitoring-replacer>getBrief</media-monitoring-replacer>
                                     </td>
                                 </tr>
@@ -804,14 +805,14 @@
                                         الإمارات العربية المتحدة
                                     </td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <media-monitoring-replacer>getPositionOfUAE</media-monitoring-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">ملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <media-monitoring-replacer>getNotes</media-monitoring-replacer>
                                     </td>
                                 </tr>
@@ -822,20 +823,23 @@
                 </RD>
                 <RD-holder>
                 </RD-holder>
-
+                <table class="template-subject-main" style="border: 0;width: 690px;">
+                    <thead style="background-color: #636566;color: white; ">
+                    <tr style="background-color: #636566;color: white; ">
+                        <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                    </tr>
+                    </thead>
+                </table>
                 <RD-additionalData>
                     <RD-additionalData-remover>
-                        ​ <attribute>regional-talking-additional-replacer</attribute>
+
+                         <attribute>regional-talking-additional-replacer</attribute>
+
                         <div class="discussion-point template-subject-main">
+
                         <span>
                                 <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
-                                       <thead style="background-color: #636566;color: white; ">
-                                                        <tr style="background-color: #636566;color: white; ">
-                                                            <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
-                                                        </tr>
-                                                        </thead>
-                                    </table>
+
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -857,7 +861,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;" class="text-fields-align">
                                                     <regional-talking-additional-replacer drawWholeTable="true">getDetails
                                                     </regional-talking-additional-replacer>
                                                 </td>
@@ -883,7 +887,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">اللجان المشتركة</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">اللجان المشتركة</th>
                     </tr>
                     </thead>
                 </table>
@@ -906,7 +910,7 @@
                             <table style="border: 0;width: 690px;">
                                 <thead style="background-color: #636566;color: white; ">
                                 <tr style="background-color: #636566;color: white; ">
-                                    <th class="header" style="background-color: #636566;color: white; ">لجنة مشتركة</th>
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">لجنة مشتركة</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -935,7 +939,7 @@
                                 <table style="border: 0;width: 690px;">
                             <thead style="background-color: #636566;color: white; ">
                             <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">الإجتماعات</th>
+                                <th class="header header-title" style="background-color: #636566;color: white; ">الإجتماعات</th>
                             </tr>
                             </thead>
                         </table>
@@ -974,16 +978,16 @@
                         </span>
                             <Table-holder-meeting>
                             </Table-holder-meeting>
+                            <table style="border: 0;width: 690px;">
+                                <thead style="background-color: #636566;color: white; ">
+                                <tr style="background-color: #636566;color: white; ">
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">مختصر أنشطة التعاون</th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <span>
+                            <span>
 
-                            <span>
-                            <span>
-                                <table style="border: 0;width: 690px;">
-                            <thead style="background-color: #636566;color: white; ">
-                            <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">مختصر أنشطة التعاون</th>
-                            </tr>
-                            </thead>
-                        </table>
                                 <table class="simple-table " holder="Table-holder-activities"
                                        style="width: 690px;">
                                     <thead>
@@ -1010,16 +1014,16 @@
                         </span>
                             <Table-holder-activities>
                             </Table-holder-activities>
+                            <table style="border: 0;width: 690px;">
+                                <thead style="background-color: #636566;color: white; ">
+                                <tr style="background-color: #636566;color: white; ">
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <span>
+                            <span>
 
-                            <span>
-                            <span>
-                                <table style="border: 0;width: 690px;">
-                            <thead style="background-color: #636566;color: white; ">
-                            <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
-                            </tr>
-                            </thead>
-                        </table>
                                 <table class="simple-table " holder="Table-holder-additional"
                                        style="width: 690px;">
                                     <thead>
@@ -1040,7 +1044,7 @@
                                         <tr class="single-view">
                                             <td class="header"
                                                 style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                            <td style="width: 200px;">
+                                            <td style="width: 200px;" class="text-fields-align">
                                                 <joined-committee-additional-replacer drawWholeTable="true">getDetails
                                                 </joined-committee-additional-replacer>
                                             </td>
@@ -1062,7 +1066,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">نتائج الإجتماعات السابقة</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">نتائج الإجتماعات السابقة</th>
                     </tr>
                     </thead>
                 </table>
@@ -1083,7 +1087,7 @@
                             <table style="border: 0;width: 690px;">
                                 <thead style="background-color: #636566;color: white; ">
                                 <tr style="background-color: #636566;color: white; ">
-                                    <th class="header" style="background-color: #636566;color: white; ">إجتماع سابق</th>
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">إجتماع سابق</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -1105,15 +1109,15 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <table style="border: 0;width: 690px;">
+                                <thead style="background-color: #636566;color: white; ">
+                                <tr style="background-color: #636566;color: white; ">
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">نتيجة إجتماع</th>
+                                </tr>
+                                </thead>
+                            </table>
                             <span>
                                 <span>
-                                <table style="border: 0;width: 690px;">
-                            <thead style="background-color: #636566;color: white; ">
-                            <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">نتيجة إجتماع</th>
-                            </tr>
-                            </thead>
-                        </table>
                                 <table class="simple-table " holder="Table-holder"
                                        style="width: 690px;">
                                     <thead>
@@ -1135,10 +1139,10 @@
                                                 </previous-meetings-results-replacer>
                                             </td>
                                         </tr>
-                                       <tr class="single-view">
+                                       <tr class="">
                                         <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                         <td colspan="3"
-                                            style="width: 200px;">
+                                            style="width: 200px;" class="text-fields-align">
                                             <previous-meetings-results-replacer drawWholeTable="true">getNotes</previous-meetings-results-replacer>
                                         </td>
                                         </tr>
@@ -1148,16 +1152,16 @@
                         </span>
                             <Table-holder>
                             </Table-holder>
+                            <table style="border: 0;width: 690px;">
+                                <thead style="background-color: #636566;color: white; ">
+                                <tr style="background-color: #636566;color: white; ">
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                                </tr>
+                                </thead>
+                            </table>
+                            <span>
+                            <span>
 
-                            <span>
-                            <span>
-                                <table style="border: 0;width: 690px;">
-                            <thead style="background-color: #636566;color: white; ">
-                            <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
-                            </tr>
-                            </thead>
-                        </table>
                                 <table class="simple-table " holder="Table-holder-additional"
                                        style="width: 690px;">
                                     <thead>
@@ -1178,7 +1182,7 @@
                                         <tr class="single-view">
                                             <td class="header"
                                                 style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                            <td style="width: 200px;">
+                                            <td style="width: 200px;" class="text-fields-align">
                                                 <previous-meetings-additional-replacer drawWholeTable="true">getDetails
                                                 </previous-meetings-additional-replacer>
                                             </td>
@@ -1201,7 +1205,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">موقف القوات</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">موقف القوات</th>
                     </tr>
                     </thead>
                 </table>
@@ -1218,7 +1222,7 @@
                             <table style="border: 0;width: 690px;">
                                 <thead style="background-color: #636566;color: white; ">
                                 <tr style="background-color: #636566;color: white; ">
-                                    <th class="header" style="background-color: #636566;color: white; ">وثيقة القوات</th>
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">وثيقة القوات</th>
                                 </tr>
                                 </thead>
                             </table>
@@ -1251,7 +1255,9 @@
                                 <table style="border: 0;width: 690px;">
                                     <thead style="background-color: #636566;color: white; ">
                                     <tr style="background-color: #636566;color: white; ">
-                                        <th class="header" style="background-color: #636566;color: white; ">معسكر</th>
+                                        <th class="header header-title" style="background-color: #636566;color: white; ">
+                                            <troops-situation-replacer>getCampName</troops-situation-replacer>
+                                        </th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -1304,7 +1310,7 @@
                                     <tr class="single-view">
                                         <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                         <td colspan="3"
-                                            style="width: 200px;">
+                                            style="width: 200px;" class="text-fields-align">
                                             <troops-situation-replacer drawWholeTable="true">getNotes</troops-situation-replacer>
                                         </td>
                                     </tr>
@@ -1326,7 +1332,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">مختصر الوثائق القانونية</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">مختصر الوثائق القانونية</th>
                     </tr>
                     </thead>
                 </table>
@@ -1374,7 +1380,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <legal-documents-replacer>getNotes</legal-documents-replacer>
                                     </td>
                                 </tr>
@@ -1391,7 +1397,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">التقارير</th>
+                        <th style="background-color: #b68a35;color: white;page-break-before: always" class="header-title-gold">التقارير</th>
                     </tr>
                     </thead>
                 </table>
@@ -1438,7 +1444,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الخلاصة</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <reports-replacer>getConclusion</reports-replacer>
                                     </td>
                                 </tr>
@@ -1449,19 +1455,21 @@
                 </RPT>
                 <RPT-holder>
                 </RPT-holder>
-                <RPT-additionalData>
-                    <RPT-additionalData-remover>
-                        ​ <attribute>report-additional-replacer</attribute>
-                        <div class="discussion-point template-subject-main">
-                        <span>
-                                <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
+                <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
                     </tr>
                     </thead>
                 </table>
+                <RPT-additionalData>
+                    <RPT-additionalData-remover>
+                         <attribute>report-additional-replacer</attribute>
+                        <div class="discussion-point template-subject-main">
+
+                        <span>
+                                <span>
+
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -1483,7 +1491,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;" class="text-fields-align">
                                                     <report-additional-replacer drawWholeTable="true">getDetails
                                                     </report-additional-replacer>
                                                 </td>
@@ -1508,7 +1516,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">تقارير المهام الرسمية</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">تقارير المهام الرسمية</th>
                     </tr>
                     </thead>
                 </table>
@@ -1549,21 +1557,21 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">التوصيات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <official-missions-replacer>getRecommendations</official-missions-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الخلاصة</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <official-missions-replacer>getConclusion</official-missions-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <official-missions-replacer>getNotes</official-missions-replacer>
                                     </td>
                                 </tr>
@@ -1574,19 +1582,20 @@
                 </OM>
                 <OM-holder>
                 </OM-holder>
-                <OM-additionalData>
-                    <OM-additionalData-remover>
-                        ​ <attribute>OM-additional-replacer</attribute>
-                        <div class="discussion-point template-subject-main">
-                        <span>
-                                <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
+                <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
                     </tr>
                     </thead>
                 </table>
+                <OM-additionalData>
+                    <OM-additionalData-remover>
+                        <attribute>OM-additional-replacer</attribute>
+                        <div class="discussion-point template-subject-main">
+                        <span>
+                                <span>
+
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -1608,7 +1617,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;" class="text-fields-align">
                                                     <OM-additional-replacer drawWholeTable="true">getDetails
                                                     </OM-additional-replacer>
                                                 </td>
@@ -1633,7 +1642,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">سجل المشتريات و العقود</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">سجل المشتريات و العقود</th>
                     </tr>
                     </thead>
                 </table>
@@ -1694,14 +1703,14 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">حالة المشروع/العقد</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <PurchasesAndContracts-replacer>getStatus</PurchasesAndContracts-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <PurchasesAndContracts-replacer>getNotes</PurchasesAndContracts-replacer>
                                     </td>
                                 </tr>
@@ -1712,19 +1721,21 @@
                 </PC>
                 <PC-holder>
                 </PC-holder>
-                <PC-additionalData>
-                    <PC-additionalData-remover>
-                        ​ <attribute>purchase-contracts-additional-replacer</attribute>
-                        <div class="discussion-point template-subject-main">
-                        <span>
-                                <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
+                <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
                     </tr>
                     </thead>
                 </table>
+                <PC-additionalData>
+                    <PC-additionalData-remover>
+                         <attribute>purchase-contracts-additional-replacer</attribute>
+                        <div class="discussion-point template-subject-main">
+
+                        <span>
+                                <span>
+
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -1746,7 +1757,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;" class="text-fields-align">
                                                     <purchase-contracts-additional-replacer drawWholeTable="true">getDetails
                                                     </purchase-contracts-additional-replacer>
                                                 </td>
@@ -1771,21 +1782,22 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">سجل الأحداث الجيواستراتيجية</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always;" class="header-title-gold">سجل الأحداث الجيواستراتيجية</th>
                     </tr>
                     </thead>
                 </table>
                 <GE>
                     <GE-remover>
                         <attribute>GeoStrategicalEvents-replacer</attribute>
+                        <table class="template-subject-main" style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th class="header header-title" style="background-color: #636566;color: white; ">بيانات أساسية</th>
+                            </tr>
+                            </thead>
+                        </table>
                         <div class="discussion-point template-subject-main">
-                            <table style="border: 0;width: 690px;">
-                                <thead style="background-color: #636566;color: white; ">
-                                <tr style="background-color: #636566;color: white; ">
-                                    <th class="header" style="background-color: #636566;color: white; ">بيانات أساسية</th>
-                                </tr>
-                                </thead>
-                            </table>
+
 
                             <table class="simple-table " style="width: 690px;">
                                 <thead>
@@ -1817,21 +1829,21 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">المختصر</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <GeoStrategicalEvents-replacer>getSynopsis</GeoStrategicalEvents-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">التأثير المتوقع على الدولة</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <GeoStrategicalEvents-replacer>getExpectedImpactOnTheCountry</GeoStrategicalEvents-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <GeoStrategicalEvents-replacer>getNotes</GeoStrategicalEvents-replacer>
                                     </td>
                                 </tr>
@@ -1842,19 +1854,20 @@
                 </GE>
                 <GE-holder>
                 </GE-holder>
-                <GE-additionalData>
-                    <GE-additionalData-remover>
-                        ​ <attribute>events-additional-replacer</attribute>
-                        <div class="discussion-point template-subject-main">
-                        <span>
-                                <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
+                <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
                     </tr>
                     </thead>
                 </table>
+                <GE-additionalData>
+                    <GE-additionalData-remover>
+                         <attribute>events-additional-replacer</attribute>
+                        <div class="discussion-point template-subject-main">
+                        <span>
+                                <span>
+
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -1875,7 +1888,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;" class="text-fields-align">
                                                     <events-additional-replacer drawWholeTable="true">getDetails
                                                     </events-additional-replacer>
                                                 </td>
@@ -1898,7 +1911,7 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">أهمية التعاون</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">أهمية التعاون</th>
                     </tr>
                     </thead>
                 </table>
@@ -1918,28 +1931,28 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">أهمية التعاون مع الدولة في الجانب السياسي</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <cooperation-importance-replacer>getPolitical</cooperation-importance-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">أهمية التعاون مع الدولة في الجانب العسكري</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <cooperation-importance-replacer>getMilitary</cooperation-importance-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">أهمية التعاون مع الدولة في الجانب الإقتصادي</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <cooperation-importance-replacer>getEconomic</cooperation-importance-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;" class="text-fields-align">
                                         <cooperation-importance-replacer>getNotes</cooperation-importance-replacer>
                                     </td>
                                 </tr>
@@ -1950,19 +1963,21 @@
                 </CI>
                 <CI-holder>
                 </CI-holder>
-                <CI-additionalData>
-                    <CI-additionalData-remover>
-                        ​ <attribute>cooperation-importance-additional-replacer</attribute>
-                        <div class="discussion-point template-subject-main">
-                        <span>
-                                <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
+                <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
                     </tr>
                     </thead>
                 </table>
+                <CI-additionalData>
+                    <CI-additionalData-remover>
+                         <attribute>cooperation-importance-additional-replacer</attribute>
+                        <div class="discussion-point template-subject-main">
+
+                        <span>
+                                <span>
+
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -1984,7 +1999,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;" class="text-fields-align">
                                                     <cooperation-importance-additional-replacer drawWholeTable="true">getDetails
                                                     </cooperation-importance-additional-replacer>
                                                 </td>
@@ -2009,14 +2024,14 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">ملخص الأنشطة و الزيارات الرسمية</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">ملخص الأنشطة و الزيارات الرسمية</th>
                     </tr>
                     </thead>
                 </table>
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">الأنشطة</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">الأنشطة</th>
                     </tr>
                     </thead>
                 </table>
@@ -2054,7 +2069,7 @@
                                     <tr class="single-view">
                                         <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                         <td colspan="3"
-                                            style="width: 200px;">
+                                            style="width: 200px;" class="text-fields-align">
                                             <activities-visits-replacer>getNotes</activities-visits-replacer>
                                         </td>
                                     </tr>
@@ -2077,7 +2092,9 @@
                         <table class="template-subject-main" style="border: 0;width: 690px;">
                             <thead style="background-color: #636566;color: white; ">
                             <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">زيارة</th>
+                                <th class="header header-title" style="background-color: #636566;color: white; ">
+                                    <visits-replacer>getName</visits-replacer>
+                                </th>
                             </tr>
                             </thead>
                         </table>
@@ -2107,14 +2124,14 @@
                                     <tr class="single-view">
                                         <td style="width: 400px; background-color: #c6c6c6;color: black;">أهداف الزيارة</td>
                                         <td colspan="3"
-                                            style="width: 200px;">
+                                            style="width: 200px;"  class="text-fields-align">
                                             <visits-replacer>getGoals</visits-replacer>
                                         </td>
                                     </tr>
                                     <tr class="single-view">
                                         <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                         <td colspan="3"
-                                            style="width: 200px;">
+                                            style="width: 200px;"  class="text-fields-align">
                                             <visits-replacer>getNotes</visits-replacer>
                                         </td>
                                     </tr>
@@ -2124,16 +2141,16 @@
                             </table>
                         </div>
                         <div class="discussion-point template-subject-main">
-
+                            <table style="border: 0;width: 690px;">
+                                <thead style="background-color: #636566;color: white; ">
+                                <tr style="background-color: #636566;color: white; ">
+                                    <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                                </tr>
+                                </thead>
+                            </table>
                         <span>
                                 <span>
-                                    <table style="border: 0;width: 690px;">
-                                        <thead style="background-color: #636566;color: white; ">
-                                                                <tr style="background-color: #636566;color: white; ">
-                                                                    <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
-                                                                </tr>
-                                                                </thead>
-                                    </table>
+
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -2155,7 +2172,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;"  class="text-fields-align">
                                                     <visitsAdditionalData-replacer drawWholeTable="true">getDetails
                                                     </visitsAdditionalData-replacer>
                                                 </td>
@@ -2181,14 +2198,14 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">سجل المساعدات و المنح</th>
+                        <th style="background-color: #b68a35;color: white;page-break-before: always" class="header-title-gold">سجل المساعدات و المنح</th>
                     </tr>
                     </thead>
                 </table>
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">المساعدات و المنح الإنسانية</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">المساعدات و المنح الإنسانية</th>
                     </tr>
                     </thead>
                 </table>
@@ -2228,7 +2245,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;"  class="text-fields-align">
                                         <humanAid-replacer>getNotes</humanAid-replacer>
                                     </td>
                                 </tr>
@@ -2243,7 +2260,7 @@
                     <table class="template-subject-main" style="border: 0;width: 690px;">
                         <thead style="background-color: #636566;color: white; ">
                         <tr style="background-color: #636566;color: white; ">
-                            <th class="header" style="background-color: #636566;color: white; ">المساعدات و المنح العسكرية</th>
+                            <th class="header header-title" style="background-color: #636566;color: white; ">المساعدات و المنح العسكرية</th>
                         </tr>
                         </thead>
                     </table>
@@ -2284,7 +2301,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;"  class="text-fields-align">
                                         <humanAid-military-replacer>getNotes</humanAid-military-replacer>
                                     </td>
                                 </tr>
@@ -2297,17 +2314,18 @@
                 </AG-military-holder>
                 <AG-additionalData>
                     <AG-additionalData-remover>
-                        ​ <attribute>aid-additional-replacer</attribute>
+                        <attribute>aid-additional-replacer</attribute>
+                        <table class="template-subject-main" style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                            </tr>
+                            </thead>
+                        </table>
                         <div class="discussion-point template-subject-main">
                         <span>
                                 <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
-                                        <thead style="background-color: #636566;color: white; ">
-                                        <tr style="background-color: #636566;color: white; ">
-                                            <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
-                                        </tr>
-                                        </thead>
-                                    </table>
+
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -2329,7 +2347,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;"  class="text-fields-align">
                                                     <aid-additional-replacer drawWholeTable="true">getDetails
                                                     </aid-additional-replacer>
                                                 </td>
@@ -2354,14 +2372,14 @@
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; "> ملخص الدورات و التمارين</th>
+                        <th style="background-color: #b68a35;color: white;page-break-before: always" class="header-title-gold"> ملخص الدورات و التمارين</th>
                     </tr>
                     </thead>
                 </table>
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">الدورات</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">الدورات</th>
                     </tr>
                     </thead>
                 </table>
@@ -2407,7 +2425,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;"  class="text-fields-align">
                                         <trainings-replacer>getNotes</trainings-replacer>
                                     </td>
                                 </tr>
@@ -2422,7 +2440,7 @@
                     <table class="template-subject-main" style="border: 0;width: 690px;">
                         <thead style="background-color: #636566;color: white; ">
                         <tr style="background-color: #636566;color: white; ">
-                            <th class="header" style="background-color: #636566;color: white; ">التمارين</th>
+                            <th class="header header-title" style="background-color: #636566;color: white; ">التمارين</th>
                         </tr>
                         </thead>
                     </table>
@@ -2469,7 +2487,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;"  class="text-fields-align">
                                         <courses-replacer>getNotes</courses-replacer>
                                     </td>
                                 </tr>
@@ -2483,17 +2501,18 @@
 
                 <TC-additionalData>
                     <TC-additionalData-remover>
-                        ​ <attribute>training-courses-replacer</attribute>
+                         <attribute>training-courses-replacer</attribute>
+                        <table class="template-subject-main" style="border: 0;width: 690px;">
+                            <thead style="background-color: #636566;color: white; ">
+                            <tr style="background-color: #636566;color: white; ">
+                                <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                            </tr>
+                            </thead>
+                        </table>
                         <div class="discussion-point template-subject-main">
-                        <span>
+
+                            <span>
                                 <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
-                    <thead style="background-color: #636566;color: white; ">
-                    <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
-                    </tr>
-                    </thead>
-                </table>
                                     <table class="simple-table " holder="Table-holder"
                                            style="width: 690px;">
                                         <thead>
@@ -2503,7 +2522,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">العنوان</td>
@@ -2515,7 +2533,7 @@
                                             <tr class="single-view">
                                                 <td class="header"
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;"  class="text-fields-align">
                                                     <training-courses-replacer drawWholeTable="true">getDetails
                                                     </training-courses-replacer>
                                                 </td>
@@ -2523,11 +2541,8 @@
                                         </tbody>
                                     </table>
                                 </span>
-
                             </span>
-
                             <Table-holder>
-
                             </Table-holder>
                         </div>
                     </TC-additionalData-remover>
@@ -2535,12 +2550,11 @@
                 <TC-additionalData-holder>
                 </TC-additionalData-holder>
             </TC-table>
-
             <CB-table>
                 <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #b68a35;color: white; ">
                     <tr style="background-color: #b68a35;color: white; ">
-                        <th style="background-color: #b68a35;color: white; ">إيجاز موقف الدولة</th>
+                        <th style="background-color: #b68a35;color: white; page-break-before: always" class="header-title-gold">إيجاز موقف الدولة</th>
                     </tr>
                     </thead>
                 </table>
@@ -2550,7 +2564,7 @@
                         <table style="border: 0;width: 690px;">
                             <thead style="background-color: #636566;color: white; ">
                             <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">آخر إجتماع</th>
+                                <th class="header header-title" style="background-color: #636566;color: white; ">آخر إجتماع</th>
                             </tr>
                             </thead>
                         </table>
@@ -2566,7 +2580,7 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">عنوان الإجتماع</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;"  class="text-fields-align">
                                         <latest-meetings-replacer>getMeetingTitle</latest-meetings-replacer>
                                     </td>
                                 </tr>
@@ -2589,14 +2603,15 @@
                 </CB-holder>
                 <SP>
                     <SP-remover>
-                        <attribute>stucked-points-replacer</attribute>
                         <table class="template-subject-main" style="border: 0;width: 690px;">
                             <thead style="background-color: #636566;color: white; ">
                             <tr style="background-color: #636566;color: white; ">
-                                <th class="header" style="background-color: #636566;color: white; ">النقاط العالقة</th>
+                                <th class="header header-title" style="background-color: #636566;color: white; ">النقاط العالقة</th>
                             </tr>
                             </thead>
                         </table>
+                        <attribute>stucked-points-replacer</attribute>
+
                         <div class="discussion-point template-subject-main">
                             <table class="simple-table "
                                    style="width: 690px;">
@@ -2620,14 +2635,14 @@
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">موضوع النقاش</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;"  class="text-fields-align">
                                         <stucked-points-replacer>getDebateSubject</stucked-points-replacer>
                                     </td>
                                 </tr>
                                 <tr class="single-view">
                                     <td style="width: 400px; background-color: #c6c6c6;color: black;">الملاحظات</td>
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;"  class="text-fields-align">
                                         <stucked-points-replacer>getNotes</stucked-points-replacer>
                                     </td>
                                 </tr>
@@ -2642,7 +2657,7 @@
                     <table class="template-subject-main" style="border: 0;width: 690px;">
                         <thead style="background-color: #636566;color: white; ">
                         <tr style="background-color: #636566;color: white; ">
-                            <th class="header" style="background-color: #636566;color: white; ">التوصيات</th>
+                            <th class="header header-title" style="background-color: #636566;color: white; ">التوصيات</th>
                         </tr>
                         </thead>
                     </table>
@@ -2661,7 +2676,7 @@
                                 <tbody>
                                 <tr class="single-view">
                                     <td colspan="3"
-                                        style="width: 200px;">
+                                        style="width: 200px;"  class="text-fields-align">
                                         <recommendation-replacer>getRecommendationsAndResults</recommendation-replacer>
                                     </td>
                                 </tr>
@@ -2672,20 +2687,20 @@
                 </CB-recommendation>
                 <CB-recommendation-holder>
                 </CB-recommendation-holder>
-                <CB-additionalData>
-                    <CB-additionalData-remover>
-                        ​ <attribute>country-brief-additional-replacer</attribute>
-                        <div class="discussion-point template-subject-main">
-                        <span>
-                                <span>
-                                    <table class="template-subject-main" style="border: 0;width: 690px;">
+                <table class="template-subject-main" style="border: 0;width: 690px;">
                     <thead style="background-color: #636566;color: white; ">
                     <tr style="background-color: #636566;color: white; ">
-                        <th class="header" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
+                        <th class="header header-title" style="background-color: #636566;color: white; ">المعلومات الإضافية</th>
                     </tr>
                     </thead>
                 </table>
-                                    <table class="simple-table " holder="Table-holder"
+                <CB-additionalData>
+                    <CB-additionalData-remover>
+                         <attribute>country-brief-additional-replacer</attribute>
+                        <div class="discussion-point template-subject-main">
+                        <span>
+                                <span>
+                                    <table class="header simple-table" holder="Table-holder-CB"
                                            style="width: 690px;">
                                         <thead>
                                             <tr>
@@ -2694,9 +2709,8 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-
-                                            <tr class="single-view">
-                                                <td class="header"
+                                            <tr class="single-view simple-table">
+                                                <td
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">العنوان</td>
                                                 <td style="width: 200px;">
                                                     <country-brief-additional-replacer drawWholeTable="true">getTitle
@@ -2704,9 +2718,9 @@
                                                 </td>
                                             </tr>
                                             <tr class="single-view">
-                                                <td class="header"
+                                                <td
                                                     style="width: 400px; background-color: #c6c6c6;color: black;">التفاصيل</td>
-                                                <td style="width: 200px;">
+                                                <td style="width: 200px;"  class="text-fields-align">
                                                     <country-brief-additional-replacer drawWholeTable="true">getDetails
                                                     </country-brief-additional-replacer>
                                                 </td>
@@ -2717,9 +2731,9 @@
 
                             </span>
 
-                            <Table-holder>
+                            <Table-holder-CB>
 
-                            </Table-holder>
+                            </Table-holder-CB>
                         </div>
                     </CB-additionalData-remover>
                 </CB-additionalData>
